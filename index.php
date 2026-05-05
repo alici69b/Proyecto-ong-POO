@@ -9,6 +9,6 @@ $connection = $db->getConnection();
 
 
 //Cargamos la vista principal
-echo "biennnnnnnnnnnnn";
+require_once "pages/Inicio.php";
 
 ?>

@@ -10,4 +10,5 @@ $connection = $db->getConnection();
 
 //Cargamos la vista principal
 echo "biennnnnnnnnnnnn";
+
 ?>

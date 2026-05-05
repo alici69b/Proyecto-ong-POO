@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
     <!-- Link del Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-        <!-- Fuentes de google fonts  -->
+    <!-- Fuentes de google fonts  -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bricolage Grotesque">
 
@@ -22,28 +23,63 @@
         }
 
         html {
-            scroll-behavior: smooth; 
+            scroll-behavior: smooth;
         }
 
         @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50%       { background-position: 100% 50%; }
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
-        .fade-in { animation: fadeIn 0.5s ease both; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(16px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .fade-in {
+            animation: fadeIn 0.5s ease both;
         }
-        .fade-in-1 { animation-delay: 0.05s; }
-        .fade-in-2 { animation-delay: 0.15s; }
-        .fade-in-3 { animation-delay: 0.25s; }
-        .fade-in-4 { animation-delay: 0.35s; }
-        .fade-in-5 { animation-delay: 0.45s; }
-        .fade-in-6 { animation-delay: 0.55s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-1 {
+            animation-delay: 0.05s;
+        }
+
+        .fade-in-2 {
+            animation-delay: 0.15s;
+        }
+
+        .fade-in-3 {
+            animation-delay: 0.25s;
+        }
+
+        .fade-in-4 {
+            animation-delay: 0.35s;
+        }
+
+        .fade-in-5 {
+            animation-delay: 0.45s;
+        }
+
+        .fade-in-6 {
+            animation-delay: 0.55s;
+        }
     </style>
 
-   <!--
+    <!--
     colores
         -azul oscuro: #004e64
         -azul: #00a5cf
@@ -57,33 +93,36 @@
     -->
 
 </head>
+
 <body class=" bg-[#f4f9fa]" id="inicio">
     <!-- Importamos el Menú de navegación -->
     <?php
-    require_once "../src/components/Header.php";
+    require_once __DIR__ . "/../src/components/Header.php";
     ?>
 
     <!-- BOTON DE IR A INICIO -->
-    <a href="#inicio" class="fixed bottom-10 right-10 z-[9999] p-3 rounded-full bg-[#25a18e] text-white hover:bg-[#1a7a6b] transition-all shadow-xl flex items-center justify-center border-2 border-white/20" aria-label="Volver al inicio"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+    <a href="#inicio" class="fixed bottom-10 right-10 z-[9999] p-3 rounded-full bg-[#25a18e] text-white hover:bg-[#1a7a6b] transition-all shadow-xl flex items-center justify-center border-2 border-white/20" aria-label="Volver al inicio"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
     </a>
-   
-   <!-- Contenido Principal Impacto -->
+
+    <!-- Contenido Principal Impacto -->
     <main class="fade-in fade-in-1 max-w-7xl mx-auto px-4 py-12 pt-40">
         <div class="flex flex-col">
-           
+
             <!-- Título de la página -->
             <div class="text-center">
                 <p class="text-[#00a5cf] font-bold text-sm tracking-[0.2em] uppercase 4 opacity-90">
-                        Nuestro impacto
-                    </p>
+                    Nuestro impacto
+                </p>
                 <h1 class="font-['Domine']  text-slate-800 md:text-6xl lg:text-6xl text-4xl font-bold mb-4">
-                   Cada número es una <i class="bg-linear-to-r from-[#00a5cf] to-[#9fffcb] bg-clip-text text-transparent">historia real</i>
+                    Cada número es una <i class="bg-linear-to-r from-[#00a5cf] to-[#9fffcb] bg-clip-text text-transparent">historia real</i>
                 </h1>
                 <p class="text-gray-500 max-w-2xl mx-auto  sm:text-lg sm:p-2 lg:text-lg px-7 ">
                     Detrás de cada estadística hay una persona que decidió no rendirse
                 </p>
             </div>
-            
+
             <!-- CARDS -->
             <div class="fade-in fade-in-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-16 p-4">
                 <!-- Resets Iniciados -->
@@ -165,7 +204,13 @@
                             <!-- Nombre Categoría -->
                             <div class="flex flex-row items-center space-y-1 justify-between">
                                 <div class="flex flex-row space-x-5 items-center">
-                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"  stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-book w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" /><path d="M3 6l0 13" /><path d="M12 6l0 13" /><path d="M21 6l0 13" />
+                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-book w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                                            <path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0" />
+                                            <path d="M3 6l0 13" />
+                                            <path d="M12 6l0 13" />
+                                            <path d="M21 6l0 13" />
                                         </svg>
                                     </div>
                                     <div class="">Estudios</div>
@@ -183,7 +228,15 @@
                             <!-- Nombre Categoría -->
                             <div class="flex flex-row items-center space-y-1 justify-between">
                                 <div class="flex flex-row space-x-5 items-center">
-                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list  w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" /><path d="M9 12l.01 0" /><path d="M13 12l2 0" /><path d="M9 16l.01 0" /><path d="M13 16l2 0" /></svg>
+                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-list  w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" />
+                                            <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2" />
+                                            <path d="M9 12l.01 0" />
+                                            <path d="M13 12l2 0" />
+                                            <path d="M9 16l.01 0" />
+                                            <path d="M13 16l2 0" />
+                                        </svg>
                                     </div>
                                     <div>Proyectos</div>
                                 </div>
@@ -200,7 +253,10 @@
                             <!-- Nombre Categoría -->
                             <div class="flex flex-row items-center space-y-1 justify-between">
                                 <div class="flex flex-row space-x-5 items-center">
-                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heart w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg></div>
+                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-heart w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                                        </svg></div>
                                     <div>Hábitos</div>
                                 </div>
                                 <!-- Número de casos -->
@@ -216,7 +272,11 @@
                             <!-- Nombre Categoría -->
                             <div class="flex flex-row items-center space-y-1 justify-between">
                                 <div class="flex flex-row space-x-5 items-center">
-                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-medal w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 4v3m-4 -3v6m8 -6v6" /><path d="M12 18.5l-3 1.5l.5 -3.5l-2 -2l3 -.5l1.5 -3l1.5 3l3 .5l-2 2l.5 3.5l-3 -1.5" /></svg></div>
+                                    <div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-medal w-10 h-10 text-[#00a5cf] bg-[#d6f3ee] p-2 rounded-lg">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M12 4v3m-4 -3v6m8 -6v6" />
+                                            <path d="M12 18.5l-3 1.5l.5 -3.5l-2 -2l3 -.5l1.5 -3l1.5 3l3 .5l-2 2l.5 3.5l-3 -1.5" />
+                                        </svg></div>
                                     <div>Otros sueños</div>
                                 </div>
                                 <!-- Número de casos -->
@@ -267,7 +327,7 @@
                     </div>
                 </div>
             </div>
-            
+
 
             <!-- Card Footer Porcentaje --> <!-- COLORES DE ANTES: from-[#00a5cf] to-[#9fffcb]  --> <!-- to-[#83e0ad] -->
             <div class=" fade-in fade-in-4 text-center pt-16 p-4">
@@ -288,8 +348,8 @@
     </main>
     <!-- Importamos el footer -->
     <footer>
-    <?php
-    require_once "../src/components/footer.php";
-    ?>    
+        <?php
+        require_once __DIR__ . "/../src/components/footer.php";
+        ?>
     </footer>
 </body>

@@ -6,12 +6,13 @@ class Reset extends Usuario
 {
     protected $conn;
 
-	public function __construct()
+    public function __construct()
     {
         parent::__construct();
     }
 
-    public function registroUsuario(array $datos): bool
+    //funcion del registro del usuario, lo insertamos en la bbdd
+    public function insertarUsuario(array $datos): bool
     {
         $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare("
@@ -26,40 +27,42 @@ class Reset extends Usuario
         ]);
     }
 
-    public function registro(): void {
+    //la funcion registro hace el request_method y recoge los datos del formulario, void es que no devuelve nada
+    public function registro(): void
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirigir('index.php?ruta=registro');
             return;
         }
 
-        // 1. Recoger datos
+        // recogemos los datos
         $nombre    = trim($_POST['nombre'] ?? '');
         $apellidos = trim($_POST['apellidos'] ?? '');
         $email     = trim($_POST['email'] ?? '');
         $password  = $_POST['password'] ?? '';
 
-        // 2. Validar campos vacíos
+        // validamos los nmbres vacios
         if (empty($nombre) || empty($apellidos) || empty($email) || empty($password)) {
             $_SESSION['error'] = "Todos los campos son obligatorios";
             $this->redirigir('index.php?ruta=registro');
             return;
         }
 
-        // 3. Validar formato email
+        // validamos el formato email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $_SESSION['error'] = "El email no es válido";
             $this->redirigir('index.php?ruta=registro');
             return;
         }
 
-        // 4. Comprobar si el email ya existe
-        if ($this->usuarioReset->buscarPorEmail($email)) {
+        // comprobamos si el email existe
+        if ($this->buscarPorEmail($email)) {
             $_SESSION['error'] = "Este email ya está registrado";
             $this->redirigir('index.php?ruta=registro');
             return;
         }
 
-        // 5. Crear usuario
+        // creamos el usuario para guardarlo 
         $datos = [
             'nombre'    => $nombre,
             'apellidos' => $apellidos,
@@ -67,7 +70,7 @@ class Reset extends Usuario
             'password'  => $password
         ];
 
-        if ($this->usuarioReset->crear($datos)) {
+        if ($this->insertarUsuario($datos)) {
             $_SESSION['exito'] = "Registro exitoso, ya puedes iniciar sesión";
             $this->redirigir('index.php?ruta=login');
         } else {

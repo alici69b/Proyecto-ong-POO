@@ -2,11 +2,7 @@
 
 session_start();
 
-
-require_once "../models/Usuario.php";
-
-
-
-include ""
+require_once __DIR__ . "/../models/Usuario.php";
+require_once __DIR__ . "/../models/Reset.php";
 
 ?>

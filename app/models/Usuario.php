@@ -114,7 +114,49 @@ abstract class Usuario
         }
     }
 
+    // funcion para redirigir, a la hora a la que tengamos que irnos al registro, poniendo la url nos llevara al momento
+    protected function redirigir(string $url): void
+    {
+        header("Location: " . $url);
+        exit();
+    }
+
+    //funcion deonde le decimos donde esta el registro y el login y que lo redirija directamente.
+    protected function render(string $vista, array $datos = []): void
+    {
+        extract($datos); // convierte array en variables ($datos['nombre'] -> $nombre)
+        require_once "views/{$vista}.php";
+    }
+
+    // verificar que hay sesión iniciada, porque si no la hay, no dejara irnos al login 
+    protected function verificarSesion(): void
+    {
+        if (!isset($_SESSION['usuario'])) {
+            $this->redirigir('index.php?ruta=login');
+        }
+    }
+
+    // Verificar el rol del usuario
+    protected function verificarRol(string $rol): void
+    {
+        if ($_SESSION['usuario']['nombre_rol'] !== $rol) {
+            $this->redirigir('index.php?ruta=login');
+        }
+    }
+
+    // funciones para los mensajes de exito y error
+    protected function setError(string $mensaje): void
+    {
+        $_SESSION['error'] = $mensaje;
+    }
+
+    // funciones para los mensajes de exito y error
+    protected function setExito(string $mensaje): void
+    {
+        $_SESSION['exito'] = $mensaje;
+    }
+
     //metodo abstracto, que heredarn los hijos y cada uno tendran 
     //el array de $datos, se recoge a traves del registro de cada uno de los usuarios
-    abstract public function registroUsuario(array $datos);
+    abstract public function insertarUsuario(array $datos);
 }

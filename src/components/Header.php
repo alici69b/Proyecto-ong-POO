@@ -43,8 +43,8 @@
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
                 <div class=" bg-gray-50 flex flex-col gap-1 p-4">
-                    <a class="w-full py-3 text-center border-2 border-[#25a18e] text-[#25a18e] rounded-xl font-bold" href="../app/vista/auth/Login.php">Iniciar Sesión</a>
-                    <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="../app/vista/auth/Register.php">Registro</a>
+                    <a class="w-full py-3 text-center border-2 border-[#25a18e] text-[#25a18e] rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_login.php">Iniciar Sesión</a>
+                    <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_register.php">Registro</a>
                 </div>
             </div>
         </div>

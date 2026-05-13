@@ -10,9 +10,6 @@ $rol = $_SESSION["rol"] ?? "usuario";
     <link rel="icon" type="image/svg+xml" href="../../../public/img/Logo_RESET.svg">
     <title> Registro - RESET</title>
 
-    <!-- Link al css -->
-    <link rel="stylesheet" href="../../../public/css/style.css">
-
     <style>
         @keyframes slideOutRight {
             from {
@@ -130,7 +127,7 @@ $rol = $_SESSION["rol"] ?? "usuario";
                 </div>
 
                 <!-- Formulario con los campos: nombre, email, contraseña y el boton -->
-                <form class="space-y-5" method="post" action="../../controllers/controller_register.php">
+                <form class="space-y-5" method="post" action="/Proyecto-ong-POO/app/controllers/controller_register.php">
 
                     <!--  El value inicial es 'soy-usuario', que coincide con el botón que arranca activo -->
                     <input type="hidden" name="tipo" id="input-rol" value="<?= $rol; ?>">
@@ -226,7 +223,7 @@ $rol = $_SESSION["rol"] ?? "usuario";
                 </form>
 
                 <p class="mt-10 text-center text-sm text-gray-600">
-                    ¿Ya tienes cuenta? <a href="#" onclick="navegarCon('Login.php')" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
+                    ¿Ya tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
                 </p>
 
             </div>

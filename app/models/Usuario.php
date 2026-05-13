@@ -28,7 +28,8 @@ abstract class Usuario
                 ':email' => $email,
             ]);
 
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result === false ? null : $result;
         } catch (Exception $error) {
             throw new RuntimeException("Error al buscar por email: " . $error->getMessage());
         }
@@ -46,7 +47,8 @@ abstract class Usuario
                 ':id' => $id,
             ]);
 
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result === false ? null : $result;
         } catch (Exception $error) {
             throw new RuntimeException("Error al buscar por id: " . $error->getMessage());
         }

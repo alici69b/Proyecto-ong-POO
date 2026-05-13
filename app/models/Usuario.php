@@ -35,7 +35,6 @@ abstract class Usuario
     }
 
     //funcion buscar por id 
-
     public function buscarPorId(int $id): ?array
     {
         try {

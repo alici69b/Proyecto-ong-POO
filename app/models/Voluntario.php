@@ -4,8 +4,6 @@
 
 class Voluntario extends Usuario
 {
-    protected $conn;
-
     public function __construct()
     {
         parent::__construct();
@@ -16,7 +14,7 @@ class Voluntario extends Usuario
 
         try {
 
-            //inserto en la tabla usuario para despues insertar el la tabla del voluntario
+            //inserto en la tabla usuario para después insertar el la tabla del voluntario
             $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
             $stmt = $this->conn->prepare("
                 INSERT INTO usuario (nombre, apellidos, email, password, id_rol)
@@ -44,6 +42,7 @@ class Voluntario extends Usuario
                 ':contacto_extra' => $datos['contacto_extra'] ?? ''
             ]);
 
+            return true;
 
         } catch (Exception $e) {
             throw new \RuntimeException('No se ha podido insertar al voluntario ' . $e);

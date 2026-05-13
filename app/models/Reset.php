@@ -4,7 +4,6 @@
 
 class Reset extends Usuario
 {
-    protected $conn;
 
     public function __construct()
     {

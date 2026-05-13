@@ -35,11 +35,13 @@ try {
         exit();
     }
 
-    $_SESSION['user_id']     = $usuario['id'];
-    $_SESSION['user_nombre'] = $usuario['nombre'];
-    $_SESSION['user_email']  = $usuario['email'];
-    $_SESSION['user_rol']    = $usuario['nombre_rol'];
-    $_SESSION['logged_in']   = true;
+    $_SESSION['user_id']       = $usuario['id'];
+    $_SESSION['user_nombre']   = $usuario['nombre'];
+    $_SESSION['user_apellidos'] = $usuario['apellidos'];
+    $_SESSION['user_email']    = $usuario['email'];
+    $_SESSION['user_rol']      = $usuario['nombre_rol'];
+    $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'default.png';
+    $_SESSION['logged_in']     = true;
 
     $rol = strtolower($usuario['nombre_rol']);
     if ($rol === 'admin') {
@@ -47,7 +49,7 @@ try {
     } elseif ($rol === 'soy-voluntario') {
         header('Location: ../views/volunteer/dashboard.php');
     } elseif ($rol === 'soy-usuario') {
-        header('Location: ../views/user/dashboard.php');
+        header('Location: ../controllers/controller_user_dashboard.php');
     } else {
         header('Location: /Proyecto-ong-POO/index.php');
     }

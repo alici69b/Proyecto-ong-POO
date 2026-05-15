@@ -9,7 +9,7 @@ session_start();
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../models/Reset.php';
+require_once __DIR__ . '/../models/UsuarioNormal.php';
 require_once __DIR__ . '/../models/Voluntario.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
 
@@ -69,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Buscamo si el reset creado, le existe el email
-    $modeloReset = new Reset();
-    if ($modeloReset->buscarPorEmail($email)) {
+    $modeloUsuario = new UsuarioNormal();
+    if ($modeloUsuario->buscarPorEmail($email)) {
         $_SESSION['errores'] = ['email' => ['Este email ya está registrado']];
         header('Location: ../views/auth/Register.php');
         exit();
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($tipo === 'soy-voluntario') {
             $modelo    = new Voluntario();
         } else {
-            $modelo = new Reset();
+            $modelo = new UsuarioNormal();
         }
 
         $resultado = $modelo->insertarUsuario($datos);

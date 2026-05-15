@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="../public/img/Logo_RESET.svg">
     <title>Impactos - RESET</title>
-    <!-- Link css -->
-    <link rel="stylesheet" href="../public/styles.css">
-
     <!-- Link del Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 

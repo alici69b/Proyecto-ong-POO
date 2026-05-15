@@ -8,9 +8,6 @@
     <title>Historias - RESET</title>
 
 
-    <!-- Link al css -->
-    <link rel="stylesheet" href="../public/css/style.css">
-
     <!-- Link del Tailwind -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
@@ -530,7 +527,7 @@
                 <div class="bg-linear-to-r from-[#00a5cf] to-[#78d4a1] rounded-3xl p-12 text-white shadow-lg">
                     <h1 class="text-3xl lg:text-4xl font-bold mb-4">Tu historia puede ser la próxima</h1>
                     <p class="text-lg lg:text-xl mb-8 leading-relaxed">Cada una de estas personas estuvo donde tú estás ahora. El primer paso es siempre el más difícil, pero no tienes que darlo solo/a.</p>
-                    <a href="RequestReset.php" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600/80 font-bold rounded-xl shadow-md hover:bg-red-600/80 hover:text-white transition-colors duration-300">
+                    <a href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600/80 font-bold rounded-xl shadow-md hover:bg-red-600/80 hover:text-white transition-colors duration-300">
                         Solicitar mi RESET
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right-dashed">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />

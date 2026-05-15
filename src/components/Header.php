@@ -6,7 +6,7 @@ $loggedIn = !empty($_SESSION['logged_in']);
 $nombre = $_SESSION['user_nombre'] ?? '';
 $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
 ?>
-<nav class="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.08)] rounded-full z-[100] px-6 py-2.5 flex items-center justify-between">
+<nav class="absolute top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl bg-white/60 backdrop-blur-md border border-white/10 shadow-lg rounded-full z-[100] px-6 py-3 flex items-center justify-between">
 
     <div class="flex-1 flex justify-start">
         <a href="/Proyecto-ong-POO/index.php" class="flex items-center gap-2 hover:opacity-80 transition group">
@@ -19,16 +19,16 @@ $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
     </div>
 
     <div class="hidden md:flex flex-none items-center justify-center gap-6">
-        <a class="text-gray-500 hover:text-[#004e64] font-medium transition text-sm" href="/Proyecto-ong-POO/pages/Inicio.php">Inicio</a>
-        <a class="text-gray-500 hover:text-[#004e64] font-medium transition text-sm" href="/Proyecto-ong-POO/pages/Historys.php">Historias</a>
-        <a class="text-gray-500 hover:text-[#004e64] font-medium transition text-sm" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
-        <a class="text-gray-500 hover:text-[#004e64] font-medium transition text-sm" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Inicio.php">Inicio</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Historys.php">Historias</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
     </div>
 
     <div class="flex-1 flex justify-end items-center gap-3">
         <div class="hidden md:flex items-center gap-3">
             <?php if ($loggedIn): ?>
-            <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="flex items-center gap-2 text-sm font-bold text-[#004e64] hover:text-[#00a5cf] transition mr-1">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="flex items-center gap-2 text-sm font-bold text-[#004e64] hover:text-[#00a5cf] transition mr-1 bg-white/60 px-2 py-1 rounded-full backdrop-blur-sm">
                 <span class="w-7 h-7 rounded-full bg-[#004e64] flex items-center justify-center text-white text-xs font-bold"><?= $inicial ?></span>
                 <?= htmlspecialchars($nombre) ?>
             </a>

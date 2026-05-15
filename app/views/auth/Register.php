@@ -1,5 +1,5 @@
 <?php
-$rol = $_SESSION["rol"] ?? "usuario"; // por defecto usuario
+$rol = $_SESSION["rol"] ?? "usuario";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -9,9 +9,6 @@ $rol = $_SESSION["rol"] ?? "usuario"; // por defecto usuario
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="../../../public/img/Logo_RESET.svg">
     <title> Registro - RESET</title>
-
-    <!-- Link al css -->
-    <link rel="stylesheet" href="../../public/css/style.css">
 
     <style>
         @keyframes slideOutRight {
@@ -184,6 +181,11 @@ $rol = $_SESSION["rol"] ?? "usuario"; // por defecto usuario
                     </div>
 
                     <div>
+                        <label for="apellidos" class="block text-sm font-medium text-slate-700 mb-2">Tus apellidos</label>
+                        <input name="apellidos" type="text" placeholder="¿Cuáles son tus apellidos?" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                    </div>
+
+                    <div>
                         <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
                         <input name="email" type="email" placeholder="tu@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
                     </div>
@@ -221,7 +223,7 @@ $rol = $_SESSION["rol"] ?? "usuario"; // por defecto usuario
                 </form>
 
                 <p class="mt-10 text-center text-sm text-gray-600">
-                    ¿Ya tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_login.php" onclick="navegarCon('auth/Login.php')" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
+                    ¿Ya tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
                 </p>
 
             </div>

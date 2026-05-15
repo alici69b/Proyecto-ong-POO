@@ -122,7 +122,7 @@ if (isset($_SESSION["error_login"])) {
 
 
 
-        <form action="/app/controlador/Reset_passwordController.php" method="POST">
+        <form action="/Proyecto-ong-POO/app/controllers/controller_resetPassword.php" method="POST">
           <label for="email">Introduce tu email</label><br>
           <input type="email" name="email_restablecer_contrasena" class="mt-1 w-full rounded-lg border mb-4 border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " placeholder="ejemplo@gmail.com"><br>
 

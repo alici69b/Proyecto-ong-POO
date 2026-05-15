@@ -1,17 +1,20 @@
 <?php
-
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$loggedIn = !empty($_SESSION['logged_in']);
+$nombre = $_SESSION['user_nombre'] ?? '';
+$inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
 ?>
-
 <nav class="absolute top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl bg-white/60 backdrop-blur-md border border-white/10 shadow-lg rounded-full z-[100] px-6 py-3 flex items-center justify-between">
 
     <div class="flex-1 flex justify-start">
         <a href="/Proyecto-ong-POO/index.php" class="flex items-center gap-2 hover:opacity-80 transition group">
-            <svg fill="#ff3b30" class="w-8 h-8 md:w-10 md:h-10 transition-transform group-hover:rotate-12" viewBox="0 0 612.00 612.00">
+            <svg fill="#ff3b30" class="w-8 h-8 md:w-9 md:h-9 transition-transform group-hover:rotate-12" viewBox="0 0 612.00 612.00">
                 <path d="M44.563,250.179l237.89,41.871c0.485,0.085,0.964,0.118,1.451,0.118c4.33-0.027,7.831-3.545,7.831-7.88 c0-1.831-0.624-3.516-1.672-4.853l-39.919-61.25c24.027-10.024,64.762-23.283,112.095-23.283c24.594,0,48.118,3.69,69.918,10.972 c19.861,6.631,47.495,24.447,70.4,45.389c16.415,15.01,31.403,32.073,45.896,48.573c3.34,3.802,6.682,7.607,10.048,11.396 c1.521,1.713,3.677,2.648,5.894,2.648c0.788,0,1.581-0.116,2.357-0.361c2.961-0.928,5.101-3.508,5.468-6.588l0.116-0.991 c6.506-56.017-7.174-114.855-37.531-161.427c-32.502-49.852-84.035-85.972-145.111-101.71 c-24.353-6.275-49.973-9.456-76.149-9.456c-34.717,0-69.827,5.501-104.373,16.35c-18.876,5.971-37.136,13.429-54.376,22.198 L110.264,3.574c-1.714-2.631-4.832-3.978-7.921-3.467c-3.096,0.526-5.584,2.838-6.333,5.887L38.278,240.535 c-0.521,2.118-0.142,4.359,1.05,6.186C40.519,248.549,42.415,249.802,44.563,250.179z"></path>
                 <path d="M572.67,365.274c-1.191-1.827-3.087-3.08-5.236-3.458l-237.888-41.872c-3.094-0.54-6.212,0.8-7.942,3.419 c-1.73,2.619-1.74,6.017-0.027,8.648l40.278,61.802c-24.027,10.024-64.762,23.283-112.093,23.283 c-24.594,0-48.118-3.692-69.92-10.974c-19.864-6.632-47.498-24.449-70.4-45.389c-16.415-15.01-31.403-32.071-45.896-48.568 c-3.34-3.803-6.684-7.608-10.049-11.398c-2.065-2.323-5.301-3.219-8.265-2.282c-2.964,0.935-5.101,3.526-5.456,6.612l-0.111,0.962 c-6.508,56.021,7.172,114.855,37.532,161.42c32.5,49.855,84.034,85.977,145.109,101.712c24.358,6.275,49.982,9.456,76.16,9.456 c0.003,0,0.002,0,0.007,0c34.71,0,69.819-5.499,104.355-16.35c18.876-5.971,37.136-13.427,54.375-22.196l44.53,68.321 c1.47,2.255,3.967,3.578,6.6,3.578c0.438,0,0.88-0.036,1.321-0.109c3.096-0.526,5.583-2.838,6.335-5.887l57.734-234.541 C574.242,369.342,573.863,367.103,572.67,365.274z"></path>
             </svg>
-            <h3 class="font-black text-xl text-bold tracking-tighter">RESET</h3>
+            <h3 class="font-black text-xl tracking-tighter">RESET</h3>
         </a>
     </div>
 
@@ -24,8 +27,16 @@
 
     <div class="flex-1 flex justify-end items-center gap-3">
         <div class="hidden md:flex items-center gap-3">
+            <?php if ($loggedIn): ?>
+            <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="flex items-center gap-2 text-sm font-bold text-[#004e64] hover:text-[#00a5cf] transition mr-1 bg-white/60 px-2 py-1 rounded-full backdrop-blur-sm">
+                <span class="w-7 h-7 rounded-full bg-[#004e64] flex items-center justify-center text-white text-xs font-bold"><?= $inicial ?></span>
+                <?= htmlspecialchars($nombre) ?>
+            </a>
+            <a class="px-5 py-2 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] transition font-bold text-sm shadow-md" href="/Proyecto-ong-POO/app/controllers/controller_logout.php">Cerrar Sesión</a>
+            <?php else: ?>
             <a class="px-5 py-2 border-2 border-[#25a18e] text-[#25a18e] rounded-full hover:bg-[#25a18e] hover:text-white transition font-bold text-sm" href="/Proyecto-ong-POO/app/controllers/controller_login.php">Iniciar Sesión</a>
             <a class="px-5 py-2 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] transition font-bold text-sm shadow-md" href="/Proyecto-ong-POO/app/controllers/controller_register.php">Registro</a>
+            <?php endif; ?>
         </div>
 
         <div class="md:hidden flex items-center">
@@ -42,10 +53,15 @@
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Historys.php">Historias</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
-                <div class=" bg-gray-50 flex flex-col gap-1 p-4">
-                    <a class="w-full py-3 text-center border-2 border-[#25a18e] text-[#25a18e] rounded-xl font-bold" href="../app/vista/auth/Login.php">Iniciar Sesión</a>
-                    <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="../app/vista/auth/Register.php">Registro</a>
+                <div class="bg-gray-50 flex flex-col gap-1 p-4">
+                    <?php if ($loggedIn): ?>
+                    <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_logout.php">Cerrar Sesión</a>
+                    <?php else: ?>
+                    <a class="w-full py-3 text-center border-2 border-[#25a18e] text-[#25a18e] rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_login.php">Iniciar Sesión</a>
+                    <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_register.php">Registro</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
+    </div>
 </nav>

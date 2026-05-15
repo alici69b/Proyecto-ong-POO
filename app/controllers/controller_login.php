@@ -4,7 +4,7 @@ session_start();
 //importamos los modelos que vamos a utilizar
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Usuario.php';
-require_once __DIR__ . '/../models/Reset.php';
+require_once __DIR__ . '/../models/UsuarioNormal.php';
 
 // si no  exite el metodo post lo redirigimos al login 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //intentamos cmprobar si el email esta en la bbdd
     try {
-        $modelo  = new Reset();
+        $modelo  = new UsuarioNormal();
         $usuario = $modelo->buscarPorEmail($email);
 
         //si no esta mandaremos un error com oque el email no esta registrado

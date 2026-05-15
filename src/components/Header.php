@@ -32,6 +32,9 @@ $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
                 <span class="w-7 h-7 rounded-full bg-[#004e64] flex items-center justify-center text-white text-xs font-bold"><?= $inicial ?></span>
                 <?= htmlspecialchars($nombre) ?>
             </a>
+            <a class="px-3 py-2 text-[#004e64] hover:text-[#00a5cf] transition font-bold text-sm" href="/Proyecto-ong-POO/app/controllers/controller_profile.php" title="Configuración">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+            </a>
             <a class="px-5 py-2 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] transition font-bold text-sm shadow-md" href="/Proyecto-ong-POO/app/controllers/controller_logout.php">Cerrar Sesión</a>
             <?php else: ?>
             <a class="px-5 py-2 border-2 border-[#25a18e] text-[#25a18e] rounded-full hover:bg-[#25a18e] hover:text-white transition font-bold text-sm" href="/Proyecto-ong-POO/app/controllers/controller_login.php">Iniciar Sesión</a>
@@ -55,6 +58,7 @@ $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
                 <div class="bg-gray-50 flex flex-col gap-1 p-4">
                     <?php if ($loggedIn): ?>
+                    <a class="w-full py-3 text-center border-2 border-[#00a5cf] text-[#00a5cf] rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_profile.php">Configuración</a>
                     <a class="w-full py-3 text-center bg-[#25a18e] text-white rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_logout.php">Cerrar Sesión</a>
                     <?php else: ?>
                     <a class="w-full py-3 text-center border-2 border-[#25a18e] text-[#25a18e] rounded-xl font-bold" href="/Proyecto-ong-POO/app/controllers/controller_login.php">Iniciar Sesión</a>

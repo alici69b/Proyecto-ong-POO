@@ -29,7 +29,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     </style>
 </head>
 <body class="text-[#004e64] min-h-screen flex">
-    <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col">
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+    <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
         <div class="flex items-center gap-3 px-2 mt-8 mb-10">
                 <div class="flex items-center gap-3  mb-4">
                     <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -72,7 +73,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </aside>
 
-    <main class="flex-1 ml-64 p-8">
+    <main class="flex-1 ml-0 lg:ml-64 p-4 md:p-8">
+        <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
+            </div>
+        </div>
         <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestión de Usuarios</h1>
@@ -123,8 +133,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                             <tr class="hover:bg-slate-50/80 transition-all">
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00a5cf] to-[#9fffcb] text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                                            <?= $u['iniciales'] ?>
+                                        <div class="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+                                            <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($u['foto_perfil'] ?? 'foto_defecto.webp') ?>" alt="Foto"
+                                                 class="w-full h-full object-cover"
+                                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                            <div class="w-full h-full hidden items-center justify-center text-xs font-bold text-slate-400 bg-gradient-to-br from-[#00a5cf] to-[#9fffcb] text-white">
+                                                <?= $u['iniciales'] ?>
+                                            </div>
                                         </div>
                                         <div>
                                             <p class="font-bold text-slate-700"><?= htmlspecialchars($u['nombre'] . ' ' . ($u['apellidos'] ?? '')) ?></p>
@@ -223,7 +238,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     </div>
 
     <script>
-        function toggleSidebar() { document.getElementById('sidebar')?.classList.toggle('-translate-x-full'); }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
         function abrirModalEditar(id, nombre, apellidos, email, rol) {
             document.getElementById('edit-id').value = id;
             document.getElementById('edit-nombre').value = nombre;

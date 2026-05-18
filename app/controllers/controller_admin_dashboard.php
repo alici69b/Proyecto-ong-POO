@@ -55,7 +55,7 @@ try {
     $resultado6 = $conn->query($sql6);
     $resets_por_estado = $resultado6->fetchAll();
 
-    // sexta consulta, para mostrar en la vista, mostramos el nombre del estado y el total de la tabla reset 
+    // septima consulta, para mostrar en la vista, mostramos el nombre del estado y el total de la tabla reset 
     $sql7 = "SELECT u.id, u.nombre, u.email, u.created_at, r.nombre_rol
              FROM usuario u
              JOIN roles r ON u.id_rol = r.id
@@ -63,6 +63,16 @@ try {
              LIMIT 5";
     $resultado7 = $conn->query($sql7);
     $ultimos_usuarios = $resultado7->fetchAll();
+
+    // octaba consulta, para mostrar en la vista, voluntarios agrupados por tipo_ayuda
+    $sql8 = "SELECT tipo_ayuda, COUNT(*) as total FROM voluntario GROUP BY tipo_ayuda";
+    $resultado8 = $conn->query($sql8);
+    $voluntarios_por_categoria = $resultado8->fetchAll();
+
+    // novena consulta, para mostrar en la vista, usuarios normales agrupados por tipo_ayuda
+    $sql9 = "SELECT un.tipo_ayuda, COUNT(*) as total FROM usuario_normal un JOIN usuario u ON u.id = un.id_usuario WHERE u.id_rol = 1 GROUP BY un.tipo_ayuda";
+    $resultado9 = $conn->query($sql9);
+    $usuarios_por_categoria = $resultado9->fetchAll();
 //si da error, deberia de poner todos a cero 
 } catch (Exception $e) {
     $total_usuarios = 0;
@@ -72,6 +82,8 @@ try {
     $total_admin = 0;
     $resets_por_estado = [];
     $ultimos_usuarios = [];
+    $voluntarios_por_categoria = [];
+    $usuarios_por_categoria = [];
 }
 
 $nuevos = 0;
@@ -103,5 +115,38 @@ foreach ($resets_por_estado as $fila) {
         $completados = $total;
     }
 }
+
+$map_vol_labels = [
+    'estudio'     => 'Mentoría en estudios',
+    'salud'       => 'Coaching de salud',
+    'creatividad' => 'Guía creativa',
+    'proyecto'    => 'Asesoría de emprendimiento',
+    'otros'       => 'Otro'
+];
+
+$map_usu_labels = [
+    'estudio'     => 'Estudios',
+    'salud'       => 'Salud',
+    'creatividad' => 'Creatividad',
+    'proyecto'    => 'Proyecto',
+    'otros'       => 'Otros'
+];
+
+$cat_vol = [];
+foreach ($voluntarios_por_categoria as $v) {
+    $label = $map_vol_labels[$v['tipo_ayuda']] ?? ucfirst($v['tipo_ayuda']);
+    $cat_vol[$label] = (int)$v['total'];
+}
+
+$cat_usu = [];
+foreach ($usuarios_por_categoria as $u) {
+    $label = $map_usu_labels[$u['tipo_ayuda']] ?? ucfirst($u['tipo_ayuda']);
+    $cat_usu[$label] = (int)$u['total'];
+}
+
+$chart_vol_labels = json_encode(array_keys($cat_vol));
+$chart_vol_data = json_encode(array_values($cat_vol));
+$chart_usu_labels = json_encode(array_keys($cat_usu));
+$chart_usu_data = json_encode(array_values($cat_usu));
 
 include __DIR__ . '/../views/admin/dashboard.php';

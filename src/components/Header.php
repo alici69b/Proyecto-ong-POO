@@ -5,6 +5,15 @@ if (session_status() === PHP_SESSION_NONE) {
 $loggedIn = !empty($_SESSION['logged_in']);
 $nombre = $_SESSION['user_nombre'] ?? '';
 $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
+$rol = $_SESSION['user_rol'] ?? '';
+
+if ($rol === 'admin') {
+    $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php';
+} elseif ($rol === 'soy-voluntario') {
+    $dashboard_url = '/Proyecto-ong-POO/app/views/volunteer/dashboard.php';
+} else {
+    $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php';
+}
 ?>
 <nav class="absolute top-6 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl bg-white/60 backdrop-blur-md border border-white/10 shadow-lg rounded-full z-[100] px-6 py-3 flex items-center justify-between">
 
@@ -28,7 +37,7 @@ $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
     <div class="flex-1 flex justify-end items-center gap-3">
         <div class="hidden md:flex items-center gap-3">
             <?php if ($loggedIn): ?>
-            <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="flex items-center gap-2 text-sm font-bold text-[#004e64] hover:text-[#00a5cf] transition mr-1 bg-white/60 px-2 py-1 rounded-full backdrop-blur-sm">
+            <a href="<?= $dashboard_url ?>" class="flex items-center gap-2 text-sm font-bold text-[#004e64] hover:text-[#00a5cf] transition mr-1 bg-white/60 px-2 py-1 rounded-full backdrop-blur-sm">
                 <span class="w-7 h-7 rounded-full bg-[#004e64] flex items-center justify-center text-white text-xs font-bold"><?= $inicial ?></span>
                 <?= htmlspecialchars($nombre) ?>
             </a>

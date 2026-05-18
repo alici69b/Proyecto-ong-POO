@@ -63,7 +63,7 @@ try {
              LIMIT 5";
     $resultado7 = $conn->query($sql7);
     $ultimos_usuarios = $resultado7->fetchAll();
-
+//si da error, deberia de poner todos a cero 
 } catch (Exception $e) {
     $total_usuarios = 0;
     $total_voluntarios = 0;
@@ -78,6 +78,7 @@ $nuevos = 0;
 $pendientes = 0;
 $completados = 0;
 
+//lo que guardamos en la consulta seis, tendremso que compararlo con los estados que tenemos 
 foreach ($resets_por_estado as $fila) {
     $estado = strtolower($fila['nombre_estado']);
     $total = $fila['total'];
@@ -103,4 +104,4 @@ foreach ($resets_por_estado as $fila) {
     }
 }
 
-require_once __DIR__ . '/../views/admin/dashboard.php';
+include __DIR__ . '/../views/admin/dashboard.php';

@@ -1,8 +1,23 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();
 }
+
+//hecho asi porque daba fallos a la hora de nombrarlas en la vista
+/** @var int $total_usuarios - Variable definida en el controlador (controller_admin_dashboard.php, línea 28) */
+/** @var int $total_voluntarios - Variable definida en el controlador (controller_admin_dashboard.php, línea 33) */
+/** @var int $total_resets - Variable definida en el controlador (controller_admin_dashboard.php, línea 38) */
+/** @var int $total_mensajes - Variable definida en el controlador (controller_admin_dashboard.php, línea 43) */
+/** @var int $total_admin - Variable definida en el controlador (controller_admin_dashboard.php, línea 48) */
+/** @var int $nuevos - Calculada en el controlador a partir de $resets_por_estado (controller_admin_dashboard.php, líneas 82-105) */
+/** @var int $pendientes - Calculada en el controlador a partir de $resets_por_estado (controller_admin_dashboard.php, líneas 82-105) */
+/** @var int $completados - Calculada en el controlador a partir de $resets_por_estado (controller_admin_dashboard.php, líneas 82-105) */
+/** @var array $ultimos_usuarios - Variable definida en el controlador (controller_admin_dashboard.php, línea 65) */
+/** @var array $resets_por_estado - Variable definida en el controlador (controller_admin_dashboard.php, línea 56) */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,29 +56,30 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </button>
         </div>
         <nav class="flex flex-col gap-1.5 flex-1">
-            <a href="../controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 36 36"><path d="M32 5H4c-1.1 0-2 .9-2 2v22c0 1.1.9 2 2 2h28c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM4 29V7h28v22H4z"/><path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z"/></svg>
                 Vista general
             </a>
-            <a href="../views/admin/gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 1920 1920"><path d="M276.9 440.6v565.7c0 422.4 374.2 625.5 674.7 788.7l8 4.3 8.1-4.3c300.5-163.2 674.7-366.3 674.7-788.7V440.6l-682.8-321.7-682.8 321.7z"/></svg>
-                Resets <span class="ml-auto bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-bold"><?= $total_resets ?></span>
+                Resets 
             </a>
-            <a href="../views/admin/gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                Usuarios <span class="ml-auto bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-bold"><?= $total_usuarios ?></span>
+                Usuarios 
             </a>
-            <a href="../views/admin/gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Historias
             </a>
-            <a href="../views/admin/gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                Mensajes <span class="ml-auto bg-white/20 text-[10px] px-2 py-0.5 rounded-full font-bold"><?= $total_mensajes ?></span>
+                Mensajes 
             </a>
+            
         </nav>
         <div class="pt-4 border-t border-white/10">
-            <a href="../controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>
                 Cerrar sesión
             </a>
@@ -166,7 +182,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                             <span class="w-2 h-2 bg-[#7ae582] rounded-full"></span>
                             Últimos usuarios
                         </h3>
-                        <a href="../views/admin/gestionusuarios.php" class="text-[10px] font-bold text-[#00a5cf] hover:underline">Ver todos</a>
+                        <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="text-[10px] font-bold text-[#00a5cf] hover:underline">Ver todos</a>
                     </div>
                     <div class="space-y-4">
                         <?php if (empty($ultimos_usuarios)): ?>

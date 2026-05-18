@@ -1,17 +1,13 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-$historias = [
-    ['id_historia' => 1, 'titulo' => 'De abandonar Medicina a ser cirujana', 'solicitante' => 'Elena M.', 'nombre_categoria' => 'Estudios', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'Una historia increíble de superación y cambio de rumbo profesional.', 'estado' => 'Publicada', 'icono' => '📚'],
-    ['id_historia' => 2, 'titulo' => 'Un sueño congelado que volvió a arder', 'solicitante' => 'Javier R.', 'nombre_categoria' => 'Proyecto', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'Cómo retomar una pasión estancada y convertirla en realidad.', 'estado' => 'Publicada', 'icono' => '💡'],
-    ['id_historia' => 3, 'titulo' => 'Correr otra vez después de 5 años', 'solicitante' => 'Carmen S.', 'nombre_categoria' => 'Hábitos', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'El camino de vuelta a la salud física y la disciplina deportiva.', 'estado' => 'Publicada', 'icono' => '👟'],
-    ['id_historia' => 4, 'titulo' => 'Recuperar la confianza después del fracaso', 'solicitante' => 'Ana L.', 'nombre_categoria' => 'Mental', 'fecha' => '2026-04-20 10:30:00', 'descripcion' => 'Aprender a levantarse y empezar de nuevo con más fuerza.', 'estado' => 'Borrador', 'icono' => '🧠'],
-    ['id_historia' => 5, 'titulo' => 'De la adicción al emprendimiento', 'solicitante' => 'Miguel G.', 'nombre_categoria' => 'Laboral', 'fecha' => '2026-04-19 08:15:00', 'descripcion' => 'Transformar una experiencia difícil en una oportunidad de negocio.', 'estado' => 'Borrador', 'icono' => '🚀'],
-];
+/** @var array $historias - Variable definida en el controlador (controller_admin_gestionarhistorias.php, línea 6) */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,30 +37,30 @@ $historias = [
                 </div>
             </div>
         <nav class="flex flex-col gap-1.5 flex-1">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 36 36"><path d="M32 5H4c-1.1 0-2 .9-2 2v22c0 1.1.9 2 2 2h28c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM4 29V7h28v22H4z"/><path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z"/></svg>
                 Vista general
             </a>
-            <a href="gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 1920 1920"><path d="M276.9 440.6v565.7c0 422.4 374.2 625.5 674.7 788.7l8 4.3 8.1-4.3c300.5-163.2 674.7-366.3 674.7-788.7V440.6l-682.8-321.7-682.8 321.7z"/></svg>
                 Resets
             </a>
-            <a href="gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 Usuarios
             </a>
-            <a href="gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Historias
             </a>
-            <a href="gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Mensajes
             </a>
         </nav>
         <div class="pt-4 border-t border-white/10">
             
-            <a href="../../controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>
                 Cerrar sesión
             </a>

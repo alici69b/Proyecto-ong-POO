@@ -9,11 +9,11 @@ class Admin extends Usuario
         parent::__construct();
     }
 
+    //funcion para insertar el usuario 
     public function insertarUsuario(array $datos): bool
     {
         $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
-        
-        $this->conn->beginTransaction();
+    
         
         try {
             $stmt = $this->conn->prepare("
@@ -38,11 +38,9 @@ class Admin extends Usuario
                 ':nivel_permiso'  => $datos['nivel_permiso'] ?? 'moderador'
             ]);
 
-            $this->conn->commit();
             return true;
 
         } catch (Exception $e) {
-            $this->conn->rollBack();
             throw new RuntimeException('No se ha podido insertar al admin: ' . $e->getMessage());
         }
     }

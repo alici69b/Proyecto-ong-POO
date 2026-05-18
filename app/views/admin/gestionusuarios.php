@@ -1,75 +1,17 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-require_once __DIR__ . '/../../config/db.php';
-
-$db = new Database();
-$conn = $db->getConnection();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
-    $id = (int)$_POST['id_usuario'];
-    $nombre = trim($_POST['nombre']);
-    $apellidos = trim($_POST['apellidos'] ?? '');
-    $email = trim($_POST['email']);
-    $id_rol = (int)$_POST['id_rol'];
-
-    $stmt = $conn->prepare("UPDATE usuario SET nombre = :nombre, apellidos = :apellidos, email = :email, id_rol = :id_rol WHERE id = :id");
-    $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':id_rol' => $id_rol, ':id' => $id]);
-
-    if (!empty($_POST['password_nuevo'])) {
-        $hash = password_hash($_POST['password_nuevo'], PASSWORD_BCRYPT);
-        $stmt2 = $conn->prepare("UPDATE usuario SET password = :password WHERE id = :id");
-        $stmt2->execute([':password' => $hash, ':id' => $id]);
-    }
-
-    header('Location: gestionusuarios.php?updated=1');
-    exit();
-}
-
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    $id = (int)$_GET['id'];
-    if ($id !== (int)$_SESSION['user_id']) {
-        $conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id")->execute([':id' => $id]);
-        $conn->prepare("DELETE FROM admin WHERE id_usuario = :id")->execute([':id' => $id]);
-        $conn->prepare("DELETE FROM usuario WHERE id = :id")->execute([':id' => $id]);
-    }
-    header('Location: gestionusuarios.php?deleted=1');
-    exit();
-}
-
-$buscar = trim($_GET['search'] ?? '');
-$pagina = max(1, (int)($_GET['p'] ?? 1));
-$por_pagina = 10;
-$offset = ($pagina - 1) * $por_pagina;
-
-$where = '';
-$params = [];
-if ($buscar !== '') {
-    $where = "WHERE (u.nombre LIKE :q OR u.apellidos LIKE :q2 OR u.email LIKE :q3)";
-    $params[':q'] = "%$buscar%";
-    $params[':q2'] = "%$buscar%";
-    $params[':q3'] = "%$buscar%";
-}
-
-$total = $conn->prepare("SELECT COUNT(*) FROM usuario u $where");
-$total->execute($params);
-$total_usuarios = (int)$total->fetchColumn();
-$total_paginas = max(1, (int)ceil($total_usuarios / $por_pagina));
-
-$sql = "SELECT u.*, r.nombre_rol FROM usuario u JOIN roles r ON u.id_rol = r.id $where ORDER BY u.created_at DESC LIMIT $por_pagina OFFSET $offset";
-$stmt = $conn->prepare($sql);
-$stmt->execute($params);
-$usuarios = $stmt->fetchAll();
-
-foreach ($usuarios as &$u) {
-    $u['iniciales'] = strtoupper(substr($u['nombre'], 0, 1) . substr($u['apellidos'] ?? $u['nombre'], 0, 1));
-    $u['fecha_registro'] = $u['created_at'];
-}
-unset($u);
+/** @var int $total_usuarios - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 57) */
+/** @var int $pagina - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 42) */
+/** @var int $total_paginas - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 58) */
+/** @var string $buscar - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 41) */
+/** @var array $usuarios - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 63) */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -100,30 +42,30 @@ unset($u);
                 </div>
             </div>
         <nav class="flex flex-col gap-1.5 flex-1">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 36 36"><path d="M32 5H4c-1.1 0-2 .9-2 2v22c0 1.1.9 2 2 2h28c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM4 29V7h28v22H4z"/><path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z"/></svg>
                 Vista general
             </a>
-            <a href="gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 1920 1920"><path d="M276.9 440.6v565.7c0 422.4 374.2 625.5 674.7 788.7l8 4.3 8.1-4.3c300.5-163.2 674.7-366.3 674.7-788.7V440.6l-682.8-321.7-682.8 321.7z"/></svg>
                 Resets
             </a>
-            <a href="gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 Usuarios
             </a>
-            <a href="gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Historias
             </a>
-            <a href="gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Mensajes
             </a>
         </nav>
         <div class="pt-4 border-t border-white/10">
             
-            <a href="../../controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>
                 Cerrar sesión
             </a>
@@ -217,7 +159,7 @@ unset($u);
                 <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>
                 <div class="flex gap-1.5">
                     <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
-                        <a href="?p=<?= $i ?>&search=<?= urlencode($buscar) ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
+                        <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php?p=<?= $i ?>&search=<?= urlencode($buscar) ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
                     <?php endfor; ?>
                 </div>
             </div>
@@ -293,7 +235,7 @@ unset($u);
         }
         function cerrarModalEditar() { document.getElementById('modal-editar').classList.add('hidden'); }
         function abrirModal(id) {
-            document.getElementById('btn-confirmar-eliminar').href = 'gestionusuarios.php?action=delete&id=' + id;
+            document.getElementById('btn-confirmar-eliminar').href = '/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php?action=delete&id=' + id;
             document.getElementById('modal-confirmar').classList.remove('hidden');
         }
         function cerrarModal() { document.getElementById('modal-confirmar').classList.add('hidden'); }

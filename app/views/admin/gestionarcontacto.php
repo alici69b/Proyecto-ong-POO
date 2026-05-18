@@ -1,24 +1,16 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-require_once __DIR__ . '/../../config/db.php';
-
-$db = new Database();
-$conn = $db->getConnection();
-
-if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    $stmt = $conn->prepare("DELETE FROM mensaje WHERE id = :id");
-    $stmt->execute([':id' => (int)$_GET['id']]);
-    header('Location: gestionarcontacto.php?deleted=1');
-    exit();
-}
-
-$mensajes = $conn->query("SELECT * FROM mensaje ORDER BY created_at DESC")->fetchAll();
-$total_mensajes = count($mensajes);
+/** @var array $mensajes - Variable definida en el controlador (controller_admin_gestionarcontacto.php, línea 17) */
+/** @var int $total_mensajes - Variable definida en el controlador (controller_admin_gestionarcontacto.php, línea 18) */
+/** @var int $no_leidos - Variable definida en el controlador (controller_admin_gestionarcontacto.php) */
+/** @var int $leidos - controller_admin_gestionarcontacto.php:39 */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,30 +40,30 @@ $total_mensajes = count($mensajes);
                 </div>
             </div>
         <nav class="flex flex-col gap-1.5 flex-1">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 36 36"><path d="M32 5H4c-1.1 0-2 .9-2 2v22c0 1.1.9 2 2 2h28c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM4 29V7h28v22H4z"/><path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z"/></svg>
                 Vista general
             </a>
-            <a href="gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" fill="currentColor" viewBox="0 0 1920 1920"><path d="M276.9 440.6v565.7c0 422.4 374.2 625.5 674.7 788.7l8 4.3 8.1-4.3c300.5-163.2 674.7-366.3 674.7-788.7V440.6l-682.8-321.7-682.8 321.7z"/></svg>
                 Resets
             </a>
-            <a href="gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 Usuarios
             </a>
-            <a href="gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Historias
             </a>
-            <a href="gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Mensajes
             </a>
         </nav>
         <div class="pt-4 border-t border-white/10">
             
-            <a href="../../controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>
                 Cerrar sesión
             </a>
@@ -81,7 +73,12 @@ $total_mensajes = count($mensajes);
     <main class="flex-1 ml-64 p-8">
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
-                <h1 class="text-3xl font-extrabold tracking-tight">Bandeja de entrada</h1>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-3xl font-extrabold tracking-tight">Bandeja de entrada</h1>
+                    <?php if ($no_leidos > 0): ?>
+                        <span class="px-2.5 py-1 bg-red-500 text-white text-[10px] font-bold rounded-full"><?= $no_leidos ?> sin leer</span>
+                    <?php endif; ?>
+                </div>
                 <p class="text-slate-500"><?= $total_mensajes ?> mensajes recibidos</p>
             </div>
             <button onclick="location.reload()" class="px-6 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95">Actualizar</button>
@@ -109,8 +106,8 @@ $total_mensajes = count($mensajes);
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
-                    <p class="text-3xl font-black"><?= $total_mensajes ?></p>
-                    <p class="text-xs font-bold text-orange-700/60 uppercase tracking-wider">Recibidos</p>
+                    <p class="text-3xl font-black"><?= $leidos ?></p>
+                    <p class="text-xs font-bold text-orange-700/60 uppercase tracking-wider">Leídos</p>
                 </div>
             </div>
         </div>
@@ -124,7 +121,7 @@ $total_mensajes = count($mensajes);
                 </div>
             <?php else: ?>
                 <?php foreach ($mensajes as $m): ?>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all">
+                <div class="rounded-2xl p-6 shadow-sm transition-all <?= empty($m['leido']) ? 'bg-blue-50/50 border-l-4 border-l-[#00a5cf] border border-blue-100' : 'bg-white border border-slate-100 hover:shadow-md' ?>">
                     <div class="flex flex-col md:flex-row md:items-center gap-6">
                         <div class="w-14 h-14 rounded-full bg-slate-100 border-4 border-slate-50 flex items-center justify-center text-xl font-bold text-slate-400 flex-shrink-0">
                             <?= strtoupper(substr($m['nombre_remitente'] ?? $m['email_remitente'], 0, 1)) ?>
@@ -139,8 +136,14 @@ $total_mensajes = count($mensajes);
                             <p class="mt-2 text-slate-500 text-sm leading-relaxed italic"><?= htmlspecialchars($m['cuerpo_mensaje'] ?? $m['mensaje'] ?? '') ?></p>
                             <p class="mt-3 text-[10px] font-bold text-slate-300 uppercase tracking-widest">Recibido el <?= date('d/m/Y H:i', strtotime($m['created_at'])) ?></p>
                         </div>
-                        <div class="flex-shrink-0">
-                            <a href="?action=delete&id=<?= $m['id'] ?>" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100" onclick="return confirm('¿Eliminar este mensaje?')">
+                        <div class="flex-shrink-0 flex flex-col gap-2">
+                            <?php if (empty($m['leido'])): ?>
+                                <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php?action=read&id=<?= $m['id'] ?>" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-[#00a5cf] hover:bg-[#00a5cf]/10 rounded-xl transition-all border border-transparent hover:border-[#00a5cf]/30">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    Marcar leído
+                                </a>
+                            <?php endif; ?>
+                            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php?action=delete&id=<?= $m['id'] ?>" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100" onclick="return confirm('¿Eliminar este mensaje?')">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                                 Eliminar
                             </a>

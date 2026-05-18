@@ -41,4 +41,51 @@ class Validaciones
         }
         return $errores;
     }
+
+    public static function validarAsunto(string $asunto): array
+    {
+        $errores = [];
+        if (empty($asunto)) {
+            $errores[] = "El asunto es obligatorio.";
+        }
+        return $errores;
+    }
+
+    public static function validarMensaje(string $cuerpo_mensaje): array
+    {
+        $errores = [];
+        if (empty($cuerpo_mensaje)) {
+            $errores[] = "El mensaje no puede estar vacío.";
+        }
+        return $errores;
+    }
+
+    //funcion para validar la pagina de contacto
+    public static function validarContacto(array $datos): array
+    {
+        $errores = [];
+
+        //cuando hablamos del slt:: es una calse que no necesita instanciarse
+        $errNombre = self::validarNombre($datos['nombre_remitente'] ?? '');
+        if (!empty($errNombre)) {
+            $errores['nombre_remitente'] = $errNombre;
+        }
+
+        $errEmail = self::validarEmail($datos['email_remitente'] ?? '');
+        if (!empty($errEmail)) {
+            $errores['email_remitente'] = $errEmail;
+        }
+
+        $errAsunto = self::validarAsunto($datos['asunto'] ?? '');
+        if (!empty($errAsunto)) {
+            $errores['asunto'] = $errAsunto;
+        }
+
+        $errMensaje = self::validarMensaje($datos['cuerpo_mensaje'] ?? '');
+        if (!empty($errMensaje)) {
+            $errores['cuerpo_mensaje'] = $errMensaje;
+        }
+
+        return $errores;
+    }
 }

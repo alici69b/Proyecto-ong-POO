@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         //si el rol es admin, te  redirije a el dashboard del admin 
         if ($rol === 'admin') {
-            header('Location: ../views/admin/dashboard.php');
+            header('Location: ../controllers/controller_admin_dashboard.php');
             //si el rol es voluntario, te  redirije a el dashboard del voluntario
         } elseif ($rol === 'soy-voluntario') {
             header('Location: ../views/volunteer/dashboard.php');

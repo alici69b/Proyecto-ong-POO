@@ -1,7 +1,7 @@
 <?php
 //Inicializamos las variables para evitar posibles errores
 $flash = $flash ?? null;
-$stats = $stats ?? ["total" => 0, "en_progreso" => 0, "completados" => 0];
+$stats = $stats ?? ['total' => 0, 'en_progreso' => 0, 'completados' => 0];
 $categorias = $categorias ?? [];
 $id_categoria = $id_categoria ?? null;
 $mis_resets = $mis_resets ?? [];
@@ -19,19 +19,15 @@ $disponibles = $disponibles ?? [];
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: "Bricolage Grotesque", sans-serif;
+            font-family: 'Bricolage Grotesque', sans-serif;
             background-color: #f4f9fa;
         }
     </style>
 </head>
 
-<body class="text-[#004e64] min-h-screen" id="inicio">
+<body class="text-[#004e64] min-h-screen">
     <div class="flex">
-        <!-- BOTON DE IR A INICIO ─────────────────────────────────────────────────────── -->
-        <a href="#inicio" class="fixed bottom-10 right-10 z-[9999] p-3 rounded-full bg-[#25a18e] text-white hover:bg-[#1a7a6b] transition-all shadow-xl flex items-center justify-center border-2 border-white/20" aria-label="Volver al inicio"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-            </svg>
-        </a>
+
         <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
         <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
             <div class="flex items-center justify-between mt-10 px-2">
@@ -76,18 +72,18 @@ $disponibles = $disponibles ?? [];
             <!-- Cabecera -->
             <header class="mb-10">
                 <h2 class="text-4xl font-extrabold tracking-tight mb-2">
-                    Bienvenido, <?= htmlspecialchars($_SESSION["user_nombre"]) ?>
+                    Bienvenido, <?= htmlspecialchars($_SESSION['user_nombre']) ?>
                 </h2>
-                <p class="text-gray-400 text-sm italic">Panel de voluntario · <?= date("d/m/Y") ?></p>
+                <p class="text-gray-400 text-sm italic">Panel de voluntario · <?= date('d/m/Y') ?></p>
             </header>
 
             <!-- Flash message -->
             <?php if ($flash): ?>
                 <div class="mb-8 px-5 py-4 rounded-2xl text-sm font-bold
-                <?= $flash["tipo"] === "success"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200" ?>">
-                    <?= htmlspecialchars($flash["msg"]) ?>
+                <?= $flash['tipo'] === 'success'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-red-50 text-red-700 border border-red-200' ?>">
+                    <?= htmlspecialchars($flash['msg']) ?>
                 </div>
             <?php endif; ?>
 
@@ -95,15 +91,15 @@ $disponibles = $disponibles ?? [];
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
                 <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
                     <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Mis RESETs asignados</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["total"] ?></div>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats['total'] ?></div>
                 </div>
                 <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
                     <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">En progreso</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["en_progreso"] ?></div>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats['en_progreso'] ?></div>
                 </div>
                 <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
                     <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Completados</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["completados"] ?></div>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats['completados'] ?></div>
                 </div>
             </div>
 
@@ -120,37 +116,37 @@ $disponibles = $disponibles ?? [];
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                         <?php foreach ($mis_resets as $r): ?>
                             <?php
-                            $badgeClass = match ($r["id_estado"]) {
-                                2 => "bg-blue-50 text-blue-700",
-                                3 => "bg-green-50 text-green-700",
-                                4 => "bg-red-50 text-red-700",
-                                default => "bg-slate-100 text-slate-500",
+                            $badgeClass = match ($r['id_estado']) {
+                                2 => 'bg-blue-50 text-blue-700',
+                                3 => 'bg-green-50 text-green-700',
+                                4 => 'bg-red-50 text-red-700',
+                                default => 'bg-slate-100 text-slate-500',
                             };
-                            $categoriaClass = match ($r["id_categoria"]) {
-                                1 => "bg-cyan-50 text-cyan-700",     // estudio
-                                2 => "bg-green-50 text-green-700",   // salud
-                                3 => "bg-purple-50 text-purple-700", // creatividad
-                                4 => "bg-yellow-50 text-yellow-700", // proyecto
-                                5 => "bg-slate-100 text-slate-600",  // otros
-                                default => "bg-slate-100 text-slate-500",
+                            $categoriaClass = match ($r['id_categoria']) {
+                                1 => 'bg-cyan-50 text-cyan-700',     // estudio
+                                2 => 'bg-green-50 text-green-700',   // salud
+                                3 => 'bg-purple-50 text-purple-700', // creatividad
+                                4 => 'bg-yellow-50 text-yellow-700', // proyecto
+                                5 => 'bg-slate-100 text-slate-600',  // otros
+                                default => 'bg-slate-100 text-slate-500',
                             };
                             ?>
                             <div class="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col gap-3">
                                 <div class="flex items-start justify-between gap-3">
                                     <h4 class="font-extrabold text-base leading-snug">
-                                        <?= htmlspecialchars($r["titulo"]) ?>
+                                        <?= htmlspecialchars($r['titulo']) ?>
                                     </h4>
                                     <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
-                                        <?= htmlspecialchars($r["nombre_estado"]) ?>
+                                        <?= htmlspecialchars($r['nombre_estado']) ?>
                                     </span>
                                 </div>
-                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
+                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r['descripcion']) ?></p>
                                 <div class="flex items-center gap-4 text-xs text-slate-400 mt-1">
                                     <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
-                                        <?= htmlspecialchars($r["nombre_categoria"]) ?>
+                                        <?= htmlspecialchars($r['nombre_categoria']) ?>
                                     </span>
-                                    <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
-                                    <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
+                                    <span><?= htmlspecialchars($r['nombre_contacto'] ?? '—') ?></span>
+                                    <span class="ml-auto"><?= date('d/m/Y', strtotime($r['created_at'])) ?></span>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -169,9 +165,9 @@ $disponibles = $disponibles ?? [];
                             class="text-sm border border-slate-200 rounded-xl px-4 py-2 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
                             <option value="">Todas las categorías</option>
                             <?php foreach ($categorias as $cat): ?>
-                                <option value="<?= $cat["id"] ?>"
-                                    <?= ($id_categoria === (int)$cat["id"]) ? "selected" : "" ?>>
-                                    <?= htmlspecialchars(ucfirst($cat["nombre_categoria"])) ?>
+                                <option value="<?= $cat['id'] ?>"
+                                    <?= ($id_categoria === (int)$cat['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars(ucfirst($cat['nombre_categoria'])) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -190,37 +186,37 @@ $disponibles = $disponibles ?? [];
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
                         <?php foreach ($disponibles as $r): ?>
                             <?php
-                            $categoriaClass = match ($r["id_categoria"]) {
-                                1 => "bg-cyan-50 text-cyan-700",     // estudio
-                                2 => "bg-green-50 text-green-700",   // salud
-                                3 => "bg-purple-50 text-purple-700", // creatividad
-                                4 => "bg-yellow-50 text-yellow-700", // proyecto
-                                5 => "bg-slate-100 text-slate-600",  // otros
-                                default => "bg-slate-100 text-slate-500",
+                            $categoriaClass = match ($r['id_categoria']) {
+                                1 => 'bg-cyan-50 text-cyan-700',     // estudio
+                                2 => 'bg-green-50 text-green-700',   // salud
+                                3 => 'bg-purple-50 text-purple-700', // creatividad
+                                4 => 'bg-yellow-50 text-yellow-700', // proyecto
+                                5 => 'bg-slate-100 text-slate-600',  // otros
+                                default => 'bg-slate-100 text-slate-500',
                             };
                             ?>
                             <div class="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col gap-3">
                                 <div class="flex items-start justify-between gap-3">
                                     <h4 class="font-extrabold text-base leading-snug">
-                                        <?= htmlspecialchars($r["titulo"]) ?>
+                                        <?= htmlspecialchars($r['titulo']) ?>
                                     </h4>
                                     <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-700">
                                         pendiente
                                     </span>
                                 </div>
-                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
+                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r['descripcion']) ?></p>
                                 <div class="flex items-center gap-4 text-xs text-slate-400">
                                     <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
-                                        <?= htmlspecialchars($r["nombre_categoria"]) ?>
+                                        <?= htmlspecialchars($r['nombre_categoria']) ?>
                                     </span>
-                                    <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
-                                    <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
+                                    <span><?= htmlspecialchars($r['nombre_contacto'] ?? '—') ?></span>
+                                    <span class="ml-auto"><?= date('d/m/Y', strtotime($r['created_at'])) ?></span>
                                 </div>
 
                                 <!-- Botón asignarse -->
                                 <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
                                     <input type="hidden" name="action" value="asignar">
-                                    <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
+                                    <input type="hidden" name="id_reset" value="<?= $r['id'] ?>">
                                     <button type="button" onclick="abrirModal(this.closest('form'))"
                                         class="mt-1 w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90 transition-all">
                                         Asignarme este reset
@@ -259,7 +255,7 @@ $disponibles = $disponibles ?? [];
 
         function abrirModal(form) {
             modalForm = form;
-            document.getElementById("modal-confirmar").classList.remove("hidden");
+            document.getElementById('modal-confirmar').classList.remove('hidden');
         }
 
         function confirmarAsignacion() {
@@ -269,50 +265,60 @@ $disponibles = $disponibles ?? [];
         }
 
         function cerrarModal() {
-            document.getElementById("modal-confirmar").classList.add("hidden");
+            document.getElementById('modal-confirmar').classList.add('hidden');
             modalForm = null;
         }
     </script>
     <!-- Script para el sidebar -->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const sections = document.querySelectorAll("section[id]");
-            const links = document.querySelectorAll(".sidebar-link");
+        //Variables
+        const sections = document.querySelectorAll("section[id]");
+        const links = document.querySelectorAll(".sidebar-link");
 
-            window.addEventListener("scroll", () => {
-                let current = "";
+        //Evento scroll para controlar el cambio de sección activa del sidebar
+        window.addEventListener("scroll", () => {
 
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop - 150;
+            let current = "";
 
-                    if (window.scrollY >= sectionTop &&
-                        window.scrollY < sectionTop + section.offsetHeight) {
-                        current = section.getAttribute("id");
-                    }
-                });
+            //Recorremos las secciones para ver en cuál estamos y guardar su id
+            sections.forEach(section => {
+                //Calculamos el top y el height de cada sección para compararlo con el scrollY
+                const sectionTop = section.offsetTop - 120;
+                const sectionHeight = section.offsetHeight;
 
-                links.forEach(link => {
-                    link.classList.remove(
+                if (scrollY >= sectionTop &&
+                    scrollY < sectionTop + sectionHeight) {
+
+                    current = section.getAttribute("id");
+                }
+            });
+            //Recorremos los links del sidebar para quitarles la clase de activo y ponerla al que corresponda
+            links.forEach(link => {
+                //Quitamos la clase de activo a todos
+                link.classList.remove(
+                    "bg-gradient-to-r",
+                    "from-[#00a5cf]",
+                    "to-[#9fffcb]",
+                    "text-[#004e64]",
+                    "shadow-lg"
+                );
+                //Añadimos la clase de inactivo a todos
+                link.classList.add(
+                    "text-blue-100"
+                );
+                //Si el link coincide con la sección activa, le ponemos la clase de activo y quitamos la de inactivo
+                if (link.getAttribute("href") === "#" + current) {
+                    //Ponemos la clase de activo
+                    link.classList.add(
                         "bg-gradient-to-r",
                         "from-[#00a5cf]",
                         "to-[#9fffcb]",
                         "text-[#004e64]",
                         "shadow-lg"
                     );
-
-                    link.classList.add("text-blue-100");
-
-                    if (link.getAttribute("href") === "#" + current) {
-                        link.classList.add(
-                            "bg-gradient-to-r",
-                            "from-[#00a5cf]",
-                            "to-[#9fffcb]",
-                            "text-[#004e64]",
-                            "shadow-lg"
-                        );
-                        link.classList.remove("text-blue-100");
-                    }
-                });
+                    //Quitamos la clase de inactivo
+                    link.classList.remove("text-blue-100");
+                }
             });
         });
     </script>

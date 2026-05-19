@@ -1,7 +1,4 @@
 <?php
-//Inicializamos sesion
-session_start();
-
 //Variables de sesion
 $mensajeError = $_SESSION["error_login"] ?? null;
 

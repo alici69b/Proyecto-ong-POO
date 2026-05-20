@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_apellidos'] = $usuario['apellidos'];
         $_SESSION['user_email']    = $usuario['email'];
         $_SESSION['user_rol']      = $usuario['nombre_rol'];
-        $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'default.png';
+        $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'foto_defecto.webp';
         $_SESSION['logged_in']     = true;
 
         //Si el rol del usuario es voluntario, obtenemos su id_voluntario y lo guardamos en sesión para usarlo en el dashboard

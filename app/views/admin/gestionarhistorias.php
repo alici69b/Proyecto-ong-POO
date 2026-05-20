@@ -24,7 +24,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     </style>
 </head>
 <body class="text-[#004e64] min-h-screen flex">
-    <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col">
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+    <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
         <div class="flex items-center gap-3 px-2 mt-8 mb-10">
                 <div class="flex items-center gap-3  mb-4">
                     <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -67,7 +68,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </aside>
 
-    <main class="flex-1 ml-64 p-8">
+    <main class="flex-1 ml-0 lg:ml-64 p-4 md:p-8">
+        <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
+            </div>
+        </div>
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestión de Historias</h1>
@@ -100,40 +110,52 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         </div>
 
-        <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-4">
             <?php foreach ($historias as $h): ?>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col xl:flex-row xl:items-center justify-between gap-6 hover:shadow-md transition-all">
-                    <div class="flex items-start gap-4 flex-1 min-w-0">
-                        <div class="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-xl flex-shrink-0"><?= $h['icono'] ?></div>
-                        <div class="min-w-0 flex-1">
-                            <h2 class="font-bold text-lg text-slate-800 truncate"><?= htmlspecialchars($h['titulo']) ?></h2>
-                            <div class="flex flex-wrap items-center gap-2 mt-1 text-sm text-slate-400">
-                                <span class="font-semibold text-slate-600"><?= htmlspecialchars($h['solicitante']) ?></span>
-                                <span class="opacity-50">•</span>
-                                <span class="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase"><?= htmlspecialchars($h['nombre_categoria']) ?></span>
-                                <span class="opacity-50">•</span>
-                                <span><?= date('d/m/Y', strtotime($h['fecha'])) ?></span>
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all">
+                    <div class="flex flex-col sm:flex-row sm:items-start gap-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-lg sm:text-xl flex-shrink-0"><?= $h['icono'] ?></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                                <div class="min-w-0 flex-1">
+                                    <h2 class="font-bold text-base sm:text-lg text-slate-800 truncate"><?= htmlspecialchars($h['titulo']) ?></h2>
+                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs sm:text-sm text-slate-400">
+                                        <span class="font-semibold text-slate-600"><?= htmlspecialchars($h['solicitante']) ?></span>
+                                        <span class="opacity-50 hidden sm:inline">•</span>
+                                        <span class="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase"><?= htmlspecialchars($h['nombre_categoria']) ?></span>
+                                        <span class="opacity-50 hidden sm:inline">•</span>
+                                        <span><?= date('d/m/Y', strtotime($h['fecha'])) ?></span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3 flex-shrink-0 self-start">
+                                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] sm:text-xs font-semibold <?= $h['estado'] === 'Publicada' ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100' : 'bg-amber-50 text-amber-700 ring-1 ring-amber-100' ?>">
+                                        <span class="h-1.5 w-1.5 rounded-full <?= $h['estado'] === 'Publicada' ? 'bg-emerald-500' : 'bg-amber-500' ?>"></span>
+                                        <?= $h['estado'] ?>
+                                    </span>
+                                    <div class="flex items-center gap-1 text-slate-400">
+                                        <button title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
+                                            <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
+                                        </button>
+                                        <button title="Eliminar" class="p-1.5 sm:p-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
+                                            <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="mt-2 text-slate-500 text-sm line-clamp-2 italic">"<?= htmlspecialchars($h['descripcion']) ?>"</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-4 flex-shrink-0">
-                        <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold <?= $h['estado'] === 'Publicada' ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100' : 'bg-amber-50 text-amber-700 ring-1 ring-amber-100' ?>">
-                            <span class="h-1.5 w-1.5 rounded-full <?= $h['estado'] === 'Publicada' ? 'bg-emerald-500' : 'bg-amber-500' ?>"></span>
-                            <?= $h['estado'] ?>
-                        </span>
-                        <div class="flex items-center gap-1 text-slate-400 border-l border-slate-100 pl-4">
-                            <button title="Editar" class="p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
-                            </button>
-                            <button title="Eliminar" class="p-2 rounded-lg hover:bg-red-50 hover:text-red-600 transition">
-                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
-                            </button>
+                            <p class="mt-3 text-slate-500 text-sm leading-relaxed line-clamp-2 italic">"<?= htmlspecialchars($h['descripcion']) ?>"</p>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     </main>
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+}
+</script>
 </body>
 </html>

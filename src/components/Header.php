@@ -2,6 +2,23 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// haremos que la session se cierre a la hora si esta insactivo 
+$sessionTimeout = 3600;
+//
+if (!empty($_SESSION['logged_in']) && isset($_SESSION['LAST_ACTIVITY'])) {
+    $inactiveTime = time() - $_SESSION['LAST_ACTIVITY'];
+    if ($inactiveTime > $sessionTimeout) {
+        $_SESSION = [];
+        session_destroy();
+        header('Location: /Proyecto-ong-POO/index.php');
+        exit();
+    }
+}
+if (!empty($_SESSION['logged_in'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+}
+
 $loggedIn = !empty($_SESSION['logged_in']);
 $nombre = $_SESSION['user_nombre'] ?? '';
 $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));

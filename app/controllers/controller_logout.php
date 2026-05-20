@@ -1,9 +1,14 @@
 <?php
 
-//iniciamos la session 
 session_start();
 $_SESSION = [];
-//destruimos la session si existiera y lo redirigimos al login una vez que se hay cdestruido la session 
+
+$params = session_get_cookie_params();
+setcookie(session_name(), '', time() - 42000,
+    $params['path'], $params['domain'],
+    $params['secure'], $params['httponly']
+);
+
 session_destroy();
 header('Location: ../views/auth/Login.php');
 exit();

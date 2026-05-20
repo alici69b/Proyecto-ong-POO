@@ -12,8 +12,8 @@ class UsuarioNormal extends Usuario
     {
         $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare("
-            INSERT INTO usuario (nombre, apellidos, email, password, id_rol)
-            VALUES (:nombre, :apellidos, :email, :password, 1)
+            INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil)
+            VALUES (:nombre, :apellidos, :email, :password, 1, 'foto_defecto.webp')
         ");
         $exito = $stmt->execute([
             ':nombre'    => $datos['nombre'],

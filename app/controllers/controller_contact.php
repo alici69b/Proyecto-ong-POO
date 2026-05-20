@@ -1,9 +1,11 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 session_start();
 
 require_once __DIR__ . '/../models/Mensaje.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
-require_once __DIR__ . '/../Helpers/Mailer.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
     $datos = [
@@ -19,8 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
         try {
             $mensajeModel = new Mensaje();
             $mensajeModel->insertar($datos);
-
-            Mailer::notifyAdminContact($datos);
 
             $_SESSION['exito'] = 'Mensaje enviado correctamente. Te responderemos pronto.';
         } catch (Exception $e) {

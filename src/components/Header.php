@@ -27,7 +27,7 @@ $rol = $_SESSION['user_rol'] ?? '';
 if ($rol === 'admin') {
     $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php';
 } elseif ($rol === 'soy-voluntario') {
-    $dashboard_url = '/Proyecto-ong-POO/app/views/volunteer/dashboard.php';
+    $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_volunteer_dashboard.php';
 } else {
     $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php';
 }

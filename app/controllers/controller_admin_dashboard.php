@@ -15,7 +15,7 @@ if ($_SESSION['user_rol'] !== 'admin') {
 
 //incluimos la conexion 
 require_once __DIR__ . '/../config/db.php';
-
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 try {
     //intentamos crear la bbdd
@@ -56,7 +56,7 @@ try {
     $resets_por_estado = $resultado6->fetchAll();
 
     // septima consulta, para mostrar en la vista, mostramos el nombre del estado y el total de la tabla reset 
-    $sql7 = "SELECT u.id, u.nombre, u.email, u.created_at, r.nombre_rol
+    $sql7 = "SELECT u.id, u.nombre, u.email, u.foto_perfil, u.created_at, r.nombre_rol
              FROM usuario u
              JOIN roles r ON u.id_rol = r.id
              ORDER BY u.created_at DESC

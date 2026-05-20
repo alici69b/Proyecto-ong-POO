@@ -106,7 +106,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </a>
 
         </nav>
-        <div class="pt-4 border-t border-white/10">
+        <div class="pt-4 border-t border-white/10 flex flex-col gap-1">
+
             <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z" />
@@ -228,17 +229,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                         <span class="w-2 h-2 bg-[#7ae582] rounded-full"></span>
                         Últimos usuarios
                     </h3>
-                    <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="text-[10px] font-bold text-[#00a5cf] hover:underline">Ver todos</a>
-                </div>
+                     </div>
                 <div class="space-y-4">
                     <?php if (empty($ultimos_usuarios)): ?>
                         <p class="text-slate-400 text-sm text-center py-8">No hay usuarios registrados</p>
                     <?php else: ?>
                         <?php foreach ($ultimos_usuarios as $u): ?>
                             <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#00a5cf] to-[#9fffcb] flex items-center justify-center text-white font-bold text-xs">
-                                    <?= strtoupper(substr($u['nombre'], 0, 1)) ?>
-                                </div>
+                                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($u['foto_perfil'] ?? 'foto_defecto.webp') ?>" alt="Foto"
+                                     class="w-9 h-9 rounded-full object-cover border-2 border-slate-100">
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-bold text-slate-700 truncate"><?= htmlspecialchars($u['nombre']) ?></p>
                                     <p class="text-[11px] text-slate-400 truncate"><?= htmlspecialchars($u['email']) ?></p>
@@ -278,48 +277,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
             </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="bg-gradient-to-br from-[#004e64] to-[#007a8a] rounded-2xl p-6 text-white">
-                <p class="text-sm font-bold opacity-80 uppercase tracking-wider">Total resets</p>
-                <p class="text-4xl font-extrabold mt-2"><?= $total_resets ?></p>
-                <div class="mt-4 flex items-center gap-2 text-[11px] opacity-70">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                    Nuevos: <?= $nuevos ?>
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-[#25a18e] to-[#2ec4a0] rounded-2xl p-6 text-white">
-                <p class="text-sm font-bold opacity-80 uppercase tracking-wider">Voluntarios</p>
-                <p class="text-4xl font-extrabold mt-2"><?= $total_voluntarios ?></p>
-                <div class="mt-4 flex items-center gap-2 text-[11px] opacity-70">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    Disponibles
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-[#ff3b30] to-[#ff6b6b] rounded-2xl p-6 text-white">
-                <p class="text-sm font-bold opacity-80 uppercase tracking-wider">Administradores</p>
-                <p class="text-4xl font-extrabold mt-2"><?= $total_admin ?></p>
-                <div class="mt-4 flex items-center gap-2 text-[11px] opacity-70">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                    Gestores del sistema
-                </div>
-            </div>
-            <div class="bg-gradient-to-br from-[#00a5cf] to-[#48cae4] rounded-2xl p-6 text-white">
-                <p class="text-sm font-bold opacity-80 uppercase tracking-wider">Mensajes</p>
-                <p class="text-4xl font-extrabold mt-2"><?= $total_mensajes ?></p>
-                <div class="mt-4 flex items-center gap-2 text-[11px] opacity-70">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Contacto
-                </div>
-            </div>
-        </div>
     </main>
 
     <?php

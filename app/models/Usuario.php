@@ -6,7 +6,7 @@
 abstract class Usuario
 {
     //atributo de la conexion de la bbdd
-    protected $conn;
+    protected PDO $conn;
 
     //constructor 
     public function __construct()

@@ -52,6 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'foto_defecto.webp';
         $_SESSION['logged_in']     = true;
 
+        //Si el rol del usuario es voluntario, obtenemos su id_voluntario y lo guardamos en sesión para usarlo en el dashboard
+        if (strtolower($usuario['nombre_rol']) === 'soy-voluntario') {
+            $db   = new Database();
+            $conn = $db->getConnection();
+            $stmt = $conn->prepare("SELECT id FROM voluntario WHERE id_usuario = :id");
+            $stmt->execute([':id' => $usuario['id']]);
+            $vol  = $stmt->fetch();
+            $_SESSION['id_voluntario'] = $vol['id'] ?? null;
+        }
+
         //comrpobamos que el rol esta en minusculas y los guardamos en una variable
         $rol = strtolower($usuario['nombre_rol']);
 
@@ -60,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: ../controllers/controller_admin_dashboard.php');
             //si el rol es voluntario, te  redirije a el dashboard del voluntario
         } elseif ($rol === 'soy-voluntario') {
-            header('Location: ../views/volunteer/dashboard.php');
+            header('Location: ../controllers/controller_volunteer_dashboard.php');
             //si el rol es usuario, te  redirije a el dashboard del usuario reset
         } elseif ($rol === 'soy-usuario') {
             header('Location: ../controllers/controller_user_dashboard.php');

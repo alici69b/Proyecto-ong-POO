@@ -1,5 +1,5 @@
 <?php
-$rol = $_SESSION["rol"] ?? "usuario";
+$rol = $_GET["rol"] ?? "usuario";
 ?>
 <!DOCTYPE html>
 <html lang="es">

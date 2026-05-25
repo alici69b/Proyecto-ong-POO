@@ -17,8 +17,8 @@ class Voluntario extends Usuario
             //inserto en la tabla usuario para después insertar el la tabla del voluntario
             $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
             $stmt = $this->conn->prepare("
-                INSERT INTO usuario (nombre, apellidos, email, password, id_rol)
-                VALUES (:nombre, :apellidos, :email, :password, 2)
+                INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil)
+                VALUES (:nombre, :apellidos, :email, :password, 2, 'foto_defecto.webp')
             ");
             $stmt->execute([
                 ':nombre'    => $datos['nombre'],

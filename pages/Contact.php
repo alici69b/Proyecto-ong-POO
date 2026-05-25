@@ -240,6 +240,33 @@ session_start();
                 <form action="/Proyecto-ong-POO/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100">
 
                     <h3 class=" text-black font-bold text-lg md:text-xl p-2 lg:text-xl">Envíanos un mensaje</h3><br>
+
+                    <div class="">
+                        <?php if (isset($_SESSION['errores']) && !empty($_SESSION['errores'])): ?>
+                            <div class="bg-red-100 border-l-4 border-[#ff3b30] text-[#ff3b30] p-4 mb-6 rounded shadow-sm animate-pulse">
+                                <ul class="text-sm text-red-700 space-y-1">
+                                    <?php foreach ($_SESSION['errores'] as $campo => $mensajes): ?>
+                                        <?php if (is_array($mensajes)): ?>
+                                            <?php foreach ($mensajes as $mensaje): ?>
+                                                <li>• <?= htmlspecialchars($mensaje) ?></li>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <li>• <?= htmlspecialchars($mensajes) ?></li>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
+                        <?php unset($_SESSION['errores']); ?>
+                        <?php if (isset($_SESSION['exito'])): ?>
+                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
+                                <?= htmlspecialchars($_SESSION['exito']) ?>
+                            </div>
+                            <?php unset($_SESSION['exito']); ?>
+                        <?php endif; ?>
+                    </div>
+
+
                     <!-- Nombre y Email -->
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -266,30 +293,7 @@ session_start();
                         <textarea rows="5" name="cuerpo_mensaje" placeholder="Hablanos de lo que te ocurre" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]  resize-none"></textarea>
                     </div>
 
-                    <div class="">
-                        <?php if (isset($_SESSION['errores']) && !empty($_SESSION['errores'])): ?>
-                            <div class="bg-red-100 border-l-4 border-[#ff3b30] text-[#ff3b30] p-4 mb-6 rounded shadow-sm animate-pulse">
-                                <ul class="text-sm text-red-700 space-y-1">
-                                    <?php foreach ($_SESSION['errores'] as $campo => $mensajes): ?>
-                                        <?php if (is_array($mensajes)): ?>
-                                            <?php foreach ($mensajes as $mensaje): ?>
-                                                <li>• <?= htmlspecialchars($mensaje) ?></li>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <li>• <?= htmlspecialchars($mensajes) ?></li>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                        <?php endif; ?>
-                        <?php unset($_SESSION['errores']); ?>
-                        <?php if (isset($_SESSION['exito'])): ?>
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
-                                <?= htmlspecialchars($_SESSION['exito']) ?>
-                            </div>
-                            <?php unset($_SESSION['exito']); ?>
-                        <?php endif; ?>
-                    </div>
+
 
                     <!-- Botón -->
                     <input type="submit" name="enviar" class="w-full mt-3 px-4 py-4  bg-[#00a5cf] text-white  hover:bg-black hover:text-white rounded-lg shadow-md  hover:shadow-lg  ">

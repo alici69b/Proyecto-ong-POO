@@ -1,45 +1,15 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-require_once __DIR__ . '/../../config/db.php';
-
-$db = new Database();
-$conn = $db->getConnection();
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) {
-    $id_reset = (int)$_POST['id_reset'];
-    $id_voluntario = !empty($_POST['id_voluntario']) ? (int)$_POST['id_voluntario'] : null;
-    $id_estado = (int)$_POST['id_estado'];
-
-    $stmt = $conn->prepare("UPDATE reset SET id_voluntario = :id_voluntario, id_estado = :id_estado WHERE id = :id");
-    $stmt->execute([':id_voluntario' => $id_voluntario, ':id_estado' => $id_estado, ':id' => $id_reset]);
-
-    header('Location: gestionarreset.php?updated=1');
-    exit();
-}
-
-$resets = $conn->query("
-    SELECT r.id AS id_reset, r.titulo, r.descripcion, r.created_at AS fecha, r.id_voluntario, r.id_estado,
-           u.nombre AS solicitante, c.nombre_categoria, e.nombre_estado
-    FROM reset r
-    JOIN usuario u ON r.id_usuario = u.id
-    LEFT JOIN categoria_reset c ON r.id_categoria = c.id
-    LEFT JOIN estado_maestro e ON r.id_estado = e.id
-    ORDER BY r.created_at DESC
-")->fetchAll();
-
-$voluntarios = $conn->query("
-    SELECT v.id AS id_voluntario, u.nombre
-    FROM voluntario v
-    JOIN usuario u ON v.id_usuario = u.id
-    ORDER BY u.nombre
-")->fetchAll();
-
-$estados = $conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maestro ORDER BY id")->fetchAll();
+/** @var array $resets - Variable definida en el controlador (controller_admin_gestionarreset.php, línea 24) */
+/** @var array $voluntarios - Variable definida en el controlador (controller_admin_gestionarreset.php, línea 28) */
+/** @var array $estados - Variable definida en el controlador (controller_admin_gestionarreset.php, línea 32) */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -56,7 +26,8 @@ $estados = $conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maest
     </style>
 </head>
 <body class="text-[#004e64] min-h-screen flex">
-    <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col">
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+    <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300">
         <div class="flex items-center gap-3 px-2 mt-8 mb-10">
                 <div class="flex items-center gap-3  mb-4">
                     <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -69,37 +40,47 @@ $estados = $conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maest
                 </div>
             </div>
         <nav class="flex flex-col gap-1.5 flex-1">
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 36 36"><path d="M32 5H4c-1.1 0-2 .9-2 2v22c0 1.1.9 2 2 2h28c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zM4 29V7h28v22H4z"/><path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z"/></svg>
                 Vista general
             </a>
-            <a href="gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarreset.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/10 text-white font-bold text-sm shadow-lg">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 1920 1920"><path d="M276.9 440.6v565.7c0 422.4 374.2 625.5 674.7 788.7l8 4.3 8.1-4.3c300.5-163.2 674.7-366.3 674.7-788.7V440.6l-682.8-321.7-682.8 321.7z"/></svg>
                 Resets
             </a>
-            <a href="gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                 Usuarios
             </a>
-            <a href="gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarhistorias.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 Historias
             </a>
-            <a href="gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionarcontacto.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm">
                 <svg class="w-5 h-5 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
                 Mensajes
             </a>
         </nav>
         <div class="pt-4 border-t border-white/10">
             
-            <a href="../../controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/></svg>
                 Cerrar sesión
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 ml-64 p-8">
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
+        <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
+            </div>
+        </div>
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestionar Resets</h1>
@@ -169,5 +150,14 @@ $estados = $conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maest
             <?php endforeach; ?>
         </div>
     </main>
+</div>
+<script>
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('-translate-x-full');
+    overlay.classList.toggle('hidden');
+}
+</script>
 </body>
 </html>

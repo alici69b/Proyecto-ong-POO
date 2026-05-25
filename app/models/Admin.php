@@ -17,8 +17,8 @@ class Admin extends Usuario
         
         try {
             $stmt = $this->conn->prepare("
-                INSERT INTO usuario (nombre, apellidos, email, password, id_rol)
-                VALUES (:nombre, :apellidos, :email, :password, 3)
+                INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil)
+                VALUES (:nombre, :apellidos, :email, :password, 3, 'foto_defecto.webp')
             ");
             $stmt->execute([
                 ':nombre'    => $datos['nombre'],

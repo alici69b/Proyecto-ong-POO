@@ -24,6 +24,25 @@ $disponibles = $disponibles ?? [];
         }
     </style>
 </head>
+<!-- Modal de confirmación (POP-UP) -->
+<div id="modal-confirmar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
+    <div class="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl shadow-slate-900/10 border border-slate-200">
+        <h3 class="text-xl font-extrabold text-slate-900 mb-4">Confirmar asignación</h3>
+        <p class="text-sm text-slate-600 mb-6">
+            ¿Seguro que quieres asignarte este reset? El cambio se guardará y verás la actividad en tu panel.
+        </p>
+        <div class="flex gap-3">
+            <button type="button" onclick="cerrarModal()"
+                class="w-full rounded-2xl border border-slate-200 bg-white text-slate-700 py-3 font-bold hover:bg-slate-50 transition-all">
+                Cancelar
+            </button>
+            <button type="button" onclick="confirmarAsignacion()"
+                class="w-full rounded-2xl bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] py-3 font-extrabold hover:opacity-90 transition-all">
+                Confirmar
+            </button>
+        </div>
+    </div>
+</div>
 
 <body class="text-[#004e64] min-h-screen" id="inicio">
     <div class="flex">
@@ -135,7 +154,11 @@ $disponibles = $disponibles ?? [];
                                 default => "bg-slate-100 text-slate-500",
                             };
                             ?>
-                            <div class="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col gap-3">
+                            <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
+                            <a href="/Proyecto-ong-POO/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
+                                class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer<?= $cerrado
+                                ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
+                                : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
                                 <div class="flex items-start justify-between gap-3">
                                     <h4 class="font-extrabold text-base leading-snug">
                                         <?= htmlspecialchars($r["titulo"]) ?>
@@ -152,7 +175,7 @@ $disponibles = $disponibles ?? [];
                                     <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
                                     <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
                                 </div>
-                            </div>
+                            </a>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -232,26 +255,6 @@ $disponibles = $disponibles ?? [];
                 <?php endif; ?>
             </section>
         </main>
-    </div>
-
-    <!-- Modal de confirmación (POP-UP) -->
-    <div id="modal-confirmar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
-        <div class="w-full max-w-md rounded-[2rem] bg-white p-6 shadow-2xl shadow-slate-900/10 border border-slate-200">
-            <h3 class="text-xl font-extrabold text-slate-900 mb-4">Confirmar asignación</h3>
-            <p class="text-sm text-slate-600 mb-6">
-                ¿Seguro que quieres asignarte este reset? El cambio se guardará y verás la actividad en tu panel.
-            </p>
-            <div class="flex gap-3">
-                <button type="button" onclick="cerrarModal()"
-                    class="w-full rounded-2xl border border-slate-200 bg-white text-slate-700 py-3 font-bold hover:bg-slate-50 transition-all">
-                    Cancelar
-                </button>
-                <button type="button" onclick="confirmarAsignacion()"
-                    class="w-full rounded-2xl bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] py-3 font-extrabold hover:opacity-90 transition-all">
-                    Confirmar
-                </button>
-            </div>
-        </div>
     </div>
     <!-- Script para el modal -->
     <script>

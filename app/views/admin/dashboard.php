@@ -117,7 +117,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </a>
         </div>
     </aside>
-    <main class="flex-1 ml-0 lg:ml-64 p-4 md:p-8">
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
         <div
             class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
@@ -299,6 +300,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
     </main>
 
+    </div>
+
     <?php
     //  Grafico para mostrar los reset realizados 
     if ($total_resets > 0): ?>
@@ -335,21 +338,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </script>
     <?php endif; ?>
     <script>
-        const volColors = [
-            { bg: 'rgba(255, 154, 162, 0.3)', border: '#ff9aa2' },
-            { bg: 'rgba(255, 183, 77, 0.3)', border: '#ffb74d' },
-            { bg: 'rgba(255, 213, 79, 0.3)', border: '#ffd54f' },
-            { bg: 'rgba(128, 222, 234, 0.3)', border: '#80deea' },
-            { bg: 'rgba(186, 104, 200, 0.3)', border: '#ba68c8' },
+        const chartColors = [
+            { bg: 'rgba(0, 165, 207, 0.3)', border: '#00a5cf' },
+            { bg: 'rgba(159, 255, 203, 0.3)', border: '#9fffcb' },
+            { bg: 'rgba(37, 161, 142, 0.3)', border: '#25a18e' },
+            { bg: 'rgba(255, 59, 48, 0.3)', border: '#ff3b30' },
+            { bg: 'rgba(255, 159, 10, 0.3)', border: '#ff9f0a' },
         ];
 
-        const usuColors = [
-            { bg: 'rgba(239, 154, 154, 0.3)', border: '#ef9a9a' },
-            { bg: 'rgba(255, 204, 128, 0.3)', border: '#ffcc80' },
-            { bg: 'rgba(197, 225, 165, 0.3)', border: '#c5e1a5' },
-            { bg: 'rgba(130, 177, 255, 0.3)', border: '#82b1ff' },
-            { bg: 'rgba(179, 136, 255, 0.3)', border: '#b388ff' },
-        ];
+        const volColors = chartColors;
+        const usuColors = chartColors;
 
         new Chart(document.getElementById('chartVoluntarios'), {
             type: 'bar',

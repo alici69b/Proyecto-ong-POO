@@ -7,6 +7,35 @@ require_once __DIR__ . '/../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
+    $nombre = trim($_POST['nombre']);
+    $apellidos = trim($_POST['apellidos'] ?? '');
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $id_rol = (int)$_POST['id_rol'];
+
+    $check = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
+    $check->execute([':email' => $email]);
+    if ($check->fetchColumn() > 0) {
+        header('Location: controller_admin_gestionusuarios.php?erroremail=1');
+        exit();
+    }
+
+    $hash = password_hash($password, PASSWORD_BCRYPT);
+    $stmt = $conn->prepare("INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil) VALUES (:nombre, :apellidos, :email, :password, :id_rol, 'foto_defecto.webp')");
+    $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':password' => $hash, ':id_rol' => $id_rol]);
+
+    $newId = $conn->lastInsertId();
+    if ($id_rol == 2) {
+        $conn->prepare("INSERT INTO voluntario (id_usuario) VALUES (:id)")->execute([':id' => $newId]);
+    } elseif ($id_rol == 3) {
+        $conn->prepare("INSERT INTO admin (id_usuario) VALUES (:id)")->execute([':id' => $newId]);
+    }
+
+    header('Location: controller_admin_gestionusuarios.php?created=1');
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
     $id = (int)$_POST['id_usuario'];
     $nombre = trim($_POST['nombre']);

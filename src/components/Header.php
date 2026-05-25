@@ -2,6 +2,23 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+// haremos que la session se cierre a la hora si esta insactivo 
+$sessionTimeout = 3600;
+//
+if (!empty($_SESSION['logged_in']) && isset($_SESSION['LAST_ACTIVITY'])) {
+    $inactiveTime = time() - $_SESSION['LAST_ACTIVITY'];
+    if ($inactiveTime > $sessionTimeout) {
+        $_SESSION = [];
+        session_destroy();
+        header('Location: /Proyecto-ong-POO/index.php');
+        exit();
+    }
+}
+if (!empty($_SESSION['logged_in'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+}
+
 $loggedIn = !empty($_SESSION['logged_in']);
 $nombre = $_SESSION['user_nombre'] ?? '';
 $inicial = mb_strtoupper(mb_substr($nombre, 0, 1));
@@ -10,7 +27,7 @@ $rol = $_SESSION['user_rol'] ?? '';
 if ($rol === 'admin') {
     $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_admin_dashboard.php';
 } elseif ($rol === 'soy-voluntario') {
-    $dashboard_url = '/Proyecto-ong-POO/app/views/volunteer/dashboard.php';
+    $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_volunteer_dashboard.php';
 } else {
     $dashboard_url = '/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php';
 }
@@ -28,9 +45,9 @@ if ($rol === 'admin') {
     </div>
 
     <div class="hidden md:flex flex-none items-center justify-center gap-6">
-        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Inicio.php">Inicio</a>
-        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Historys.php">Historias</a>
-        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/index.php">Inicio</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/app/controllers/controller_historias.php">Historias</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/app/controllers/controller_impacto.php">Impacto</a>
         <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
     </div>
 
@@ -61,9 +78,9 @@ if ($rol === 'admin') {
                 </svg>
             </label>
             <div class="absolute top-full left-0 right-0 mt-4 mx-2 bg-white rounded-2xl shadow-2xl border border-gray-100 flex-col hidden peer-checked:flex overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300">
-                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Inicio.php">Inicio</a>
-                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Historys.php">Historias</a>
-                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Impact.php">Impacto</a>
+                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/index.php">Inicio</a>
+                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/app/controllers/controller_historias.php">Historias</a>
+                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/app/controllers/controller_impacto.php">Impacto</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="/Proyecto-ong-POO/pages/Contact.php">Contacto</a>
                 <div class="bg-gray-50 flex flex-col gap-1 p-4">
                     <?php if ($loggedIn): ?>

@@ -73,7 +73,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </aside>
 
-    <main class="flex-1 ml-0 lg:ml-64 p-4 md:p-8">
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
@@ -88,10 +89,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestión de Usuarios</h1>
                 <p class="text-slate-500"><?= $total_usuarios ?> usuarios registrados</p>
             </div>
-            <form method="GET" class="relative w-full lg:w-80">
-                <input type="text" name="search" value="<?= htmlspecialchars($buscar) ?>" placeholder="Buscar por nombre o email..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#25a18e] focus:border-transparent outline-none transition-all shadow-sm text-sm">
-                <svg class="absolute left-3 top-3 w-5 h-5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            </form>
+            <div class="flex gap-3 w-full lg:w-auto">
+                <form method="GET" class="relative flex-1 lg:w-80">
+                    <input type="text" name="search" value="<?= htmlspecialchars($buscar) ?>" placeholder="Buscar por nombre o email..." class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-[#25a18e] focus:border-transparent outline-none transition-all shadow-sm text-sm">
+                    <svg class="absolute left-3 top-3 w-5 h-5 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </form>
+                <button onclick="abrirModalCrear()" class="px-5 py-2.5 bg-[#25a18e] text-white rounded-xl text-sm font-bold shadow-lg hover:bg-[#1e8575] transition-all active:scale-95 flex items-center gap-2 whitespace-nowrap">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                    Nuevo Usuario
+                </button>
+            </div>
         </header>
 
         <?php if (isset($_GET['updated'])): ?>
@@ -110,6 +117,18 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-bold flex items-center gap-2">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 No puedes eliminarte a ti mismo
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_GET['created'])): ?>
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm font-bold flex items-center gap-2">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Usuario creado correctamente
+            </div>
+        <?php endif; ?>
+        <?php if (isset($_GET['erroremail'])): ?>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-bold flex items-center gap-2">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                El email ya está registrado
             </div>
         <?php endif; ?>
 
@@ -133,7 +152,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                             <tr class="hover:bg-slate-50/80 transition-all">
                                 <td class="px-6 py-3.5">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
                                             <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($u['foto_perfil'] ?? 'foto_defecto.webp') ?>" alt="Foto"
                                                  class="w-full h-full object-cover"
                                                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
@@ -172,7 +191,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
             <div class="p-4 bg-slate-50 flex flex-col sm:flex-row justify-between items-center border-t border-slate-100 gap-4">
                 <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>
-                <div class="flex gap-1.5">
+                <div class="flex flex-wrap gap-1.5">
                     <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
                         <a href="/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php?p=<?= $i ?>&search=<?= urlencode($buscar) ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
                     <?php endfor; ?>
@@ -180,6 +199,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         </div>
     </main>
+
+</div>
 
     <div id="modal-editar" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
         <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-lg w-full border border-slate-100 max-h-[90vh] overflow-y-auto">
@@ -223,6 +244,48 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </div>
 
+    <div id="modal-crear" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl max-w-lg w-full border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-black text-slate-800">Nuevo usuario</h3>
+                <button type="button" onclick="cerrarModalCrear()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            <form method="POST" class="space-y-4">
+                <input type="hidden" name="action_crear" value="1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nombre</label>
+                        <input type="text" name="nombre" required class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Apellidos</label>
+                        <input type="text" name="apellidos" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Email</label>
+                    <input type="email" name="email" required class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Contraseña</label>
+                    <input type="password" name="password" required class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Rol</label>
+                    <select name="id_rol" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full cursor-pointer">
+                        <option value="1">Usuario</option>
+                        <option value="2">Voluntario</option>
+                        <option value="3">Administrador</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 mt-6">
+                    <button type="button" onclick="cerrarModalCrear()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Cancelar</button>
+                    <button type="submit" class="flex-1 py-3 bg-[#25a18e] text-white font-bold rounded-xl shadow-lg hover:bg-[#1e8575] transition-all">Crear usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="modal-confirmar" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
         <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center">
             <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -254,6 +317,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             document.getElementById('modal-editar').classList.remove('hidden');
         }
         function cerrarModalEditar() { document.getElementById('modal-editar').classList.add('hidden'); }
+        function abrirModalCrear() { document.getElementById('modal-crear').classList.remove('hidden'); }
+        function cerrarModalCrear() { document.getElementById('modal-crear').classList.add('hidden'); }
         function abrirModal(id) {
             document.getElementById('btn-confirmar-eliminar').href = '/Proyecto-ong-POO/app/controllers/controller_admin_gestionusuarios.php?action=delete&id=' + id;
             document.getElementById('modal-confirmar').classList.remove('hidden');
@@ -261,10 +326,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         function cerrarModal() { document.getElementById('modal-confirmar').classList.add('hidden'); }
         window.addEventListener('click', function(e) {
             if (e.target === document.getElementById('modal-editar')) cerrarModalEditar();
+            if (e.target === document.getElementById('modal-crear')) cerrarModalCrear();
             if (e.target === document.getElementById('modal-confirmar')) cerrarModal();
         });
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { cerrarModalEditar(); cerrarModal(); }
+            if (e.key === 'Escape') { cerrarModalEditar(); cerrarModalCrear(); cerrarModal(); }
         });
     </script>
 </body>

@@ -71,7 +71,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </aside>
 
-    <main class="flex-1 ml-0 lg:ml-64 p-4 md:p-8">
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
@@ -164,6 +165,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             <?php endif; ?>
         </div>
     </main>
+</div>
 <script>
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');

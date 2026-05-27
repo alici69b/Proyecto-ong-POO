@@ -54,6 +54,49 @@
                 </div>
             </div>
 
+            <!-- Certificación W3C -->
+            <div class="text-gray-400">
+                <h6 class="uppercase mb-3 font-semibold text-white">Certificaciones</h6>
+                <div class="flex flex-col items-center md:items-start gap-4">
+                    <a href="https://validator.w3.org/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3" title="HTML5 válido">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff6b22"
+                        stroke-width="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        >
+                        <path d="M20 4l-2 14.5l-6 2l-6 -2l-2 -14.5z" />
+                        <path d="M15.5 8h-7l.5 4h6l-.5 3.5l-2.5 .75l-2.5 -.75l-.1 -.5" />
+                        </svg>
+
+                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">HTML5</span>
+                    </a>
+                    <a href="https://jigsaw.w3.org/css-validator/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3" title="CSS3 válido">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#007aff"
+                        stroke-width="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        >
+                        <path d="M20 4l-2 14.5l-6 2l-6 -2l-2 -14.5z" />
+                        <path d="M8.5 8h7l-4.5 4h4l-.5 3.5l-2.5 .75l-2.5 -.75l-.1 -.5" />
+                        </svg>
+
+                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">CSS3</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
         <hr class="my-6 border-gray-700">

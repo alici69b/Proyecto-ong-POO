@@ -9,6 +9,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
+    <link rel="alternate" type="application/rss+xml" title="RESET ONG - Historias de éxito" href="/Proyecto-ong-POO/app/controllers/controller_rss.php">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bricolage Grotesque">
 
@@ -70,6 +72,13 @@
                 <p class="text-white font-bold text-4xl lg:text-5xl"><?= $totalVoluntarios ?></p>
                 <p class="text-gray-900 ">Voluntarios</p>
             </div>
+        </div>
+
+        <div class="flex justify-center pt-6">
+            <a href="/Proyecto-ong-POO/app/controllers/controller_rss.php" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-full text-sm font-semibold text-gray-800 hover:bg-white/50 transition-all shadow-sm" title="Suscríbete al canal RSS">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#ff6b22"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+                <span>RSS</span>
+            </a>
         </div>
 
         <div class="relative bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] w-full pt-20 pb-40">

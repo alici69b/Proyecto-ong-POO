@@ -237,7 +237,7 @@ session_start();
 
             <div id="Formulario" class="fade-in fade-in-2 max-w-100% grid">
 
-                <form action="/Proyecto-ong-POO/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100">
+                <form id="contactForm" action="/Proyecto-ong-POO/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100" novalidate>
 
                     <h3 class=" text-black font-bold text-lg md:text-xl p-2 lg:text-xl">Envíanos un mensaje</h3><br>
 
@@ -270,34 +270,34 @@ session_start();
                     <!-- Nombre y Email -->
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                        <div id="nombre-group">
                             <label class="block font-bold text-gray-800 my-5">Nombre *</label>
-                            <input type="text" name="nombre_remitente" placeholder="Tu nombre" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " />
+                            <input type="text" name="nombre_remitente" id="nombre_remitente" placeholder="Tu nombre" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+                            <p id="nombre_remitente-error" class="hidden text-red-500 text-sm mt-1"></p>
                         </div>
-
-                        <div>
+                        <div id="email-group">
                             <label class="block font-bold text-gray-800 my-5">Email *</label>
-                            <input type="email" name="email_remitente" placeholder="tu@email.com" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " />
+                            <input type="email" name="email_remitente" id="email_remitente" placeholder="tu@email.com" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+                            <p id="email_remitente-error" class="hidden text-red-500 text-sm mt-1"></p>
                         </div>
                     </div>
 
-                    <!-- Asunto -->
-                    <div>
+                    <div id="asunto-group">
                         <label class="block font-bold text-gray-800 my-5">Asunto *</label>
-                        <input type="text" name="asunto" placeholder="¿De qué quieres hablar?" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " />
+                        <input type="text" name="asunto" id="asunto" placeholder="¿De qué quieres hablar?" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+                        <p id="asunto-error" class="hidden text-red-500 text-sm mt-1"></p>
                     </div>
 
-                    <!-- Mensaje -->
-                    <div>
+                    <div id="mensaje-group">
                         <label class="block font-bold text-gray-800 my-5">Mensaje *</label>
-                        <textarea rows="5" name="cuerpo_mensaje" placeholder="Hablanos de lo que te ocurre" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]  resize-none"></textarea>
+                        <textarea rows="5" name="cuerpo_mensaje" id="cuerpo_mensaje" placeholder="Hablanos de lo que te ocurre" class="w-full rounded-xl border border-stone-300 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] resize-none"></textarea>
+                        <div class="flex justify-between items-center mt-1">
+                            <p id="cuerpo_mensaje-error" class="text-red-500 text-sm hidden"></p>
+                            <span id="char-count" class="text-gray-400 text-xs">0 caracteres</span>
+                        </div>
                     </div>
 
-
-
-                    <!-- Botón -->
-                    <input type="submit" name="enviar" class="w-full mt-3 px-4 py-4  bg-[#00a5cf] text-white  hover:bg-black hover:text-white rounded-lg shadow-md  hover:shadow-lg  ">
-                    </input>
+                    <input type="submit" name="enviar" class="w-full mt-3 px-4 py-4 bg-[#00a5cf] text-white hover:bg-black hover:text-white rounded-lg font-bold shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer">
                 </form>
 
 
@@ -309,6 +309,101 @@ session_start();
     <?php
     require_once __DIR__ . "/../src/components/footer.php";
     ?>
+
+<script>
+const form = document.getElementById('contactForm');
+const nombre = document.getElementById('nombre_remitente');
+const email = document.getElementById('email_remitente');
+const asunto = document.getElementById('asunto');
+const mensaje = document.getElementById('cuerpo_mensaje');
+const charCount = document.getElementById('char-count');
+
+function mostrarError(input, errorId, msg) {
+    const el = document.getElementById(errorId);
+    input.classList.add('border-red-500', 'ring-red-500');
+    input.classList.remove('border-stone-300');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+}
+
+function limpiarError(input, errorId) {
+    const el = document.getElementById(errorId);
+    input.classList.remove('border-red-500', 'ring-red-500');
+    input.classList.add('border-stone-300');
+    el.classList.add('hidden');
+    el.textContent = '';
+}
+
+function validarNombre() {
+    const v = nombre.value.trim();
+    if (v === '') { mostrarError(nombre, 'nombre_remitente-error', 'El nombre es obligatorio.'); return false; }
+    if (v.length < 2) { mostrarError(nombre, 'nombre_remitente-error', 'El nombre debe tener al menos 2 caracteres.'); return false; }
+    if (/[0-9]/.test(v)) { mostrarError(nombre, 'nombre_remitente-error', 'El nombre no puede contener números.'); return false; }
+    limpiarError(nombre, 'nombre_remitente-error');
+    return true;
+}
+
+function validarEmail() {
+    const v = email.value.trim();
+    if (v === '') { mostrarError(email, 'email_remitente-error', 'El email es obligatorio.'); return false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { mostrarError(email, 'email_remitente-error', 'Introduce un email válido.'); return false; }
+    limpiarError(email, 'email_remitente-error');
+    return true;
+}
+
+function validarAsunto() {
+    const v = asunto.value.trim();
+    if (v === '') { mostrarError(asunto, 'asunto-error', 'El asunto es obligatorio.'); return false; }
+    if (v.length < 4) { mostrarError(asunto, 'asunto-error', 'El asunto debe tener al menos 4 caracteres.'); return false; }
+    limpiarError(asunto, 'asunto-error');
+    return true;
+}
+
+function validarMensaje() {
+    const v = mensaje.value.trim();
+    if (v === '') { mostrarError(mensaje, 'cuerpo_mensaje-error', 'El mensaje es obligatorio.'); return false; }
+    if (v.length < 10) { mostrarError(mensaje, 'cuerpo_mensaje-error', 'El mensaje debe tener al menos 10 caracteres.'); return false; }
+    limpiarError(mensaje, 'cuerpo_mensaje-error');
+    return true;
+}
+
+const campos = [
+    { el: nombre, val: validarNombre },
+    { el: email, val: validarEmail },
+    { el: asunto, val: validarAsunto },
+    { el: mensaje, val: validarMensaje },
+];
+campos.forEach(c => {
+    c.el.addEventListener('blur', c.val);
+    c.el.addEventListener('input', function() {
+        const errorId = this.id + '-error';
+        const errorEl = document.getElementById(errorId);
+        if (errorEl && !errorEl.classList.contains('hidden')) c.val();
+    });
+});
+
+mensaje.addEventListener('input', function() {
+    charCount.textContent = this.value.length + ' caracteres';
+    if (this.value.length > 500) {
+        charCount.classList.add('text-red-500');
+        charCount.classList.remove('text-gray-400');
+    } else {
+        charCount.classList.remove('text-red-500');
+        charCount.classList.add('text-gray-400');
+    }
+});
+
+form.addEventListener('submit', function(e) {
+    const v1 = validarNombre(), v2 = validarEmail(), v3 = validarAsunto(), v4 = validarMensaje();
+    if (!v1 || !v2 || !v3 || !v4) {
+        e.preventDefault();
+        if (!v1) nombre.focus();
+        else if (!v2) email.focus();
+        else if (!v3) asunto.focus();
+        else if (!v4) mensaje.focus();
+    }
+});
+</script>
 
 </body>
 

@@ -82,7 +82,7 @@
         </div>
     </main>
 
-    <section class=" fade-in fade-in-3 w-full  md:mb-5 text-black mt-5 p-6 md:p-8 lg:p-20 ">
+    <section class=" fade-in fade-in-3 w-full md:mb-2 text-black mt-5 p-6 md:p-8 lg:p-20 ">
         <div class="flex flex-col items-center text-center ">
             <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">¿Cómo funciona RESET?</p>
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Aprende un poco más sobre <span class="text-[#ff3b30]">nosotros</span></h2>
@@ -116,7 +116,7 @@
         </div>
     </section>
 
-    <section class="fade-in fade-in-4  w-full  md:mb-5 text-black mt-5 ">
+    <section class="fade-in fade-in-4 w-full md:mb-2 text-black mt-2">
         <div class=" p-6 md:p-8 lg:p-20">
             <div class="text-center pt-10 md:pt-16 pb-12 relative z-10">
                 <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">¿Qué ayudamos a reiniciar?</p>
@@ -202,7 +202,7 @@
       </div>
     </section>
 
-    <div class=" fade-in fade-in-5 relative bg-transparent pt-20">
+    <div class=" fade-in fade-in-5 relative bg-transparent pt-14">
         <div class="relative leading-[0] h-[150px]">
             <svg class="relative block w-full h-[150px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
                 <defs><linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#9fffcb" /><stop offset="100%" stop-color="#00a5cf" /></linearGradient></defs>

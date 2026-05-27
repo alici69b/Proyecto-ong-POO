@@ -65,7 +65,7 @@ class Historia
                 ':valoracion' => (int)($datos['valoracion'] ?? 5),
                 ':edad' => (int)($datos['edad'] ?? 0),
                 ':foto' => $datos['foto'] ?? 'foto_defecto.webp',
-                ':icono' => $datos['icono'] ?? '📖',
+                ':icono' => $datos['icono'] ?? '',
                 ':estado' => $datos['estado'] ?? 'Borrador',
                 ':automatica' => (int)($datos['automatica'] ?? 0),
             ]);
@@ -173,7 +173,7 @@ class Historia
                 'valoracion' => 5,
                 'edad' => 0,
                 'foto' => $data['foto_perfil'] ?? 'foto_defecto.webp',
-                'icono' => '🔄',
+                'icono' => '',
                 'estado' => 'Borrador',
                 'automatica' => 1,
             ]);

@@ -1,4 +1,6 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) session_start();
+
 //Variables de sesion
 $mensajeError = $_SESSION["error_login"] ?? null;
 
@@ -50,7 +52,7 @@ if(isset($_SESSION["error_login"])) {
     <div class="mx-auto w-full max-w-md">
       
       <a href="/Proyecto-ong-POO/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700">
-        <span class="mr-2">←</span> Volver al inicio
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio
       </a>
 
      
@@ -63,7 +65,7 @@ if(isset($_SESSION["error_login"])) {
       <p class="mt-2 mb-8 text-gray-600">Accede a tu cuenta para continuar tu proceso RESET.</p>
 
 
-      <form action="/Proyecto-ong-POO/app/controllers/controller_login.php" method="POST" class="space-y-6">
+      <form id="loginForm" action="/Proyecto-ong-POO/app/controllers/controller_login.php" method="POST" class="space-y-6" novalidate>
 <!-- Muestro los errores de el error del login  -->
         <?php if (isset($mensajeError)): ?>
           <div class="bg-red-100 border-l-4 border-[#ff3b30] text-[#ff3b30] p-4 mb-6 rounded shadow-sm animate-pulse">
@@ -72,26 +74,26 @@ if(isset($_SESSION["error_login"])) {
           </div>
         <?php endif; ?>
 
-        <div>
-          <label for="email" class="block text-sm  text-gray-700">Email</label>
-          <input type="email" name="email" placeholder="tu@email.com" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " />
+        <div id="email-group">
+          <label for="email" class="block text-sm text-gray-700">Email</label>
+          <input type="email" name="email" id="email" placeholder="tu@email.com" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+          <p id="email-error" class="hidden text-red-500 text-sm mt-1"></p>
         </div>
 
-        <div class="relative">
-          <label for="pass" class="block text-sm  text-gray-700">Contraseña</label>
-          <input type="password" name="pass" placeholder="••••••••" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " />
-          <button type="button" class="absolute right-3 top-10 text-gray-400 hover:text-gray-600">
-          </button>
+        <div class="relative" id="pass-group">
+          <label for="pass" class="block text-sm text-gray-700">Contraseña</label>
+          <input type="password" name="pass" id="pass" placeholder="••••••••" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+          <p id="pass-error" class="hidden text-red-500 text-sm mt-1"></p>
         </div>
 
         <div class="flex items-center justify-between">
           <label for="recordarDatos" class="flex items-center text-sm text-gray-600">
-            <input name="recordarDatos" type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-[#00a5cf] " />
+            <input name="recordarDatos" type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-[#00a5cf]" />
             Recordarme
           </label>
-          <a href="/Proyecto-ong-POO/app/controllers/controller_resetPassword.php" class="text-sm  text-[#00a5cf] hover:underline">¿Olvidaste tu contraseña?</a>
+          <a href="/Proyecto-ong-POO/app/controllers/controller_resetPassword.php" class="text-sm text-[#00a5cf] hover:underline">¿Olvidaste tu contraseña?</a>
         </div>
-<!-- Muestro los errores de los intentos  -->
+
         <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00a5cf] p-3 font-semibold text-white transition hover:bg-black" name="iniciar_sesion" id="iniciar_sesion">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
           Iniciar sesión
@@ -117,10 +119,69 @@ if(isset($_SESSION["error_login"])) {
 </div>
 
 <script>
-  function navegarCon(url) {
-    document.body.classList.add('saliendo');
-    setTimeout(() => window.location.href = url, 300); // espera a que termine la animación
-}
+  const emailInput = document.getElementById('email');
+  const passInput = document.getElementById('pass');
+  const emailError = document.getElementById('email-error');
+  const passError = document.getElementById('pass-error');
+  const loginForm = document.getElementById('loginForm');
+
+  //agrego distintos eventos para la validación
+  emailInput.addEventListener('blur', () => validarEmail());
+  emailInput.addEventListener('input', () => { if (emailError.classList.contains('hidden') === false) validarEmail(); });
+  passInput.addEventListener('blur', () => validarPass());
+  passInput.addEventListener('input', () => { if (passError.classList.contains('hidden') === false) validarPass(); });
+
+  function mostrarError(input, errorEl, mensaje) {
+    input.classList.add('border-red-500', 'ring-red-500');
+    input.classList.remove('border-gray-300');
+    errorEl.textContent = mensaje;
+    errorEl.classList.remove('hidden');
+  }
+
+  function limpiarError(input, errorEl) {
+    input.classList.remove('border-red-500', 'ring-red-500');
+    input.classList.add('border-gray-300');
+    errorEl.classList.add('hidden');
+    errorEl.textContent = '';
+  }
+
+  function validarEmail() {
+    const email = emailInput.value.trim();
+    if (email === '') {
+      mostrarError(emailInput, emailError, 'El email es obligatorio.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      mostrarError(emailInput, emailError, 'Introduce un email válido (ej. usuario@dominio.com).');
+      return;
+    }
+    limpiarError(emailInput, emailError);
+    return true;
+  }
+
+  function validarPass() {
+    const pass = passInput.value.trim();
+    if (pass === '') {
+      mostrarError(passInput, passError, 'La contraseña es obligatoria.');
+      return;
+    }
+    if (pass.length <= 8) {
+      mostrarError(passInput, passError, 'La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+    limpiarError(passInput, passError);
+    return true;
+  }
+
+  loginForm.addEventListener('submit', function(e) {
+    const emailValido = validarEmail();
+    const passValido = validarPass();
+    if (!emailValido || !passValido) {
+      e.preventDefault(); // Inválida la petición al servidor
+      if (!emailValido) emailInput.focus();
+      else if (!passValido) passInput.focus();
+    }
+  });
 </script>
 </body>
 </html>

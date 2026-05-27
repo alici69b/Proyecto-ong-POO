@@ -1,4 +1,9 @@
 <?php
+<<<<<<< HEAD
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
+=======
 session_start();
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
@@ -9,6 +14,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
 $historiaModel = new Historia();
+>>>>>>> 721a28808f0f032cee4f518a2f5e1df4e13d63f3
 
 $db = new Database();
 $conn = $db->getConnection();

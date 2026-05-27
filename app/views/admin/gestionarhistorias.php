@@ -70,6 +70,20 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
     <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
+        <?php if (isset($modo_simulado) && $modo_simulado): ?>
+        <div class="flex flex-col gap-2 mb-6">
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
+                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
+            </div>
+            <?php if (isset($_GET['sim_bloqueado'])): ?>
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
+                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                <span>Acción bloqueada: estás en modo simulación.</span>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
@@ -155,7 +169,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 hover:shadow-md transition-all">
                     <div class="flex flex-col sm:flex-row sm:items-start gap-4">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-lg sm:text-xl flex-shrink-0 relative">
-                            <?= $h['icono'] ?? '📖' ?>
+                            <?php if (!empty($h['icono'])): ?><?= $h['icono'] ?><?php else: ?><svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"/></svg><?php endif; ?>
                             <?php if (!empty($h['automatica'])): ?>
                                 <span class="absolute -top-1 -right-1 bg-purple-500 text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-bold" title="Generada automáticamente">A</span>
                             <?php endif; ?>
@@ -184,7 +198,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                         </span>
                                     <?php endif; ?>
                                     <div class="flex items-center gap-1 text-slate-400">
-                                        <button onclick="abrirModalEditar(<?= $h['id'] ?>, '<?= addslashes($h['titulo']) ?>', '<?= addslashes($h['solicitante'] ?? '') ?>', '<?= addslashes($h['nombre_voluntario'] ?? '') ?>', '<?= addslashes($h['nombre_categoria'] ?? '') ?>', '<?= addslashes($h['descripcion'] ?? '') ?>', '<?= addslashes($h['descripcion_antes'] ?? '') ?>', '<?= addslashes($h['descripcion_despues'] ?? '') ?>', '<?= (int)($h['edad'] ?? 0) ?>', '<?= (int)($h['duracion_meses'] ?? 0) ?>', '<?= (int)($h['valoracion'] ?? 5) ?>', '<?= addslashes($h['foto'] ?? '') ?>', '<?= addslashes($h['icono'] ?? '📖') ?>', '<?= addslashes($h['estado'] ?? 'Borrador') ?>')" title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
+                                        <button onclick="abrirModalEditar(<?= $h['id'] ?>, '<?= addslashes($h['titulo']) ?>', '<?= addslashes($h['solicitante'] ?? '') ?>', '<?= addslashes($h['nombre_voluntario'] ?? '') ?>', '<?= addslashes($h['nombre_categoria'] ?? '') ?>', '<?= addslashes($h['descripcion'] ?? '') ?>', '<?= addslashes($h['descripcion_antes'] ?? '') ?>', '<?= addslashes($h['descripcion_despues'] ?? '') ?>', '<?= (int)($h['edad'] ?? 0) ?>', '<?= (int)($h['duracion_meses'] ?? 0) ?>', '<?= (int)($h['valoracion'] ?? 5) ?>', '<?= addslashes($h['foto'] ?? '') ?>', '<?= addslashes($h['icono'] ?? '') ?>', '<?= addslashes($h['estado'] ?? 'Borrador') ?>')" title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
                                             <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                                         </button>
                                         <a href="controller_admin_preview_historia.php?id=<?= $h['id'] ?>" target="_blank" title="Vista previa" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
@@ -287,8 +301,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                     </select>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Icono (emoji)</label>
-                    <input type="text" name="icono" value="📖" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Icono</label>
+                    <input type="text" name="icono" value="" placeholder="Dejar vacío para icono por defecto" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
                 </div>
             </div>
             <div>
@@ -393,8 +407,8 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                     </select>
                 </div>
                 <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Icono (emoji)</label>
-                    <input type="text" name="icono" id="edit-icono" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Icono</label>
+                    <input type="text" name="icono" id="edit-icono" placeholder="Dejar vacío para icono por defecto" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
                 </div>
             </div>
             <div>

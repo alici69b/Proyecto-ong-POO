@@ -1,0 +1,113 @@
+{
+  "organizacion": "RESET ONG",
+  "descripcion": "Datos financieros exportados del sistema ERP interno. Incluye ingresos, gastos y evolución mensual por año fiscal.",
+  "ultima_actualizacion": "2026-05-27",
+  "moneda": "EUR",
+  "ejercicios": [
+    {
+      "año": 2026,
+      "ingresos_totales": 98500,
+      "gastos_totales": 78200,
+      "superavit": 20300,
+      "ingresos": [
+        { "categoria": "Donaciones particulares", "monto": 42000, "porcentaje": 42.6 },
+        { "categoria": "Subvenciones públicas", "monto": 28000, "porcentaje": 28.4 },
+        { "categoria": "Cuotas de socios", "monto": 15000, "porcentaje": 15.2 },
+        { "categoria": "Eventos y campañas", "monto": 8500, "porcentaje": 8.6 },
+        { "categoria": "Servicios prestados", "monto": 5000, "porcentaje": 5.1 }
+      ],
+      "gastos": [
+        { "categoria": "Programas de acompañamiento", "monto": 35000, "porcentaje": 44.8 },
+        { "categoria": "Personal y voluntarios", "monto": 22000, "porcentaje": 28.1 },
+        { "categoria": "Administración y oficina", "monto": 8500, "porcentaje": 10.9 },
+        { "categoria": "Marketing y comunicación", "monto": 6200, "porcentaje": 7.9 },
+        { "categoria": "Tecnología e infraestructura", "monto": 4500, "porcentaje": 5.8 },
+        { "categoria": "Otros gastos", "monto": 2000, "porcentaje": 2.6 }
+      ],
+      "evolucion_mensual": [
+        { "mes": "Enero", "ingresos": 7800, "gastos": 6200 },
+        { "mes": "Febrero", "ingresos": 8200, "gastos": 6500 },
+        { "mes": "Marzo", "ingresos": 9100, "gastos": 7100 },
+        { "mes": "Abril", "ingresos": 8500, "gastos": 6800 },
+        { "mes": "Mayo", "ingresos": 7900, "gastos": 6400 },
+        { "mes": "Junio", "ingresos": 8800, "gastos": 7000 },
+        { "mes": "Julio", "ingresos": 7500, "gastos": 5800 },
+        { "mes": "Agosto", "ingresos": 6200, "gastos": 5000 },
+        { "mes": "Septiembre", "ingresos": 8400, "gastos": 6700 },
+        { "mes": "Octubre", "ingresos": 8600, "gastos": 6900 },
+        { "mes": "Noviembre", "ingresos": 8200, "gastos": 6500 },
+        { "mes": "Diciembre", "ingresos": 9300, "gastos": 7500 }
+      ]
+    },
+    {
+      "año": 2025,
+      "ingresos_totales": 82300,
+      "gastos_totales": 69500,
+      "superavit": 12800,
+      "ingresos": [
+        { "categoria": "Donaciones particulares", "monto": 35000, "porcentaje": 42.5 },
+        { "categoria": "Subvenciones públicas", "monto": 22000, "porcentaje": 26.7 },
+        { "categoria": "Cuotas de socios", "monto": 12000, "porcentaje": 14.6 },
+        { "categoria": "Eventos y campañas", "monto": 8500, "porcentaje": 10.3 },
+        { "categoria": "Servicios prestados", "monto": 4800, "porcentaje": 5.8 }
+      ],
+      "gastos": [
+        { "categoria": "Programas de acompañamiento", "monto": 30000, "porcentaje": 43.2 },
+        { "categoria": "Personal y voluntarios", "monto": 18500, "porcentaje": 26.6 },
+        { "categoria": "Administración y oficina", "monto": 7800, "porcentaje": 11.2 },
+        { "categoria": "Marketing y comunicación", "monto": 5800, "porcentaje": 8.3 },
+        { "categoria": "Tecnología e infraestructura", "monto": 4000, "porcentaje": 5.8 },
+        { "categoria": "Otros gastos", "monto": 3400, "porcentaje": 4.9 }
+      ],
+      "evolucion_mensual": [
+        { "mes": "Enero", "ingresos": 6500, "gastos": 5200 },
+        { "mes": "Febrero", "ingresos": 6800, "gastos": 5500 },
+        { "mes": "Marzo", "ingresos": 7200, "gastos": 5800 },
+        { "mes": "Abril", "ingresos": 6900, "gastos": 5600 },
+        { "mes": "Mayo", "ingresos": 7100, "gastos": 5900 },
+        { "mes": "Junio", "ingresos": 7400, "gastos": 6200 },
+        { "mes": "Julio", "ingresos": 6200, "gastos": 5100 },
+        { "mes": "Agosto", "ingresos": 5400, "gastos": 4500 },
+        { "mes": "Septiembre", "ingresos": 7000, "gastos": 6000 },
+        { "mes": "Octubre", "ingresos": 7200, "gastos": 6100 },
+        { "mes": "Noviembre", "ingresos": 6800, "gastos": 5800 },
+        { "mes": "Diciembre", "ingresos": 7800, "gastos": 6500 }
+      ]
+    },
+    {
+      "año": 2024,
+      "ingresos_totales": 56100,
+      "gastos_totales": 49800,
+      "superavit": 6300,
+      "ingresos": [
+        { "categoria": "Donaciones particulares", "monto": 24000, "porcentaje": 42.8 },
+        { "categoria": "Subvenciones públicas", "monto": 15000, "porcentaje": 26.7 },
+        { "categoria": "Cuotas de socios", "monto": 8100, "porcentaje": 14.4 },
+        { "categoria": "Eventos y campañas", "monto": 5000, "porcentaje": 8.9 },
+        { "categoria": "Servicios prestados", "monto": 4000, "porcentaje": 7.1 }
+      ],
+      "gastos": [
+        { "categoria": "Programas de acompañamiento", "monto": 21000, "porcentaje": 42.2 },
+        { "categoria": "Personal y voluntarios", "monto": 12500, "porcentaje": 25.1 },
+        { "categoria": "Administración y oficina", "monto": 5800, "porcentaje": 11.6 },
+        { "categoria": "Marketing y comunicación", "monto": 4200, "porcentaje": 8.4 },
+        { "categoria": "Tecnología e infraestructura", "monto": 3500, "porcentaje": 7.0 },
+        { "categoria": "Otros gastos", "monto": 2800, "porcentaje": 5.6 }
+      ],
+      "evolucion_mensual": [
+        { "mes": "Enero", "ingresos": 4200, "gastos": 3600 },
+        { "mes": "Febrero", "ingresos": 4500, "gastos": 3800 },
+        { "mes": "Marzo", "ingresos": 4800, "gastos": 4100 },
+        { "mes": "Abril", "ingresos": 4600, "gastos": 4000 },
+        { "mes": "Mayo", "ingresos": 4700, "gastos": 4200 },
+        { "mes": "Junio", "ingresos": 5000, "gastos": 4400 },
+        { "mes": "Julio", "ingresos": 4400, "gastos": 3900 },
+        { "mes": "Agosto", "ingresos": 3800, "gastos": 3400 },
+        { "mes": "Septiembre", "ingresos": 4800, "gastos": 4300 },
+        { "mes": "Octubre", "ingresos": 4900, "gastos": 4400 },
+        { "mes": "Noviembre", "ingresos": 4700, "gastos": 4200 },
+        { "mes": "Diciembre", "ingresos": 5300, "gastos": 4700 }
+      ]
+    }
+  ]
+}

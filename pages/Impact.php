@@ -124,9 +124,7 @@
             </div>
         </div>
     </main>
-    <footer>
-        <?php require_once __DIR__ . "/../src/components/footer.php"; ?>
-    </footer>
+    <?php require_once __DIR__ . "/../src/components/footer.php"; ?>
     <script>
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', function(e) {

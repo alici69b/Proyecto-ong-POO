@@ -127,8 +127,6 @@
             </div>
         </div>
     </main>
-    <footer>
-        <?php require_once __DIR__ . "/../src/components/footer.php"; ?>
-    </footer>
+    <?php require_once __DIR__ . "/../src/components/footer.php"; ?>
 </body>
 </html>

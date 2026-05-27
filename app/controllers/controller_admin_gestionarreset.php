@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 $modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../models/Historia.php';
+
 $db = new Database();
 $conn = $db->getConnection();
 
@@ -18,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) 
 
     $stmt = $conn->prepare("UPDATE reset SET id_voluntario = :id_voluntario, id_estado = :id_estado WHERE id = :id");
     $stmt->execute([':id_voluntario' => $id_voluntario, ':id_estado' => $id_estado, ':id' => $id_reset]);
+
+    if ($id_estado === 3) {
+        $historiaModel = new Historia();
+        $historiaModel->crearAutomaticaDesdeReset($id_reset);
+    }
 
     header('Location: controller_admin_gestionarreset.php?updated=1');
     exit();

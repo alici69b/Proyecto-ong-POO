@@ -77,6 +77,13 @@ $disponibles = $disponibles ?? [];
                     </svg>
                     Resets disponibles
                 </a>
+                <a href="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm font-bold">
+                    <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
+                        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
+                    </svg>
+                    Mi perfil
+                </a>
             </nav>
             <div class="mt-auto pt-6 border-t border-white/10">
                 <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php"
@@ -157,8 +164,8 @@ $disponibles = $disponibles ?? [];
                             <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
                             <a href="/Proyecto-ong-POO/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
                                 class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer<?= $cerrado
-                                ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
-                                : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
+                                                                                                                    ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
+                                                                                                                    : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
                                 <div class="flex items-start justify-between gap-3">
                                     <h4 class="font-extrabold text-base leading-snug">
                                         <?= htmlspecialchars($r["titulo"]) ?>

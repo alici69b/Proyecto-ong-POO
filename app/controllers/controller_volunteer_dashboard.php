@@ -1,6 +1,8 @@
 <?php
 //Inicializamos sesión
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 //Controlamos que el usuario esté logueado y el rol sea de voluntario, sino lo redirigimos al login
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {

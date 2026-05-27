@@ -1,7 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 $historias = [
     ['id_historia' => 1, 'titulo' => 'De abandonar Medicina a ser cirujana', 'solicitante' => 'Elena M.', 'nombre_categoria' => 'Estudios', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'Una historia increíble de superación y cambio de rumbo profesional.', 'estado' => 'Publicada', 'icono' => '📚'],

@@ -151,6 +151,57 @@
         </div>
     </section>
 
+    <section class="fade-in fade-in-4 w-full text-black">
+      <div class="py-16 md:py-24 px-6">
+        <div class="text-center mb-14">
+          <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">Acceso simulado a perfiles</p>
+          <h2 class="text-4xl md:text-5xl font-bold text-slate-800">Explora nuestros <span class="text-[#ff3b30]">perfiles</span></h2>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+
+          <!-- Voluntario -->
+          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=voluntario" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#00a5cf]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#00a5cf]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#00a5cf]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Voluntario</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Panel de voluntarios, gestiona tus acompañamientos y consulta tus estadísticas.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#00a5cf] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil →</span>
+          </a>
+
+          <!-- Usuario Reset -->
+          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=socio" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#25a18e]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#25a18e]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#25a18e]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Usuario Reset</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Revisa tus aportaciones, consulta el impacto de tus donaciones y gestiona tu perfil.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#25a18e] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil →</span>
+          </a>
+
+          <!-- Administrador -->
+          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=admin" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#ff3b30]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#ff3b30]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#ff3b30]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Administrador</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Administra usuarios, gestiona reset y supervisa el funcionamiento de la plataforma.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#ff3b30] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil →</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
     <div class=" fade-in fade-in-5 relative bg-transparent pt-20">
         <div class="relative leading-[0] h-[150px]">
             <svg class="relative block w-full h-[150px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
@@ -159,6 +210,8 @@
             </svg>
         </div>
     </div>
+
+    
 
     <section class="fade-in fade-in-6 relative  bg-linear-to-r from-[#9fffcb] to-[#00a5cf] min-h-150  py-30">
         <div class="font-['Domine'] flex justify-center  text-center my-3 p-2">

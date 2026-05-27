@@ -1,13 +1,17 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 require_once __DIR__ . '/../config/db.php';
 $db = new Database();
 $conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) {
+    if ($modo_simulado) {
+        header('Location: controller_admin_gestionarreset.php?sim_bloqueado=1');
+        exit();
+    }
     $id_reset = (int)$_POST['id_reset'];
     $id_voluntario = !empty($_POST['id_voluntario']) ? (int)$_POST['id_voluntario'] : null;
     $id_estado = (int)$_POST['id_estado'];

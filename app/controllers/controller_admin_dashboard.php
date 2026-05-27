@@ -1,13 +1,13 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-//si no existe la session del logueo, entonces te redirige al login 
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
+
 if (!isset($_SESSION['logged_in'])) {
     header('Location: ../views/auth/Login.php');
     exit();
 }
 
-//si el usuario no es admin entonces redirigimos al login 
 if ($_SESSION['user_rol'] !== 'admin') {
     header('Location: ../views/auth/Login.php');
     exit();

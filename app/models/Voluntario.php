@@ -48,5 +48,95 @@ class Voluntario extends Usuario
             throw new \RuntimeException('No se ha podido insertar al voluntario ' . $e);
         }
     }
+    /** Obtiene todos los datos del perfil del voluntario unidos de las dos tablas
+     * @param int $id_usuario
+     * @return array|false
+     */
+    public function obtenerPerfil(int $id_usuario): array|false
+    {
+        $stmt = $this->conn->prepare("
+            SELECT u.id, u.nombre, u.apellidos, u.email, u.foto_perfil,
+                   v.id AS id_voluntario, v.tipo_ayuda, v.disponibilidad, v.contacto_extra
+            FROM usuario u
+            INNER JOIN voluntario v ON v.id_usuario = u.id
+            WHERE u.id = :id_usuario
+        ");
+        $stmt->execute([':id_usuario' => $id_usuario]);
+        return $stmt->fetch();
+    }
 
+    /** Actualiza nombre, apellidos, tipo_ayuda y disponibilidad
+     * @param int $id_usuario
+     * @param array $datos
+     * @return bool
+     */
+    public function actualizarDatos(int $id_usuario, array $datos): bool
+    {
+        // Actualizamos la tabla usuario
+        $stmt = $this->conn->prepare("
+            UPDATE usuario
+            SET nombre    = :nombre,
+                apellidos = :apellidos
+            WHERE id = :id_usuario
+        ");
+        $stmt->execute([
+            ':nombre'     => $datos['nombre'],
+            ':apellidos'  => $datos['apellidos'],
+            ':id_usuario' => $id_usuario,
+        ]);
+
+        // Actualizamos la tabla voluntario
+        $stmt2 = $this->conn->prepare("
+            UPDATE voluntario
+            SET tipo_ayuda      = :tipo_ayuda,
+                disponibilidad  = :disponibilidad
+            WHERE id_usuario = :id_usuario
+        ");
+        $stmt2->execute([
+            ':tipo_ayuda'     => $datos['tipo_ayuda'],
+            ':disponibilidad' => $datos['disponibilidad'],
+            ':id_usuario'     => $id_usuario,
+        ]);
+
+        return true;
+    }
+
+    /** Actualiza la foto de perfil en la tabla usuario
+     * @param int $id_usuario
+     * @param string $nombre_archivo
+     * @return bool
+     */
+    public function actualizarFoto(int $id_usuario, string $nombre_archivo): bool
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE usuario
+            SET foto_perfil = :foto_perfil
+            WHERE id = :id_usuario
+        ");
+        $stmt->execute([
+            ':foto_perfil' => $nombre_archivo,
+            ':id_usuario'  => $id_usuario,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /** Cambia la contraseña (firma compatible con la clase padre)
+     * @param int $id
+     * @param string $nueva_password
+     * @return bool
+     */
+    public function cambiarPassword(int $id, string $nueva_password): bool
+    {
+        try {
+            $hash = password_hash($nueva_password, PASSWORD_BCRYPT);
+            $stmt = $this->conn->prepare("UPDATE usuario SET password = :password WHERE id = :id");
+            return $stmt->execute([
+                ':password' => $hash,
+                ':id' => $id
+            ]);
+        } catch (Exception $error) {
+            throw new RuntimeException("Error al cambiar la contraseña: " . $error->getMessage());
+        }
+    }
 }
+?>

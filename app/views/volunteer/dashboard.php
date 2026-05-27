@@ -213,7 +213,7 @@ $disponibles = $disponibles ?? [];
                             <?php endforeach; ?>
                         </select>
                         <?php if ($id_categoria): ?>
-                            <a href="?" class="text-xs text-slate-400 hover:text-slate-600 font-bold">✕ Limpiar</a>
+                            <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Limpiar</a>
                         <?php endif; ?>
                     </form>
                 </div>

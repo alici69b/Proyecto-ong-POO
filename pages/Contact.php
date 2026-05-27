@@ -201,7 +201,7 @@ session_start();
                         <details class="group rounded-xl border bg-white border-gray-200 p-4">
                             <summary class="flex cursor-pointer items-center justify-between text-lg font-bold text-slate-800">
                                 ¿Cuánto cuesta el servicio?
-                                <span class="transition group-open:rotate-180">⌄</span>
+                                <svg class="w-5 h-5 transition group-open:rotate-180 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                             </summary>
                             <p class="m-3 text-gray-500">
                                 RESET es una ONG sin animo de lucro. Aunque siempre tienes la opcion de poder donar algo por ayudarte.
@@ -211,7 +211,7 @@ session_start();
                         <details class="group rounded-xl border bg-white border-gray-200 p-4">
                             <summary class="flex cursor-pointer items-center justify-between text-lg font-bold text-slate-800">
                                 ¿Cuánto tiempo tarda el proceso?
-                                <span class="transition group-open:rotate-180">⌄</span>
+                                <svg class="w-5 h-5 transition group-open:rotate-180 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                             </summary>
                             <p class="m-3 text-gray-500">
                                 Depende de cada caso. Normalmente contactamos en 48h y el acompañamiento dura entre 1-6 meses.
@@ -221,8 +221,8 @@ session_start();
                         <!-- FAQ 3 -->
                         <details class="group rounded-xl border bg-white border-gray-200 p-4">
                             <summary class="flex cursor-pointer items-center justify-between text-lg font-bold text-slate-800">
-                                ¿Puedo se voluntario desde cualquier país?
-                                <span class="transition group-open:rotate-180">⌄</span>
+                                ¿Puedo ser voluntario desde cualquier país?
+                                <svg class="w-5 h-5 transition group-open:rotate-180 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                             </summary>
                             <p class="m-3 text-gray-500">
                                 ¡Síii! TRabajamos 100% online, así que puedes participar desde cualquier lugar del mundo.

@@ -34,7 +34,7 @@
                     </li>
                 </ul>
                 <p class="mt-4">
-                    <a href="/Proyecto-ong-POO/app/controllers/controller_register.php" class="text-[#25a18e] hover:text-white transition font-semibold text-sm">✉ ¿Quieres ayudarnos? ¡Regístrate aquí!</a>
+                    <a href="/Proyecto-ong-POO/app/controllers/controller_register.php" class="inline-flex items-center gap-1.5 text-[#25a18e] hover:text-white transition font-semibold text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg> ¿Quieres ayudarnos? ¡Regístrate aquí!</a>
                 </p>
             </div>
 
@@ -106,8 +106,9 @@
                 &copy;RESET ONG. Mini-proyecto 1º DAW.
             </p>
             <div class="flex justify-around gap-4">
-                <a href="../documentation/Politic_and_privacity.php" class="text-center md:text-right hover:text-[#00a5cf]">Politica y privacidad</a>
-                <a href="../documentation/Legal_Notice.php" class="text-center md:text-right hover:text-[#00a5cf]">Aviso legal</a>
+                <a href="/Proyecto-ong-POO/documentation/Politic_and_privacity.php" class="text-center md:text-right hover:text-[#00a5cf]">Politica y privacidad</a>
+                <a href="/Proyecto-ong-POO/documentation/Legal_Notice.php" class="text-center md:text-right hover:text-[#00a5cf]">Aviso legal</a>
+                <a href="/Proyecto-ong-POO/app/controllers/controller_transparencia.php" class="text-center md:text-right hover:text-[#00a5cf]">Transparencia</a>
             </div>
         </div>
     </div>

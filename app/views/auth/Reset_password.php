@@ -97,7 +97,7 @@ if (isset($_SESSION["error_login"])) {
       <div class="mx-auto w-full max-w-md">
 
         <a href="../../../index.php" class="mb-5 flex items-center text-sm text-gray-500 hover:text-gray-700">
-          <span class="mr-2">←</span> Volver al inicio
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio
         </a>
 
 

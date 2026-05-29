@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 //Variables de sesion
@@ -51,7 +52,7 @@ if(isset($_SESSION["error_login"])) {
   <div class="flex w-full flex-col justify-center px-8 md:px-16 lg:w-1/2 xl:px-24 bg-white">
     <div class="mx-auto w-full max-w-md">
       
-      <a href="/Proyecto-ong-POO/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700">
+      <a href="<?= BASE_URL ?>/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio
       </a>
 
@@ -65,7 +66,7 @@ if(isset($_SESSION["error_login"])) {
       <p class="mt-2 mb-8 text-gray-600">Accede a tu cuenta para continuar tu proceso RESET.</p>
 
 
-      <form id="loginForm" action="/Proyecto-ong-POO/app/controllers/controller_login.php" method="POST" class="space-y-6" novalidate>
+      <form id="loginForm" action="<?= BASE_URL ?>/app/controllers/controller_login.php" method="POST" class="space-y-6" novalidate>
 <!-- Muestro los errores de el error del login  -->
         <?php if (isset($mensajeError)): ?>
           <div class="bg-red-100 border-l-4 border-[#ff3b30] text-[#ff3b30] p-4 mb-6 rounded shadow-sm animate-pulse">
@@ -91,7 +92,7 @@ if(isset($_SESSION["error_login"])) {
             <input name="recordarDatos" type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-[#00a5cf]" />
             Recordarme
           </label>
-          <a href="/Proyecto-ong-POO/app/controllers/controller_resetPassword.php" class="text-sm text-[#00a5cf] hover:underline">¿Olvidaste tu contraseña?</a>
+          <a href="<?= BASE_URL ?>/app/controllers/controller_resetPassword.php" class="text-sm text-[#00a5cf] hover:underline">¿Olvidaste tu contraseña?</a>
         </div>
 
         <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-lg bg-[#00a5cf] p-3 font-semibold text-white transition hover:bg-black" name="iniciar_sesion" id="iniciar_sesion">
@@ -101,7 +102,7 @@ if(isset($_SESSION["error_login"])) {
       </form>
 
       <p class="mt-10 text-center text-sm text-gray-600">
-        ¿No tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_register.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Regístrate aquí</a>
+        ¿No tienes cuenta? <a href="<?= BASE_URL ?>/app/controllers/controller_register.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Regístrate aquí</a>
       </p>
     </div>
   </div>

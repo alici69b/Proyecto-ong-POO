@@ -1,10 +1,11 @@
+<?php require_once __DIR__ . "/../config.php"; ?>
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/Proyecto-ong-POO/public/img/Logo_RESET.svg">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/public/img/Logo_RESET.svg">
     <title>Historias - RESET</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -59,7 +60,7 @@
                 <div class="top-24 flex flex-col <?= $reverse ? 'lg:flex-row-reverse' : 'lg:flex-row' ?> gap-12 items-center mb-12 transition-all duration-300 bg-white rounded-3xl shadow-2xl p-6 z-<?= ($index + 1) * 10 ?>">
                     <div class="w-full lg:w-auto shrink-0 flex justify-center lg:justify-end">
                         <div class="relative inline-block">
-                            <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-100 h-100 aspect-square object-cover rounded-3xl shadow-medium">
+                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-100 h-100 aspect-square object-cover rounded-3xl shadow-medium">
                             <div class="absolute -bottom-4 -right-4 px-4 py-2 rounded-xl text-sm font-medium shadow-lg text-white bg-teal-600">
                                 <?= htmlspecialchars($h['nombre_categoria']) ?>
                             </div>
@@ -85,7 +86,7 @@
                             </div>
                             <div class="flex flex-wrap items-center gap-4 text-sm">
                                 <div class="flex items-center gap-3">
-                                    <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($foto) ?>" class="h-10 w-10 rounded-full object-cover">
+                                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" class="h-10 w-10 rounded-full object-cover">
                                     <div>
                                         <p class="font-semibold"><?= htmlspecialchars($h['solicitante']) ?></p>
                                         <p class="text-gray-500 text-sm"><?= (int)$h['edad'] ?> años</p>
@@ -119,7 +120,7 @@
                 <div class="bg-linear-to-r from-[#00a5cf] to-[#78d4a1] rounded-3xl p-12 text-white shadow-lg">
                     <h1 class="text-3xl lg:text-4xl font-bold mb-4">Tu historia puede ser la próxima</h1>
                     <p class="text-lg lg:text-xl mb-8 leading-relaxed">Cada una de estas personas estuvo donde tú estás ahora. El primer paso es siempre el más difícil, pero no tienes que darlo solo/a.</p>
-                    <a href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600/80 font-bold rounded-xl shadow-md hover:bg-red-600/80 hover:text-white transition-colors duration-300">
+                    <a href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-red-600/80 font-bold rounded-xl shadow-md hover:bg-red-600/80 hover:text-white transition-colors duration-300">
                         Solicitar mi RESET
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right-dashed"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12h.5m3 0h1.5m3 0h6" /><path d="M15 16l4 -4" /><path d="M15 8l4 4" /></svg>
                     </a>

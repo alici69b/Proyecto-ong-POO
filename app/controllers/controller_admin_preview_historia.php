@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../config.php";
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
@@ -61,7 +62,7 @@ $valoracion = (int)($h['valoracion'] ?? 5);
         <div class="flex flex-col lg:flex-row gap-10 items-center bg-white rounded-3xl shadow-2xl p-8 lg:p-10 transition-all duration-300">
             <div class="w-full lg:w-auto shrink-0 flex justify-center lg:justify-end">
                 <div class="relative inline-block">
-                    <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-80 h-80 sm:w-96 sm:h-96 aspect-square object-cover rounded-3xl shadow-xl">
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-80 h-80 sm:w-96 sm:h-96 aspect-square object-cover rounded-3xl shadow-xl">
                     <div class="absolute -bottom-4 -right-4 px-5 py-2.5 rounded-xl text-sm font-bold shadow-lg text-white bg-teal-600">
                         <?= htmlspecialchars($h['nombre_categoria']) ?>
                     </div>
@@ -89,7 +90,7 @@ $valoracion = (int)($h['valoracion'] ?? 5);
 
                 <div class="flex flex-wrap items-center gap-5 text-sm pt-4 border-t border-slate-100">
                     <div class="flex items-center gap-3">
-                        <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($foto) ?>" class="h-11 w-11 rounded-full object-cover ring-2 ring-slate-200">
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" class="h-11 w-11 rounded-full object-cover ring-2 ring-slate-200">
                         <div>
                             <p class="font-bold text-slate-800"><?= htmlspecialchars($h['solicitante']) ?></p>
                             <p class="text-gray-500 text-xs"><?= (int)$h['edad'] ? (int)$h['edad'] . ' años' : 'Edad no especificada' ?></p>

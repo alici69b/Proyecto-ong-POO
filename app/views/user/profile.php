@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/../../../config.php"; ?>
 <?php if (!isset($usuario)): header('Location: ../../controllers/controller_user_dashboard.php'); exit(); endif; ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,7 +19,7 @@
 
     <div class="pt-28 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#00a5cf] transition mb-6">
+        <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#00a5cf] transition mb-6">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
             Volver al panel
         </a>
@@ -41,7 +42,7 @@
             <div class="bg-gradient-to-r from-[#004e64] to-[#00a5cf] p-8 text-white">
                 <div class="flex items-center gap-6">
                     <div class="w-20 h-20 rounded-full border-4 border-white/30 overflow-hidden shrink-0 bg-white/20">
-                        <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil" class="w-full h-full object-cover"
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil" class="w-full h-full object-cover"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                         <div class="w-full h-full hidden items-center justify-center text-3xl font-extrabold text-white">
                             <?= mb_strtoupper(mb_substr($usuario['nombre'] ?? 'U', 0, 1)) ?>
@@ -85,7 +86,7 @@
                         <label class="block text-sm font-bold text-gray-700 mb-1.5">Foto de perfil</label>
                         <div class="flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto"
+                                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto"
                                      class="w-full h-full object-cover"
                                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                 <div class="w-full h-full hidden items-center justify-center text-xl font-bold text-gray-400">

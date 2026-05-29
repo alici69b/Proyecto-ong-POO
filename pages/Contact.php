@@ -2,6 +2,7 @@
 session_start();
 ?>
 
+<?php require_once __DIR__ . "/../config.php"; ?>
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 
@@ -237,7 +238,7 @@ session_start();
 
             <div id="Formulario" class="fade-in fade-in-2 max-w-100% grid">
 
-                <form id="contactForm" action="/Proyecto-ong-POO/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100" novalidate>
+                <form id="contactForm" action="<?= BASE_URL ?>/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100" novalidate>
 
                     <h3 class=" text-black font-bold text-lg md:text-xl p-2 lg:text-xl">Envíanos un mensaje</h3><br>
 

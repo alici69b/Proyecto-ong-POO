@@ -1,15 +1,16 @@
+<?php require_once __DIR__ . "/../config.php"; ?>
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/Proyecto-ong-POO/public/img/Logo_RESET.svg">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/public/img/Logo_RESET.svg">
     <title>RESET - Segundas oportunidades</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-    <link rel="alternate" type="application/rss+xml" title="RESET ONG - Historias de éxito" href="/Proyecto-ong-POO/app/controllers/controller_rss.php">
+    <link rel="alternate" type="application/rss+xml" title="RESET ONG - Historias de éxito" href="<?= BASE_URL ?>/app/controllers/controller_rss.php">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bricolage Grotesque">
@@ -53,8 +54,8 @@
             <div class=" max-w-xl mx-auto text-center top-0">
                 <p class="px-15  text-gray-800  text-md md:text-md lg:text-lg">Volvemos a dar vida a proyectos, hábitos, ideas, estudios y pequeños sueños que quedaron en pausa.</p>
                 <div class=" flex justify-center text-center items-center  gap-3 px-15 pt-15">
-                    <a class="px-5 py-3 text-sm w-50 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold  shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
-                    <a class="px-5  py-3 w-53 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
+                    <a class="px-5 py-3 text-sm w-50 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold  shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
+                    <a class="px-5  py-3 w-53 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
                 </div>
             </div>
         </div>
@@ -75,7 +76,7 @@
         </div>
 
         <div class="flex justify-center pt-6">
-            <a href="/Proyecto-ong-POO/app/controllers/controller_rss.php" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-full text-sm font-semibold text-gray-800 hover:bg-white/50 transition-all shadow-sm" title="Suscríbete al canal RSS">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_rss.php" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-full text-sm font-semibold text-gray-800 hover:bg-white/50 transition-all shadow-sm" title="Suscríbete al canal RSS">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#ff6b22"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
                 <span>RSS</span>
             </a>
@@ -169,7 +170,7 @@
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
 
           <!-- Voluntario -->
-          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=voluntario" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=voluntario" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1.5 bg-[#00a5cf]"></div>
             <div class="flex items-center gap-4 mb-4">
               <div class="p-3 rounded-xl bg-[#00a5cf]/10">
@@ -182,7 +183,7 @@
           </a>
 
           <!-- Usuario Reset -->
-          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=socio" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=socio" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1.5 bg-[#25a18e]"></div>
             <div class="flex items-center gap-4 mb-4">
               <div class="p-3 rounded-xl bg-[#25a18e]/10">
@@ -195,7 +196,7 @@
           </a>
 
           <!-- Administrador -->
-          <a href="/Proyecto-ong-POO/app/controllers/simular_perfil.php?rol=admin" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=admin" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1.5 bg-[#ff3b30]"></div>
             <div class="flex items-center gap-4 mb-4">
               <div class="p-3 rounded-xl bg-[#ff3b30]/10">
@@ -229,8 +230,8 @@
         <div class=" max-w-xl mx-auto text-center top-0">
             <p class="px-15  text-gray-800  text-md md:text-md lg:text-lg">No tienes que hacerlo solo/a. Da el primer paso y déjanos ayudarte a reiniciar lo que quedó pendiente.</p>
             <div class=" flex justify-center text-center items-center  gap-3 pt-6">
-                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
-                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
+                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
+                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
             </div>
         </div>
     </section>

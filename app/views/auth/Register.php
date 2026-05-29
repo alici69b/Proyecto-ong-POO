@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 $rol = $_GET["rol"] ?? "usuario";
 ?>
 <!DOCTYPE html>
@@ -84,7 +85,7 @@ $rol = $_GET["rol"] ?? "usuario";
         <!-- boton de volver al inicio con el logo y el nombre de la ong -->
         <div class="flex w-full flex-col justify-center px-8 md:px-16 lg:w-1/2 xl:px-24 bg-white">
             <div class="mx-auto w-full max-w-md">
-                <a href="/Proyecto-ong-POO/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio</a>
+                <a href="<?= BASE_URL ?>/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio</a>
                 <div class="flex items-center gap-2">
                     <svg fill="#ff3b30" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612.00 612.00" xml:space="preserve">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -127,7 +128,7 @@ $rol = $_GET["rol"] ?? "usuario";
                 </div>
 
                 <!-- Formulario con los campos: nombre, email, contraseña y el boton -->
-                <form id="registerForm" class="space-y-5" method="post" action="/Proyecto-ong-POO/app/controllers/controller_register.php" novalidate>
+                <form id="registerForm" class="space-y-5" method="post" action="<?= BASE_URL ?>/app/controllers/controller_register.php" novalidate>
 
                     <!--  El value inicial es 'soy-usuario', que coincide con el botón que arranca activo -->
                     <input type="hidden" name="tipo" id="input-rol" value="<?= $rol; ?>">
@@ -229,7 +230,7 @@ $rol = $_GET["rol"] ?? "usuario";
                 </form>
 
                 <p class="mt-10 text-center text-sm text-gray-600">
-                    ¿Ya tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
+                    ¿Ya tienes cuenta? <a href="<?= BASE_URL ?>/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
                 </p>
 
             </div>

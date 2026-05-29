@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 $rol = $_GET["rol"] ?? "usuario";
 ?>
 <!DOCTYPE html>
@@ -84,7 +85,7 @@ $rol = $_GET["rol"] ?? "usuario";
         <!-- boton de volver al inicio con el logo y el nombre de la ong -->
         <div class="flex w-full flex-col justify-center px-8 md:px-16 lg:w-1/2 xl:px-24 bg-white">
             <div class="mx-auto w-full max-w-md">
-                <a href="/Proyecto-ong-POO/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700"><span class="mr-2">←</span> Volver al inicio</a>
+                <a href="<?= BASE_URL ?>/index.php" class="mb-10 flex items-center text-sm text-gray-500 hover:text-gray-700"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio</a>
                 <div class="flex items-center gap-2">
                     <svg fill="#ff3b30" height="25px" width="25px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612.00 612.00" xml:space="preserve">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -127,7 +128,7 @@ $rol = $_GET["rol"] ?? "usuario";
                 </div>
 
                 <!-- Formulario con los campos: nombre, email, contraseña y el boton -->
-                <form class="space-y-5" method="post" action="/Proyecto-ong-POO/app/controllers/controller_register.php">
+                <form id="registerForm" class="space-y-5" method="post" action="<?= BASE_URL ?>/app/controllers/controller_register.php" novalidate>
 
                     <!--  El value inicial es 'soy-usuario', que coincide con el botón que arranca activo -->
                     <input type="hidden" name="tipo" id="input-rol" value="<?= $rol; ?>">
@@ -151,7 +152,7 @@ $rol = $_GET["rol"] ?? "usuario";
                         <!--  bloque-usuario visible por defecto (sin hidden) -->
                         <div id="bloque-usuario" class="animate-in fade-in duration-300">
                             <label class="block text-sm font-medium text-slate-700 mb-2">¿Qué quieres reiniciar?</label>
-                            <select name="tipo_ayuda_usuario" class="w-full px-4 py-3 rounded-xl border border-slate-200">
+                            <select name="tipo_ayuda_usuario" id="tipo_ayuda_usuario" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
                                 <option value="">Selecciona una categoría</option>
                                 <option value="estudio">Estudios</option>
                                 <option value="salud">Salud</option>
@@ -159,12 +160,13 @@ $rol = $_GET["rol"] ?? "usuario";
                                 <option value="proyecto">Proyecto</option>
                                 <option value="otros">Otros</option>
                             </select>
+                            <p id="tipo_ayuda_usuario-error" class="hidden text-red-500 text-sm mt-1"></p>
                         </div>
 
                         <!--  bloque-voluntario oculto por defecto (con hidden) -->
                         <div id="bloque-voluntario" class="hidden animate-in fade-in duration-300">
                             <label class="block text-sm font-medium text-slate-700 mb-2">¿Cómo puedes ayudar?</label>
-                            <select name="tipo_ayuda_voluntario" class="w-full px-4 py-3 rounded-xl border border-slate-200">
+                            <select name="tipo_ayuda_voluntario" id="tipo_ayuda_voluntario" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
                                 <option value="">Selecciona una ayuda</option>
                                 <option value="estudio">Mentoría en estudios</option>
                                 <option value="salud">Coaching de salud</option>
@@ -172,27 +174,32 @@ $rol = $_GET["rol"] ?? "usuario";
                                 <option value="proyecto">Asesoría de emprendimiento</option>
                                 <option value="otros">Otro</option>
                             </select>
+                            <p id="tipo_ayuda_voluntario-error" class="hidden text-red-500 text-sm mt-1"></p>
                         </div>
                     </div>
 
-                    <div>
+                    <div id="nombre-group">
                         <label for="nombre" class="block text-sm font-medium text-slate-700 mb-2">Tu nombre</label>
-                        <input name="nombre" type="text" placeholder="¿Cómo te llamas?" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <input name="nombre" id="nombre" type="text" placeholder="¿Cómo te llamas?" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <p id="nombre-error" class="hidden text-red-500 text-sm mt-1"></p>
                     </div>
 
-                    <div>
+                    <div id="apellidos-group">
                         <label for="apellidos" class="block text-sm font-medium text-slate-700 mb-2">Tus apellidos</label>
-                        <input name="apellidos" type="text" placeholder="¿Cuáles son tus apellidos?" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <input name="apellidos" id="apellidos" type="text" placeholder="¿Cuáles son tus apellidos?" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <p id="apellidos-error" class="hidden text-red-500 text-sm mt-1"></p>
                     </div>
 
-                    <div>
+                    <div id="email-group">
                         <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email</label>
-                        <input name="email" type="email" placeholder="tu@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <input name="email" id="email" type="email" placeholder="tu@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <p id="email-error" class="hidden text-red-500 text-sm mt-1"></p>
                     </div>
 
-                    <div>
+                    <div id="contrasena-group">
                         <label for="contrasena" class="block text-sm font-medium text-slate-700 mb-2">Contraseña</label>
-                        <input name="contrasena" type="password" placeholder="Mínimo 8 caracteres" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <input name="contrasena" id="contrasena" type="password" placeholder="Mínimo 8 caracteres" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] transition-all">
+                        <p id="contrasena-error" class="hidden text-red-500 text-sm mt-1"></p>
                     </div>
 
                     <button name="crear_cuenta" id="crear_cuenta" type="submit" class="w-full bg-[#00a5cf] hover:bg-black text-white font-semibold py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
@@ -223,13 +230,131 @@ $rol = $_GET["rol"] ?? "usuario";
                 </form>
 
                 <p class="mt-10 text-center text-sm text-gray-600">
-                    ¿Ya tienes cuenta? <a href="/Proyecto-ong-POO/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
+                    ¿Ya tienes cuenta? <a href="<?= BASE_URL ?>/app/controllers/controller_login.php" class="cursor-pointer font-bold text-[#00a5cf] hover:underline">Inicia Sesión</a>
                 </p>
 
             </div>
         </div>
 
         <script>
+            const form = document.getElementById('registerForm');
+            const nombre = document.getElementById('nombre');
+            const apellidos = document.getElementById('apellidos');
+            const email = document.getElementById('email');
+            const contrasena = document.getElementById('contrasena');
+            const tipoAyudaUsuario = document.getElementById('tipo_ayuda_usuario');
+            const tipoAyudaVoluntario = document.getElementById('tipo_ayuda_voluntario');
+
+            const campos = [
+                { el: nombre, error: 'nombre-error', val: () => validarTexto(nombre, 'El nombre') },
+                { el: apellidos, error: 'apellidos-error', val: () => validarTexto(apellidos, 'Los apellidos') },
+                { el: email, error: 'email-error', val: () => validarEmail() },
+                { el: contrasena, error: 'contrasena-error', val: () => validarContrasena() },
+            ];
+
+            function mostrarError(input, errorId, mensaje) {
+                const errorEl = document.getElementById(errorId);
+                input.classList.add('border-red-500', 'ring-red-500');
+                input.classList.remove('border-slate-200');
+                errorEl.textContent = mensaje;
+                errorEl.classList.remove('hidden');
+            }
+
+            function limpiarError(input, errorId) {
+                const errorEl = document.getElementById(errorId);
+                input.classList.remove('border-red-500', 'ring-red-500');
+                input.classList.add('border-slate-200');
+                errorEl.classList.add('hidden');
+                errorEl.textContent = '';
+            }
+
+            function validarTexto(input, label) {
+                const v = input.value.trim();
+                if (v === '') {
+                    mostrarError(input, input.id + '-error', label + ' es obligatorio.');
+                    return false;
+                }
+                if (v.length < 2) {
+                    mostrarError(input, input.id + '-error', label + ' debe tener al menos 2 caracteres.');
+                    return false;
+                }
+                if (/[0-9]/.test(v)) {
+                    mostrarError(input, input.id + '-error', label + ' no puede contener números.');
+                    return false;
+                }
+                limpiarError(input, input.id + '-error');
+                return true;
+            }
+
+            function validarEmail() {
+                const v = email.value.trim();
+                if (v === '') {
+                    mostrarError(email, 'email-error', 'El email es obligatorio.');
+                    return false;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                    mostrarError(email, 'email-error', 'Introduce un email válido (ej. usuario@dominio.com).');
+                    return false;
+                }
+                limpiarError(email, 'email-error');
+                return true;
+            }
+
+            function validarContrasena() {
+                const v = contrasena.value.trim();
+                if (v === '') {
+                    mostrarError(contrasena, 'contrasena-error', 'La contraseña es obligatoria.');
+                    return false;
+                }
+                if (v.length < 8) {
+                    mostrarError(contrasena, 'contrasena-error', 'La contraseña debe tener al menos 8 caracteres.');
+                    return false;
+                }
+                limpiarError(contrasena, 'contrasena-error');
+                return true;
+            }
+
+            function validarTipoAyuda() {
+                const rol = document.getElementById('input-rol').value;
+                const select = rol === 'soy-voluntario' ? tipoAyudaVoluntario : tipoAyudaUsuario;
+                const errorId = rol === 'soy-voluntario' ? 'tipo_ayuda_voluntario-error' : 'tipo_ayuda_usuario-error';
+                const errorEl = document.getElementById(errorId);
+                if (select.value === '') {
+                    select.classList.add('border-red-500', 'ring-red-500');
+                    select.classList.remove('border-slate-200');
+                    errorEl.textContent = 'Selecciona una opción.';
+                    errorEl.classList.remove('hidden');
+                    return false;
+                }
+                select.classList.remove('border-red-500', 'ring-red-500');
+                select.classList.add('border-slate-200');
+                errorEl.classList.add('hidden');
+                errorEl.textContent = '';
+                return true;
+            }
+
+            campos.forEach(c => {
+                c.el.addEventListener('blur', c.val);
+                c.el.addEventListener('input', () => {
+                    if (!document.getElementById(c.error).classList.contains('hidden')) c.val();
+                });
+            });
+
+            form.addEventListener('submit', function(e) {
+                const valNombre = validarTexto(nombre, 'El nombre');
+                const valApellidos = validarTexto(apellidos, 'Los apellidos');
+                const valEmail = validarEmail();
+                const valPass = validarContrasena();
+                const valAyuda = validarTipoAyuda();
+                if (!valNombre || !valApellidos || !valEmail || !valPass || !valAyuda) {
+                    e.preventDefault();
+                    if (!valNombre) nombre.focus();
+                    else if (!valApellidos) apellidos.focus();
+                    else if (!valEmail) email.focus();
+                    else if (!valPass) contrasena.focus();
+                }
+            });
+
             function cambiarRol(rol) {
                 const btnU = document.getElementById('btn-usuario');
                 const btnV = document.getElementById('btn-voluntario');
@@ -237,7 +362,6 @@ $rol = $_GET["rol"] ?? "usuario";
                 const bloqueV = document.getElementById('bloque-voluntario');
                 const inputHidden = document.getElementById('input-rol');
 
-                // Actualizamos el valor del input oculto
                 inputHidden.value = rol;
 
                 if (rol === 'soy-usuario') {
@@ -251,6 +375,9 @@ $rol = $_GET["rol"] ?? "usuario";
                     bloqueV.classList.remove('hidden');
                     bloqueU.classList.add('hidden');
                 }
+
+                document.getElementById('tipo_ayuda_usuario-error').classList.add('hidden');
+                document.getElementById('tipo_ayuda_voluntario-error').classList.add('hidden');
             }
 
             function navegarCon(url) {
@@ -258,14 +385,12 @@ $rol = $_GET["rol"] ?? "usuario";
                 setTimeout(() => window.location.href = url, 300);
             }
 
-            // inicializar según el rol que viene desde PHP
             document.addEventListener('DOMContentLoaded', () => {
-                const rol = "<?= $rol ?>"; // viene de PHP
-
+                const rol = "<?= $rol ?>";
                 if (rol === 'voluntario') {
                     cambiarRol('soy-voluntario');
                 } else {
-                    cambiarRol('soy-usuario'); // por defecto
+                    cambiarRol('soy-usuario');
                 }
             });
         </script>

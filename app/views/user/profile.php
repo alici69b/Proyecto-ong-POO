@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/../../../config.php"; ?>
 <?php if (!isset($usuario)): header('Location: ../../controllers/controller_user_dashboard.php'); exit(); endif; ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,7 +19,7 @@
 
     <div class="pt-28 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <a href="/Proyecto-ong-POO/app/controllers/controller_user_dashboard.php" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#00a5cf] transition mb-6">
+        <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-[#00a5cf] transition mb-6">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
             Volver al panel
         </a>
@@ -32,7 +33,7 @@
 
         <?php if (!empty($errores['general'])): ?>
         <div class="mb-6 flex items-center gap-3 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-sm">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" class="w-5 h-5 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>
+            <svg fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5 shrink-0"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"/></svg>
             <p class="font-medium"><?= htmlspecialchars(implode(', ', $errores['general'])) ?></p>
         </div>
         <?php endif; ?>
@@ -41,7 +42,7 @@
             <div class="bg-gradient-to-r from-[#004e64] to-[#00a5cf] p-8 text-white">
                 <div class="flex items-center gap-6">
                     <div class="w-20 h-20 rounded-full border-4 border-white/30 overflow-hidden shrink-0 bg-white/20">
-                        <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil" class="w-full h-full object-cover"
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil" class="w-full h-full object-cover"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                         <div class="w-full h-full hidden items-center justify-center text-3xl font-extrabold text-white">
                             <?= mb_strtoupper(mb_substr($usuario['nombre'] ?? 'U', 0, 1)) ?>
@@ -85,7 +86,7 @@
                         <label class="block text-sm font-bold text-gray-700 mb-1.5">Foto de perfil</label>
                         <div class="flex items-center gap-4">
                             <div class="w-16 h-16 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto"
+                                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto"
                                      class="w-full h-full object-cover"
                                      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                 <div class="w-full h-full hidden items-center justify-center text-xl font-bold text-gray-400">

@@ -13,6 +13,7 @@ require_once __DIR__ . "/../models/Usuario.php";
 require_once __DIR__ . "/../models/Voluntario.php";
 require_once __DIR__ . "/../models/Reset.php";
 require_once __DIR__ . "/../models/ResetComentario.php";
+require_once __DIR__ . "/../models/Historia.php";
 
 // Instanciamos
 $db               = new Database();
@@ -53,6 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if ($_POST["action"] === "finalizar") {
         $ok = $resetModel->cambiarEstado($id_reset, $id_voluntario, 3); // 3 = resuelto
+        if ($ok) {
+            $historiaModel = new Historia();
+            $historiaModel->crearAutomaticaDesdeReset($id_reset);
+        }
         $_SESSION["flash"] = $ok
             ? ["tipo" => "success", "msg" => "Reset marcado como resuelto."]
             : ["tipo" => "error",   "msg" => "No se pudo finalizar. Comprueba que el reset está activo."];

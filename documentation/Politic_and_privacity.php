@@ -116,7 +116,7 @@
     </main>
 
     <a href="../index.php" class="mt-12 group flex items-center gap-3 text-[#004e64] font-bold hover:text-[#00a5cf] transition-all">
-        <span class="bg-white w-10 h-10 flex items-center justify-center rounded-full shadow-md group-hover:scale-110 transition-transform">←</span>
+        <span class="bg-white w-10 h-10 flex items-center justify-center rounded-full shadow-md group-hover:scale-110 transition-transform"><svg class="w-5 h-5 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg></span>
         Volver al inicio
     </a>
 

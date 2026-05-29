@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 //Inicializamos las variables para evitar posibles errores
 $flash = $flash ?? null;
 $stats = $stats ?? ["total" => 0, "en_progreso" => 0, "completados" => 0];
@@ -53,7 +54,16 @@ $disponibles = $disponibles ?? [];
         </a>
         <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
         <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
-            <div class="flex items-center justify-between mt-10 px-2">
+            <div class="mt-6 px-2">
+                <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
+                    <svg fill="#ff3b30" class="w-6 h-6 transition-transform group-hover:rotate-12" viewBox="0 0 612.00 612.00">
+                        <path d="M44.563,250.179l237.89,41.871c0.485,0.085,0.964,0.118,1.451,0.118c4.33-0.027,7.831-3.545,7.831-7.88 c0-1.831-0.624-3.516-1.672-4.853l-39.919-61.25c24.027-10.024,64.762-23.283,112.095-23.283c24.594,0,48.118,3.69,69.918,10.972 c19.861,6.631,47.495,24.447,70.4,45.389c16.415,15.01,31.403,32.073,45.896,48.573c3.34,3.802,6.682,7.607,10.048,11.396 c1.521,1.713,3.677,2.648,5.894,2.648c0.788,0,1.581-0.116,2.357-0.361c2.961-0.928,5.101-3.508,5.468-6.588l0.116-0.991 c6.506-56.017-7.174-114.855-37.531-161.427c-32.502-49.852-84.035-85.972-145.111-101.71 c-24.353-6.275-49.973-9.456-76.149-9.456c-34.717,0-69.827,5.501-104.373,16.35c-18.876,5.971-37.136,13.429-54.376,22.198 L110.264,3.574c-1.714-2.631-4.832-3.978-7.921-3.467c-3.096,0.526-5.584,2.838-6.333,5.887L38.278,240.535 c-0.521,2.118-0.142,4.359,1.05,6.186C40.519,248.549,42.415,249.802,44.563,250.179z"></path>
+                        <path d="M572.67,365.274c-1.191-1.827-3.087-3.08-5.236-3.458l-237.888-41.872c-3.094-0.54-6.212,0.8-7.942,3.419 c-1.73,2.619-1.74,6.017-0.027,8.648l40.278,61.802c-24.027,10.024-64.762,23.283-112.093,23.283 c-24.594,0-48.118-3.692-69.92-10.974c-19.864-6.632-47.498-24.449-70.4-45.389c-16.415-15.01-31.403-32.071-45.896-48.568 c-3.34-3.803-6.684-7.608-10.049-11.398c-2.065-2.323-5.301-3.219-8.265-2.282c-2.964,0.935-5.101,3.526-5.456,6.612l-0.111,0.962 c-6.508,56.021,7.172,114.855,37.532,161.42c32.5,49.855,84.034,85.977,145.109,101.712c24.358,6.275,49.982,9.456,76.16,9.456 c0.003,0,0.002,0,0.007,0c34.71,0,69.819-5.499,104.355-16.35c18.876-5.971,37.136-13.427,54.375-22.196l44.53,68.321 c1.47,2.255,3.967,3.578,6.6,3.578c0.438,0,0.88-0.036,1.321-0.109c3.096-0.526,5.583-2.838,6.335-5.887l57.734-234.541 C574.242,369.342,573.863,367.103,572.67,365.274z"></path>
+                    </svg>
+                    <h3 class="font-black text-lg tracking-tighter text-white">RESET</h3>
+                </a>
+            </div>
+            <div class="flex items-center justify-between px-2">
                 <div>
                     <p class="font-bold text-white text-sm">Panel Voluntario</p>
                     <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
@@ -86,7 +96,7 @@ $disponibles = $disponibles ?? [];
                 </a>
             </nav>
             <div class="mt-auto pt-6 border-t border-white/10">
-                <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php"
+                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                     <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z" />
@@ -98,6 +108,20 @@ $disponibles = $disponibles ?? [];
 
         <!-- ── Contenido principal ──────────────────────────────────────────── -->
         <main class="flex-1 md:ml-64 p-6 md:p-12 w-full">
+        <?php if (isset($modo_simulado) && $modo_simulado): ?>
+        <div class="flex flex-col gap-2 mb-6">
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
+                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
+            </div>
+            <?php if (isset($_GET['sim_bloqueado'])): ?>
+            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
+                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+                <span>Acción bloqueada: estás en modo simulación.</span>
+            </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
 
             <!-- Cabecera -->
             <header class="mb-10">
@@ -162,7 +186,7 @@ $disponibles = $disponibles ?? [];
                             };
                             ?>
                             <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
-                            <a href="/Proyecto-ong-POO/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
+                            <a href="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
                                 class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer<?= $cerrado
                                                                                                                     ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
                                                                                                                     : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
@@ -206,7 +230,7 @@ $disponibles = $disponibles ?? [];
                             <?php endforeach; ?>
                         </select>
                         <?php if ($id_categoria): ?>
-                            <a href="?" class="text-xs text-slate-400 hover:text-slate-600 font-bold">✕ Limpiar</a>
+                            <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Limpiar</a>
                         <?php endif; ?>
                     </form>
                 </div>

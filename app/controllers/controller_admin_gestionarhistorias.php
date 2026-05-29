@@ -1,14 +1,77 @@
 <?php
+<<<<<<< HEAD
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
+=======
 session_start();
 
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
+    header('Location: ../auth/Login.php');
+    exit();
+}
 
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../models/Historia.php';
+$historiaModel = new Historia();
+>>>>>>> 721a28808f0f032cee4f518a2f5e1df4e13d63f3
 
-$historias = [
-    ['id_historia' => 1, 'titulo' => 'De abandonar Medicina a ser cirujana', 'solicitante' => 'Elena M.', 'nombre_categoria' => 'Estudios', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'Una historia increíble de superación y cambio de rumbo profesional.', 'estado' => 'Publicada', 'icono' => '📚'],
-    ['id_historia' => 2, 'titulo' => 'Un sueño congelado que volvió a arder', 'solicitante' => 'Javier R.', 'nombre_categoria' => 'Proyecto', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'Cómo retomar una pasión estancada y convertirla en realidad.', 'estado' => 'Publicada', 'icono' => '💡'],
-    ['id_historia' => 3, 'titulo' => 'Correr otra vez después de 5 años', 'solicitante' => 'Carmen S.', 'nombre_categoria' => 'Hábitos', 'fecha' => '2026-04-21 12:00:00', 'descripcion' => 'El camino de vuelta a la salud física y la disciplina deportiva.', 'estado' => 'Publicada', 'icono' => '👟'],
-    ['id_historia' => 4, 'titulo' => 'Recuperar la confianza después del fracaso', 'solicitante' => 'Ana L.', 'nombre_categoria' => 'Mental', 'fecha' => '2026-04-20 10:30:00', 'descripcion' => 'Aprender a levantarse y empezar de nuevo con más fuerza.', 'estado' => 'Borrador', 'icono' => '🧠'],
-    ['id_historia' => 5, 'titulo' => 'De la adicción al emprendimiento', 'solicitante' => 'Miguel G.', 'nombre_categoria' => 'Laboral', 'fecha' => '2026-04-19 08:15:00', 'descripcion' => 'Transformar una experiencia difícil en una oportunidad de negocio.', 'estado' => 'Borrador', 'icono' => '🚀'],
-];
+$db = new Database();
+$conn = $db->getConnection();
+
+$usuarios = $conn->query("SELECT id, nombre, apellidos FROM usuario WHERE id_rol = 1 ORDER BY nombre ASC")->fetchAll();
+$voluntarios = $conn->query("SELECT u.id, u.nombre, u.apellidos FROM usuario u JOIN voluntario v ON u.id = v.id_usuario ORDER BY u.nombre ASC")->fetchAll();
+$categorias = $conn->query("SELECT nombre_categoria FROM categoria_reset ORDER BY id ASC")->fetchAll(PDO::FETCH_COLUMN);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
+    $datos = $_POST;
+    if (!empty($_FILES['foto']['name'])) {
+        $archivo = $_FILES['foto'];
+        $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+        $permitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        if (in_array($ext, $permitidas)) {
+            $nombreArchivo = 'historia_nueva_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($archivo['tmp_name'], $ruta)) {
+                $datos['foto'] = $nombreArchivo;
+            }
+        }
+    }
+    $id = $historiaModel->insertar($datos);
+    header('Location: controller_admin_gestionarhistorias.php?created=' . ($id > 0 ? 1 : 0));
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_editar']) && isset($_POST['id'])) {
+    $datos = $_POST;
+    if (!empty($_FILES['foto']['name'])) {
+        $archivo = $_FILES['foto'];
+        $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+        $permitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        if (in_array($ext, $permitidas)) {
+            $nombreArchivo = 'historia_' . $_POST['id'] . '_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($archivo['tmp_name'], $ruta)) {
+                $datos['foto'] = $nombreArchivo;
+            }
+        }
+    }
+    $ok = $historiaModel->actualizar((int)$_POST['id'], $datos);
+    header('Location: controller_admin_gestionarhistorias.php?updated=' . ($ok ? 1 : 0));
+    exit();
+}
+
+if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
+    $ok = $historiaModel->eliminar((int)$_GET['id']);
+    header('Location: controller_admin_gestionarhistorias.php?deleted=' . ($ok ? 1 : 0));
+    exit();
+}
+
+$historias = $historiaModel->obtenerTodas();
+
+$filtroEstado = $_GET['estado'] ?? '';
+if ($filtroEstado === 'Publicada' || $filtroEstado === 'Borrador') {
+    $historias = array_values(array_filter($historias, fn($h) => $h['estado'] === $filtroEstado));
+}
 
 include __DIR__ . '/../views/admin/gestionarhistorias.php';

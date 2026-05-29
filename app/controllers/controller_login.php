@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../config.php";
 session_start();
 
 //importamos los modelos que vamos a utilizar
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: ../controllers/controller_user_dashboard.php');
             //si no te llevara a la pagina principal
         } else {
-            header('Location: /Proyecto-ong-POO/index.php');
+            header('Location: ' . BASE_URL . '/index.php');
         }
         exit();
         //si da error al intentarlo, recogemos el error en sessio y redirigimos al login 

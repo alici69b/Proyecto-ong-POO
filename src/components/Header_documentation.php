@@ -15,7 +15,7 @@
 
     <div class="flex-1 flex justify-end">
         <a href="../index.php" class="flex items-center text-sm font-bold text-[#004e64]/60 hover:text-[#00a5cf] transition-colors group">
-            <span class="mr-2 transform group-hover:-translate-x-1 transition-transform">←</span> 
+            <svg class="w-4 h-4 mr-1 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg>
             Volver al inicio
         </a>
     </div>

@@ -28,7 +28,7 @@
 
     <header class="fade-in fade-in-1 w-full flex justify-center pt-6 z-[110]">
         <div class="w-[95%] max-w-7xl">
-            <?php require_once "src/components/Header_index.php"; ?>
+            <?php require_once "src/components/Header.php"; ?>
         </div>
     </header>
         

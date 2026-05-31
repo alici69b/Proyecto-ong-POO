@@ -19,18 +19,19 @@ class ResetComentario
     public function obtenerPorReset(int $id_reset): array
     {
         $stmt = $this->conn->prepare("
-            SELECT rc.id, rc.texto, rc.created_at,
-                   u.nombre  AS nombre_usuario,
-                   v.id      AS es_voluntario
-            FROM reset_comentario rc
-            LEFT JOIN usuario    u ON rc.id_usuario   = u.id
-            LEFT JOIN voluntario v ON rc.id_voluntario = v.id
-            WHERE rc.id_reset = :id_reset
-            ORDER BY rc.created_at ASC
-        ");
+        SELECT rc.id, rc.texto, rc.created_at,
+               COALESCE(u.nombre,  uv.nombre)           AS nombre_usuario,
+               v.id                                      AS es_voluntario,
+               COALESCE(u.foto_perfil, uv.foto_perfil)  AS foto_voluntario
+        FROM reset_comentario rc
+        LEFT JOIN usuario    u  ON rc.id_usuario    = u.id
+        LEFT JOIN voluntario v  ON rc.id_voluntario = v.id
+        LEFT JOIN usuario    uv ON v.id_usuario     = uv.id
+        WHERE rc.id_reset = :id_reset
+        ORDER BY rc.created_at ASC
+    ");
 
         $stmt->execute([":id_reset" => $id_reset]);
-
         return $stmt->fetchAll();
     }
 

@@ -54,12 +54,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if ($_POST["action"] === "finalizar") {
         $ok = $resetModel->cambiarEstado($id_reset, $id_voluntario, 3); // 3 = resuelto
+
         if ($ok) {
             $historiaModel = new Historia();
-            $historiaModel->crearAutomaticaDesdeReset($id_reset);
+
+            // Recogemos los datos que ha rellenado el voluntario en el formulario
+            $titulo      = trim($_POST['historia_titulo']      ?? '');
+            $descripcion = trim($_POST['historia_descripcion'] ?? '');
+            $antes       = trim($_POST['historia_antes']       ?? '');
+            $despues     = trim($_POST['historia_despues']     ?? '');
+
+            // Si el voluntario ha rellenado los campos usamos sus datos
+            // Si no (por si acaso), usamos el método automático como antes
+            if ($titulo !== '' && $descripcion !== '' && $antes !== '' && $despues !== '') {
+                $historiaModel->crearDesdeResetConDatos($id_reset, [
+                    'titulo'              => $titulo,
+                    'descripcion'         => $descripcion,
+                    'descripcion_antes'   => $antes,
+                    'descripcion_despues' => $despues,
+                ]);
+            } else {
+                $historiaModel->crearAutomaticaDesdeReset($id_reset);
+            }
         }
+
         $_SESSION["flash"] = $ok
-            ? ["tipo" => "success", "msg" => "Reset marcado como resuelto."]
+            ? ["tipo" => "success", "msg" => "Reset marcado como resuelto. La historia quedará pendiente de revisión por el administrador."]
             : ["tipo" => "error",   "msg" => "No se pudo finalizar. Comprueba que el reset está activo."];
     } elseif ($_POST["action"] === "cancelar") {
         $ok = $resetModel->cambiarEstado($id_reset, $id_voluntario, 4); // 4 = cancelado
@@ -91,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 // Recargamos el reset por si cambió el estado tras el POST
 $reset       = $resetModel->obtenerPorId($id_reset, $id_voluntario);
 $comentarios = $comentarioModel->obtenerPorReset($id_reset);
+$resetModel->actualizarVisitaVoluntario($id_reset); // Marcamos que el voluntario ha visto este reset (quita la notificación)
 
 $flash = $_SESSION["flash"] ?? null;
 unset($_SESSION["flash"]);

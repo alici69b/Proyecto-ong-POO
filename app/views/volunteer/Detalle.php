@@ -163,6 +163,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
             </div>
 
             <!-- ── Gestión de estado (solo si está activo) ── -->
+            <!-- ── Gestión de estado (solo si está activo) ── -->
             <?php if ($activo): ?>
                 <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
                     <h3 class="text-lg font-extrabold mb-4">Cerrar este reset</h3>
@@ -170,10 +171,51 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
 
                     <form method="POST"
                         action="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $reset['id'] ?>">
+
+                        <!-- Nota de cierre (opcional, va al chat) -->
                         <textarea name="nota_cierre"
-                            rows="3"
-                            placeholder="Escribe una nota de cierre... (opcional)"
-                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-4 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+                            rows="2"
+                            placeholder="Escribe una nota de cierre para el chat... (opcional)"
+                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-6 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+
+                        <!-- Bloque historia (solo si pulsa Finalizar) -->
+                        <div class="border border-slate-100 rounded-2xl p-5 mb-5 bg-slate-50">
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
+                                Historia de éxito (el admin la revisará antes de publicarla)
+                            </p>
+
+                            <!-- Título de la historia -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Título *</label>
+                                <input type="text" name="historia_titulo" required maxlength="150"
+                                    placeholder="Ej: Cómo retomé mis estudios gracias a RESET"
+                                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                            </div>
+
+                            <!-- Descripción general -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Descripción general *</label>
+                                <textarea name="historia_descripcion" required rows="2" maxlength="300"
+                                    placeholder="Un resumen breve del caso..."
+                                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none bg-white focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+                            </div>
+
+                            <!-- Antes -->
+                            <div class="mb-4">
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Situación antes *</label>
+                                <textarea name="historia_antes" required rows="3" maxlength="600"
+                                    placeholder="¿Cómo estaba la persona cuando llegó a RESET?"
+                                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none bg-white focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+                            </div>
+
+                            <!-- Después -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Situación después *</label>
+                                <textarea name="historia_despues" required rows="3" maxlength="600"
+                                    placeholder="¿Qué logró conseguir gracias al acompañamiento?"
+                                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none bg-white focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+                            </div>
+                        </div>
 
                         <div class="flex gap-3">
                             <button type="button"
@@ -221,9 +263,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                         <?php foreach ($comentarios as $c): ?>
                             <div class="flex gap-3">
                                 <!-- Avatar -->
-                                <div class="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-[#00a5cf] to-[#9fffcb] flex items-center justify-center text-[#004e64] font-extrabold text-xs">
-                                    <?= strtoupper(substr($c['nombre_usuario'] ?? 'V', 0, 1)) ?>
-                                </div>
+                                <img src="/Proyecto-ong-POO/public/img/<?= $c["foto_voluntario"] ?? 'default.png' ?>" alt="Avatar" class="shrink-0 w-8 h-8 rounded-full overflow-hidden">
                                 <!-- Burbuja -->
                                 <div class="flex-1 bg-slate-50 rounded-2xl px-4 py-3">
                                     <div class="flex items-center justify-between mb-1">

@@ -78,6 +78,9 @@ $disponibles = $disponibles ?? [];
                         <path d="M15.6 15.2l-6 8.7-4-3.5 1-1.2 2.7 2.4 6.3-9.2 6.7 10 6.8-8.9 1.3 1-8.1 10.7z" />
                     </svg>
                     Mis actividades
+                    <?php if ($hay_notificacion): ?>
+                        <span class="ml-auto w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
+                    <?php endif; ?>
                 </a>
                 <a href="#resets-disponibles"
                     class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm font-bold"
@@ -108,20 +111,24 @@ $disponibles = $disponibles ?? [];
 
         <!-- ── Contenido principal ──────────────────────────────────────────── -->
         <main class="flex-1 md:ml-64 p-6 md:p-12 w-full">
-        <?php if (isset($modo_simulado) && $modo_simulado): ?>
-        <div class="flex flex-col gap-2 mb-6">
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
-            </div>
-            <?php if (isset($_GET['sim_bloqueado'])): ?>
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-                <span>Acción bloqueada: estás en modo simulación.</span>
-            </div>
+            <?php if (isset($modo_simulado) && $modo_simulado): ?>
+                <div class="flex flex-col gap-2 mb-6">
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
+                        <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                        </svg>
+                        <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
+                    </div>
+                    <?php if (isset($_GET['sim_bloqueado'])): ?>
+                        <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
+                            <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                            <span>Acción bloqueada: estás en modo simulación.</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
             <?php endif; ?>
-        </div>
-        <?php endif; ?>
 
             <!-- Cabecera -->
             <header class="mb-10">
@@ -187,13 +194,18 @@ $disponibles = $disponibles ?? [];
                             ?>
                             <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
                             <a href="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
-                                class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer<?= $cerrado
+                                class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer <?= $cerrado
                                                                                                                     ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
                                                                                                                     : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
                                 <div class="flex items-start justify-between gap-3">
-                                    <h4 class="font-extrabold text-base leading-snug">
-                                        <?= htmlspecialchars($r["titulo"]) ?>
-                                    </h4>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="font-extrabold text-base leading-snug">
+                                            <?= htmlspecialchars($r["titulo"]) ?>
+                                        </h4>
+                                        <?php if ($r['tiene_notificacion']): ?>
+                                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
+                                        <?php endif; ?>
+                                    </div>
                                     <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
                                         <?= htmlspecialchars($r["nombre_estado"]) ?>
                                     </span>
@@ -230,7 +242,9 @@ $disponibles = $disponibles ?? [];
                             <?php endforeach; ?>
                         </select>
                         <?php if ($id_categoria): ?>
-                            <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg> Limpiar</a>
+                            <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg> Limpiar</a>
                         <?php endif; ?>
                     </form>
                 </div>

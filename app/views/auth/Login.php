@@ -166,7 +166,7 @@ if(isset($_SESSION["error_login"])) {
       mostrarError(passInput, passError, 'La contraseña es obligatoria.');
       return;
     }
-    if (pass.length <= 8) {
+    if (pass.length < 8) {
       mostrarError(passInput, passError, 'La contraseña debe tener al menos 8 caracteres.');
       return;
     }

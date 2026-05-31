@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/../../config.php"; ?>
 <footer class="bg-gray-900 text-white py-12 max-w-screen bottom-0 left-0 right-0">
     <div class="max-w-7xl mx-auto px-6">
         <div class="flex flex-col md:flex-row md:justify-around gap-8 text-center md:text-left">
@@ -34,7 +35,7 @@
                     </li>
                 </ul>
                 <p class="mt-4">
-                    <a href="/Proyecto-ong-POO/app/controllers/controller_register.php" class="text-[#25a18e] hover:text-white transition font-semibold text-sm">✉ ¿Quieres ayudarnos? ¡Regístrate aquí!</a>
+                    <a href="<?= BASE_URL ?>/app/controllers/controller_register.php" class="inline-flex items-center gap-1.5 text-[#25a18e] hover:text-white transition font-semibold text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg> ¿Quieres ayudarnos? ¡Regístrate aquí!</a>
                 </p>
             </div>
 
@@ -54,6 +55,49 @@
                 </div>
             </div>
 
+            <!-- Certificación W3C -->
+            <div class="text-gray-400">
+                <h6 class="uppercase mb-3 font-semibold text-white">Certificaciones</h6>
+                <div class="flex flex-col items-center md:items-start gap-4">
+                    <a href="https://validator.w3.org/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3" title="HTML5 válido">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#ff6b22"
+                        stroke-width="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        >
+                        <path d="M20 4l-2 14.5l-6 2l-6 -2l-2 -14.5z" />
+                        <path d="M15.5 8h-7l.5 4h6l-.5 3.5l-2.5 .75l-2.5 -.75l-.1 -.5" />
+                        </svg>
+
+                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">HTML5</span>
+                    </a>
+                    <a href="https://jigsaw.w3.org/css-validator/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3" title="CSS3 válido">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#007aff"
+                        stroke-width="1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        >
+                        <path d="M20 4l-2 14.5l-6 2l-6 -2l-2 -14.5z" />
+                        <path d="M8.5 8h7l-4.5 4h4l-.5 3.5l-2.5 .75l-2.5 -.75l-.1 -.5" />
+                        </svg>
+
+                        <span class="text-sm font-medium text-gray-400 group-hover:text-white transition-colors">CSS3</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
         <hr class="my-6 border-gray-700">
@@ -63,8 +107,9 @@
                 &copy;RESET ONG. Mini-proyecto 1º DAW.
             </p>
             <div class="flex justify-around gap-4">
-                <a href="../documentation/Politic_and_privacity.php" class="text-center md:text-right hover:text-[#00a5cf]">Politica y privacidad</a>
-                <a href="../documentation/Legal_Notice.php" class="text-center md:text-right hover:text-[#00a5cf]">Aviso legal</a>
+                <a href="<?= BASE_URL ?>/documentation/Politic_and_privacity.php" class="text-center md:text-right hover:text-[#00a5cf]">Politica y privacidad</a>
+                <a href="<?= BASE_URL ?>/documentation/Legal_Notice.php" class="text-center md:text-right hover:text-[#00a5cf]">Aviso legal</a>
+                <a href="<?= BASE_URL ?>/app/controllers/controller_transparencia.php" class="text-center md:text-right hover:text-[#00a5cf]">Transparencia</a>
             </div>
         </div>
     </div>

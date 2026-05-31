@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../config.php";
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
         }
     }
 
-    header('Location: /Proyecto-ong-POO/pages/Contact.php');
+    header('Location: ' . BASE_URL . '/pages/Contact.php');
     exit();
 }
 

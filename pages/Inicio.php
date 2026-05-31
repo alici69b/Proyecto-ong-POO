@@ -1,13 +1,16 @@
+<?php require_once __DIR__ . "/../config.php"; ?>
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/Proyecto-ong-POO/public/img/Logo_RESET.svg">
+    <link rel="icon" type="image/svg+xml" href="<?= BASE_URL ?>/public/img/Logo_RESET.svg">
     <title>RESET - Segundas oportunidades</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <link rel="alternate" type="application/rss+xml" title="RESET ONG - Historias de éxito" href="<?= BASE_URL ?>/app/controllers/controller_rss.php">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Domine">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bricolage Grotesque">
@@ -51,8 +54,8 @@
             <div class=" max-w-xl mx-auto text-center top-0">
                 <p class="px-15  text-gray-800  text-md md:text-md lg:text-lg">Volvemos a dar vida a proyectos, hábitos, ideas, estudios y pequeños sueños que quedaron en pausa.</p>
                 <div class=" flex justify-center text-center items-center  gap-3 px-15 pt-15">
-                    <a class="px-5 py-3 text-sm w-50 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold  shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
-                    <a class="px-5  py-3 w-53 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
+                    <a class="px-5 py-3 text-sm w-50 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold  shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
+                    <a class="px-5  py-3 w-53 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
                 </div>
             </div>
         </div>
@@ -72,6 +75,13 @@
             </div>
         </div>
 
+        <div class="flex justify-center pt-6">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_rss.php" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2 bg-white/30 backdrop-blur-sm rounded-full text-sm font-semibold text-gray-800 hover:bg-white/50 transition-all shadow-sm" title="Suscríbete al canal RSS">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#ff6b22"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+                <span>RSS</span>
+            </a>
+        </div>
+
         <div class="relative bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] w-full pt-20 pb-40">
             <div class="relative z-10"></div>
             <div class="absolute bottom-0 left-0 w-full leading-[0]">
@@ -82,7 +92,7 @@
         </div>
     </main>
 
-    <section class=" fade-in fade-in-3 w-full  md:mb-5 text-black mt-5 p-6 md:p-8 lg:p-20 ">
+    <section class=" fade-in fade-in-3 w-full md:mb-2 text-black mt-5 p-6 md:p-8 lg:p-20 ">
         <div class="flex flex-col items-center text-center ">
             <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">¿Cómo funciona RESET?</p>
             <h2 class="text-4xl md:text-5xl font-bold mb-6 text-slate-800">Aprende un poco más sobre <span class="text-[#ff3b30]">nosotros</span></h2>
@@ -116,7 +126,7 @@
         </div>
     </section>
 
-    <section class="fade-in fade-in-4  w-full  md:mb-5 text-black mt-5 ">
+    <section class="fade-in fade-in-4 w-full md:mb-2 text-black mt-2">
         <div class=" p-6 md:p-8 lg:p-20">
             <div class="text-center pt-10 md:pt-16 pb-12 relative z-10">
                 <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">¿Qué ayudamos a reiniciar?</p>
@@ -151,7 +161,58 @@
         </div>
     </section>
 
-    <div class=" fade-in fade-in-5 relative bg-transparent pt-20">
+    <section class="fade-in fade-in-4 w-full text-black">
+      <div class="py-16 md:py-24 px-6">
+        <div class="text-center mb-14">
+          <p class="text-[#00a5cf] font-bold text-xs md:text-sm tracking-[0.2em] uppercase mb-4 opacity-90">Acceso simulado a perfiles</p>
+          <h2 class="text-4xl md:text-5xl font-bold text-slate-800">Explora nuestros <span class="text-[#ff3b30]">perfiles</span></h2>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+
+          <!-- Voluntario -->
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=voluntario" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#00a5cf]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#00a5cf]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#00a5cf]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Voluntario</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Panel de voluntarios, gestiona tus acompañamientos y consulta tus estadísticas.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#00a5cf] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+
+          <!-- Usuario Reset -->
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=socio" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#25a18e]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#25a18e]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#25a18e]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Usuario Reset</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Revisa tus aportaciones, consulta el impacto de tus donaciones y gestiona tu perfil.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#25a18e] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+
+          <!-- Administrador -->
+          <a href="<?= BASE_URL ?>/app/controllers/simular_perfil.php?rol=admin" class="group relative bg-white rounded-4xl p-8 pt-12 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-slate-100 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-[#ff3b30]"></div>
+            <div class="flex items-center gap-4 mb-4">
+              <div class="p-3 rounded-xl bg-[#ff3b30]/10">
+                <svg class="w-7 h-7 md:w-8 md:h-8 text-[#ff3b30]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+              <h4 class="text-xl font-bold text-slate-800">Administrador</h4>
+            </div>
+            <p class="text-gray-500 text-sm leading-relaxed">Administra usuarios, gestiona reset y supervisa el funcionamiento de la plataforma.</p>
+            <span class="inline-block mt-4 text-sm font-semibold text-[#ff3b30] opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">Ver perfil <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <div class=" fade-in fade-in-5 relative bg-transparent pt-14">
         <div class="relative leading-[0] h-[150px]">
             <svg class="relative block w-full h-[150px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
                 <defs><linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#9fffcb" /><stop offset="100%" stop-color="#00a5cf" /></linearGradient></defs>
@@ -160,6 +221,8 @@
         </div>
     </div>
 
+    
+
     <section class="fade-in fade-in-6 relative  bg-linear-to-r from-[#9fffcb] to-[#00a5cf] min-h-150  py-30">
         <div class="font-['Domine'] flex justify-center  text-center my-3 p-2">
             <h1 class="max-w-4xl text-gray-900 font-bold text-5xl p-2 md:p-3 md:text-6xl lg:text-7xl">Hoy puede ser el <i class="text-white">dia</i> que todo lo <i class="text-white">cambie</i></h1>
@@ -167,8 +230,8 @@
         <div class=" max-w-xl mx-auto text-center top-0">
             <p class="px-15  text-gray-800  text-md md:text-md lg:text-lg">No tienes que hacerlo solo/a. Da el primer paso y déjanos ayudarte a reiniciar lo que quedó pendiente.</p>
             <div class=" flex justify-center text-center items-center  gap-3 pt-6">
-                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
-                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
+                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
+                <a class="px-5 py-3  w-47 bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
             </div>
         </div>
     </section>

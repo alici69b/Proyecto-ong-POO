@@ -1,55 +1,13 @@
-<!-- <?php
-// if (!isset($resets)) {
-//     header('Location: ../../controllers/controller_user_dashboard.php');
-//     exit();
-// }
+<?php
+require_once __DIR__ . "/../../../config.php";
 
-// function iconoCategoria($cat) {
-//     $cat = strtolower($cat ?? '');
-//     if ($cat === 'estudio') {
-//         return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-10 h-10 text-[#00a5cf]"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"/></svg>';
-//     }
-//     if ($cat === 'proyecto') {
-//         return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-10 h-10 text-[#ff3b30]"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/></svg>';
-//     }
-//     if ($cat === 'salud') {
-//         return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-10 h-10 text-[#25a18e]"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>';
-//     }
-//     if ($cat === 'creatividad') {
-//         return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-10 h-10 text-[#7ae582]"><path stroke-linecap="round" stroke-linejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 0-.5 1.71v2.04a.75.75 0 0 0 .75.75h14.25a.75.75 0 0 0 .75-.75v-1.04a2.25 2.25 0 0 0-.5-1.71 3 3 0 0 0-5.78-1.128M12 15.75V9m0 0V4.5m0 4.5h4.5m-4.5 0H7.5"/></svg>';
-//     }
-//     return '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-10 h-10 text-gray-400"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/></svg>';
-// }
-
-// function badgeEstado($estado) {
-//     $e = strtolower($estado ?? '');
-//     if ($e === 'activo' || $e === 'en proceso') {
-//         return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-[#25a18e]/10 text-[#25a18e] border border-[#25a18e]/20"><span class="w-1.5 h-1.5 rounded-full bg-[#25a18e]"></span>En proceso</span>';
-//     }
-//     if ($e === 'pendiente') {
-//         return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 border border-yellow-200"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>Pendiente</span>';
-//     }
-//     if ($e === 'resuelto') {
-//         return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>Logrado</span>';
-//     }
-//     if ($e === 'cancelado') {
-//         return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Cancelado</span>';
-//     }
-//     return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200">' . htmlspecialchars(ucfirst($estado ?? '')) . '</span>';
-// }
-
-// function badgeCategoria($cat) {
-//     $map = [
-//         'estudio' => 'bg-[#00a5cf]/10 text-[#00a5cf]',
-//         'salud' => 'bg-[#25a18e]/10 text-[#25a18e]',
-//         'proyecto' => 'bg-[#ff3b30]/10 text-[#ff3b30]',
-//         'creatividad' => 'bg-[#7ae582]/20 text-green-700',
-//         'otros' => 'bg-gray-100 text-gray-600',
-//     ];
-//     $clase = $map[strtolower($cat ?? '')] ?? 'bg-gray-100 text-gray-600';
-//     return '<span class="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ' . $clase . '">' . htmlspecialchars($cat ?? '') . '</span>';
-// }
-?> -->
+// Evitamos errores si las variables no vienen definidas
+if (!isset($flash)) $flash = null;
+if (!isset($stats)) $stats = array("total" => 0, "activos" => 0, "resueltos" => 0);
+if (!isset($categorias)) $categorias = array();
+if (!isset($id_categoria)) $id_categoria = null;
+if (!isset($mis_resets)) $mis_resets = array();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -58,145 +16,276 @@
     <link rel="icon" type="image/svg+xml" href="../../../public/img/Logo_RESET.svg">
     <title>Mi Panel - RESET</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f4f9fa; }
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: #f4f9fa;
+        }
     </style>
 </head>
-<body class="text-[#004e64] min-h-screen bg-[#f4f9fa]">
-
-    <?php require_once __DIR__ . "/../../../src/components/Header.php"; ?>
-
-    <div class="mt-15 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#004e64] to-[#003d4f] text-white p-8 md:p-10 mb-10 shadow-2xl shadow-[#004e64]/20">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-[#00a5cf]/10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 w-48 h-48 bg-[#9fffcb]/5 rounded-full blur-3xl"></div>
-            <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold leading-tight">Hola, <?= $nombreCompleto ?>. <br><span class="text-[#9fffcb] font-medium text-lg md:text-xl">Tu proceso de reinicio esta en marcha</span></h2>
-                </div>
-                <div class="flex gap-6 md:gap-10">
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-extrabold text-white"><?= $totalResets ?></div>
-                        <div class="text-[11px] uppercase tracking-widest text-[#9fffcb]/80 font-bold mt-1">Resets</div>
-                    </div>
-                    <div class="w-px bg-white/20"></div>
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-extrabold text-white"><?= $enCurso ?></div>
-                        <div class="text-[11px] uppercase tracking-widest text-[#9fffcb]/80 font-bold mt-1">En curso</div>
-                    </div>
-                    <div class="w-px bg-white/20"></div>
-                    <div class="text-center">
-                        <div class="text-3xl md:text-4xl font-extrabold text-white"><?= $logrados ?></div>
-                        <div class="text-[11px] uppercase tracking-widest text-[#9fffcb]/80 font-bold mt-1">Logrados</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<!-- Modal para crear un nuevo reset -->
+<div id="modal-nuevo-reset" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
+    <div class="w-full max-w-lg rounded-[2rem] bg-white p-8 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
-            <h3 class="text-2xl font-extrabold text-[#004e64]">Mis Resets</h3>
-            <div class="flex items-center gap-3">
-                <a href="/Proyecto-ong-POO/app/controllers/controller_profile.php" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-[#00a5cf] text-[#004e64] text-sm font-bold rounded-full shadow-sm transition-all">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-                    Configuración
-                </a>
-                <a href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario" class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#25a18e] hover:bg-[#1d8a78] text-white text-sm font-bold rounded-full shadow-lg shadow-[#25a18e]/30 transition-all">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                    Nuevo RESET
-                </a>
-            </div>
+            <h3 class="text-xl font-extrabold text-slate-900">Nueva solicitud de Reset</h3>
+            <button onclick="cerrarModal()" class="text-slate-400 hover:text-slate-600">✕</button>
         </div>
 
-        <?php if (empty($resets)): ?>
-        <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-12 text-center">
-            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-[#00a5cf]/10 flex items-center justify-center">
-                <svg fill="none" stroke="#00a5cf" viewBox="0 0 24 24" stroke-width="1.5" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+        <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php">
+            <input type="hidden" name="action" value="crear_reset">
+
+            <!-- Título -->
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Título *</label>
+                <input type="text" name="titulo" required maxlength="150"
+                    placeholder="¿En qué necesitas ayuda?"
+                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
             </div>
-            <p class="text-lg font-bold text-[#004e64] mb-1">Aún no tienes resets creados</p>
-            <p class="text-sm text-gray-400 mb-6">Empieza tu primer RESET y da el primer paso hacia tu nueva oportunidad.</p>
-            <a href="/Proyecto-ong-POO/app/controllers/controller_register.php?rol=usuario" class="inline-flex items-center gap-2 px-6 py-3 bg-[#00a5cf] hover:bg-[#008bb0] text-white text-sm font-bold rounded-full shadow-lg transition-all">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                Crear mi primer RESET
-            </a>
-        </div>
-        <?php else: ?>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <?php foreach ($resets as $reset): 
-                $titulo = htmlspecialchars($reset['titulo'] ?? 'Sin título');
-                $causa = htmlspecialchars(mb_substr($reset['causa_abandono'] ?? '', 0, 120));
-                $necesidades = htmlspecialchars(mb_substr($reset['necesidades_reset'] ?? '', 0, 120));
-                $categoria = $reset['nombre_categoria'] ?? '';
-                $estado = $reset['nombre_estado'] ?? '';
-                $fecha = date('Y-m-d', strtotime($reset['created_at'] ?? 'now'));
-                $mentor = '';
-                if (!empty($reset['vol_nombre'])) {
-                    $mentor = htmlspecialchars($reset['vol_nombre'] . ' ' . ($reset['vol_apellidos'] ?? ''));
-                }
-                $progress = 0;
-                if (strtolower($estado) === 'resuelto') $progress = 100;
-                elseif (strtolower($estado) === 'activo') $progress = 60;
-                elseif (strtolower($estado) === 'pendiente') $progress = 15;
-            ?>
-            <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-6 hover:shadow-2xl transition-all duration-300">
-                <div class="flex items-start justify-between mb-4">
-                    <div class="flex items-center gap-3">
-                        <?= iconoCategoria($categoria) ?>
-                        <div>
-                            <h4 class="font-extrabold text-[#004e64] text-lg leading-tight"><?= $titulo ?></h4>
-                            <div class="flex items-center gap-2 mt-1">
-                                <?= badgeCategoria($categoria) ?>
-                                <?= badgeEstado($estado) ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="mb-4">
-                    <div class="flex items-center justify-between text-xs mb-1">
-                        <span class="font-bold text-gray-400 uppercase tracking-wider">Progreso</span>
-                        <span class="font-extrabold text-[#004e64]"><?= $progress ?>%</span>
-                    </div>
-                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div class="h-full rounded-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] transition-all duration-700" style="width: <?= $progress ?>%"></div>
-                    </div>
-                </div>
-
-                <div class="space-y-2 text-sm text-gray-600 mb-4">
-                    <div class="flex items-center gap-2">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-4 h-4 text-gray-400 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>
-                        <span class="text-gray-400"><?= $fecha ?></span>
-                    </div>
-                    <?php if (!empty($causa)): ?>
-                    <div class="flex gap-2">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-4 h-4 text-gray-400 shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"/></svg>
-                        <p class="text-gray-500"><?= $causa ?><?= mb_strlen($reset['causa_abandono'] ?? '') > 120 ? '...' : '' ?></p>
-                    </div>
-                    <?php endif; ?>
-                    <?php if (!empty($necesidades)): ?>
-                    <div class="flex gap-2">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-4 h-4 text-gray-400 shrink-0 mt-0.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>
-                        <p class="text-gray-500"><?= $necesidades ?><?= mb_strlen($reset['necesidades_reset'] ?? '') > 120 ? '...' : '' ?></p>
-                    </div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-full bg-[#9fffcb]/40 flex items-center justify-center text-xs font-bold text-[#004e64]">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg>
-                        </div>
-                        <span class="text-sm text-gray-500">
-                            <?= $mentor ? 'Mentor: <strong class="text-[#004e64]">' . $mentor . '</strong>' : '<span class="text-gray-400 italic">Sin mentor asignado</span>' ?>
-                        </span>
-                    </div>
-                </div>
+            <!-- Categoría -->
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Categoría *</label>
+                <select name="id_categoria" required
+                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                    <option value="">Selecciona una categoría</option>
+                    <?php foreach ($categorias as $cat): ?>
+                        <option value="<?= $cat['id'] ?>">
+                            <?= htmlspecialchars(ucfirst($cat['nombre_categoria'])) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
 
+            <!-- Descripción -->
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Descripción</label>
+                <textarea name="descripcion" rows="3" maxlength="1000"
+                    placeholder="Cuéntanos un poco más sobre tu situación..."
+                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+            </div>
+
+            <!-- Necesidades -->
+            <div class="mb-4">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">¿Qué necesitas exactamente?</label>
+                <textarea name="necesidades_reset" rows="2" maxlength="500"
+                    placeholder="Ej: orientación, motivación, recursos..."
+                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+            </div>
+
+            <!-- Causa abandono -->
+            <div class="mb-6">
+                <label class="block text-xs font-bold text-slate-400 uppercase mb-1">¿Qué te hizo parar? (opcional)</label>
+                <textarea name="causa_abandono" rows="2" maxlength="500"
+                    placeholder="Ej: falta de tiempo, desmotivación..."
+                    class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex gap-3">
+                <button type="button" onclick="cerrarModal()"
+                    class="flex-1 border border-slate-200 text-slate-600 font-bold text-sm py-3 rounded-2xl hover:bg-slate-50">
+                    Cancelar
+                </button>
+                <button type="submit"
+                    class="flex-1 bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90">
+                    Enviar solicitud
+                </button>
+            </div>
+        </form>
     </div>
+</div>
+
+<body class="text-[#004e64] min-h-screen">
+    <div class="flex">
+
+        <!-- SIDEBAR -->
+        <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+            <div class="mt-6 px-2">
+                <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
+                    <svg fill="#ff3b30" class="w-6 h-6" viewBox="0 0 612 612">
+                        <path d="M44.563,250.179l237.89,41.871c0.485,0.085,0.964,0.118,1.451,0.118c4.33-0.027,7.831-3.545,7.831-7.88 c0-1.831-0.624-3.516-1.672-4.853l-39.919-61.25c24.027-10.024,64.762-23.283,112.095-23.283c24.594,0,48.118,3.69,69.918,10.972 c19.861,6.631,47.495,24.447,70.4,45.389c16.415,15.01,31.403,32.073,45.896,48.573c3.34,3.802,6.682,7.607,10.048,11.396 c1.521,1.713,3.677,2.648,5.894,2.648c0.788,0,1.581-0.116,2.357-0.361c2.961-0.928,5.101-3.508,5.468-6.588l0.116-0.991 c6.506-56.017-7.174-114.855-37.531-161.427c-32.502-49.852-84.035-85.972-145.111-101.71 c-24.353-6.275-49.973-9.456-76.149-9.456c-34.717,0-69.827,5.501-104.373,16.35c-18.876,5.971-37.136,13.429-54.376,22.198 L110.264,3.574c-1.714-2.631-4.832-3.978-7.921-3.467c-3.096,0.526-5.584,2.838-6.333,5.887L38.278,240.535 c-0.521,2.118-0.142,4.359,1.05,6.186C40.519,248.549,42.415,249.802,44.563,250.179z" />
+                        <path d="M572.67,365.274c-1.191-1.827-3.087-3.08-5.236-3.458l-237.888-41.872c-3.094-0.54-6.212,0.8-7.942,3.419 c-1.73,2.619-1.74,6.017-0.027,8.648l40.278,61.802c-24.027,10.024-64.762,23.283-112.093,23.283 c-24.594,0-48.118-3.692-69.92-10.974c-19.864-6.632-47.498-24.449-70.4-45.389c-16.415-15.01-31.403-32.071-45.896-48.568 c-3.34-3.803-6.684-7.608-10.049-11.398c-2.065-2.323-5.301-3.219-8.265-2.282c-2.964,0.935-5.101,3.526-5.456,6.612l-0.111,0.962 c-6.508,56.021,7.172,114.855,37.532,161.42c32.5,49.855,84.034,85.977,145.109,101.712c24.358,6.275,49.982,9.456,76.16,9.456 c0.003,0,0.002,0,0.007,0c34.71,0,69.819-5.499,104.355-16.35c18.876-5.971,37.136-13.427,54.375-22.196l44.53,68.321 c1.47,2.255,3.967,3.578,6.6,3.578c0.438,0,0.88-0.036,1.321-0.109c3.096-0.526,5.583-2.838,6.335-5.887l57.734-234.541 C574.242,369.342,573.863,367.103,572.67,365.274z" />
+                    </svg>
+                    <h3 class="font-black text-lg tracking-tighter text-white">RESET</h3>
+                </a>
+            </div>
+            <div class="px-2">
+                <p class="font-bold text-white text-sm">Mi Panel</p>
+                <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
+            </div>
+            <nav class="flex flex-col gap-2">
+                <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                    class="bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-extrabold">
+                    Mis Resets
+                    <?php if ($hay_notificacion): ?>
+                        <span class="ml-auto w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
+                    <?php endif; ?>
+                </a>
+                <a href="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
+                    Mi perfil
+                </a>
+            </nav>
+            <div class="mt-auto pt-6 border-t border-white/10">
+                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
+                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
+                    Cerrar sesión
+                </a>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="flex-1 md:ml-64 p-6 md:p-12 w-full">
+
+            <!-- Cabecera -->
+            <div class="mb-10 flex items-start justify-between gap-4">
+                <div>
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-2">
+                        Hola, <?= htmlspecialchars($_SESSION['user_nombre']) ?>
+                    </h2>
+                    <p class="text-gray-400 text-sm italic">Mi panel · <?= date('d/m/Y') ?></p>
+                </div>
+                <!-- Botón para abrir el modal de nuevo reset -->
+                <button onclick="abrirModal()"
+                    class="shrink-0 bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm px-6 py-3 rounded-2xl hover:opacity-90 shadow-md">
+                    + Nuevo Reset
+                </button>
+            </div>
+
+            <!-- Mensaje flash (éxito o error) -->
+            <?php if ($flash != null): ?>
+                <?php if ($flash['tipo'] == 'success'): ?>
+                    <div class="mb-8 px-5 py-4 rounded-2xl text-sm font-bold bg-green-50 text-green-700 border border-green-200">
+                        <?= htmlspecialchars($flash['msg']) ?>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-8 px-5 py-4 rounded-2xl text-sm font-bold bg-red-50 text-red-700 border border-red-200">
+                        <?= htmlspecialchars($flash['msg']) ?>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <!-- ESTADÍSTICAS -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
+                <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-8">
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Mis Resets</p>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= $stats['total'] ?></div>
+                </div>
+                <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-8">
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">En progreso</p>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= $stats['activos'] ?></div>
+                </div>
+                <div class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-8">
+                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Resueltos</p>
+                    <div class="text-5xl font-extrabold text-slate-800"><?= $stats['resueltos'] ?></div>
+                </div>
+            </div>
+
+            <!-- MIS RESETS -->
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 class="text-2xl font-extrabold">Mis solicitudes</h3>
+
+                <!-- Filtro por categoría -->
+                <form method="GET" action="">
+                    <select name="categoria" onchange="this.form.submit()"
+                        class="text-sm border border-slate-200 rounded-xl px-4 py-2 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                        <option value="">Todas las categorías</option>
+                        <?php foreach ($categorias as $cat): ?>
+                            <option value="<?= $cat['id'] ?>"
+                                <?php if ($id_categoria == $cat['id']) echo 'selected'; ?>>
+                                <?= htmlspecialchars(ucfirst($cat['nombre_categoria'])) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
+            </div>
+
+            <!-- Lista de resets -->
+            <?php if (count($mis_resets) == 0): ?>
+                <div class="bg-white rounded-3xl border border-slate-100 p-10 text-center text-slate-400">
+                    <p class="text-lg font-bold mb-1">Todavía no tienes solicitudes</p>
+                    <p class="text-sm">Pulsa el botón "Nuevo Reset" para pedir ayuda a un voluntario.</p>
+                </div>
+            <?php else: ?>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <?php foreach ($mis_resets as $r): ?>
+                        <?php
+                        // Color del badge según el estado
+                        if ($r['id_estado'] == 1) {
+                            $badgeClass = 'bg-amber-50 text-amber-700';
+                        } elseif ($r['id_estado'] == 2) {
+                            $badgeClass = 'bg-blue-50 text-blue-700';
+                        } elseif ($r['id_estado'] == 3) {
+                            $badgeClass = 'bg-green-50 text-green-700';
+                        } elseif ($r['id_estado'] == 4) {
+                            $badgeClass = 'bg-red-50 text-red-700';
+                        } else {
+                            $badgeClass = 'bg-slate-100 text-slate-500';
+                        }
+
+                        // Si está cerrado (resuelto o cancelado) lo mostramos con menos opacidad
+                        $cerrado = ($r['id_estado'] == 3 || $r['id_estado'] == 4);
+                        ?>
+                        <a href="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $r['id'] ?>"
+                            class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer
+                        <?php if ($cerrado): ?>
+                            bg-slate-50 border-slate-200 opacity-60 hover:opacity-80
+                        <?php else: ?>
+                            bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md
+                        <?php endif; ?>">
+
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="font-extrabold text-base"><?= htmlspecialchars($r['titulo']) ?></h4>
+                                    <!-- Punto rojo si hay mensajes sin leer del voluntario -->
+                                    <?php if ($r['tiene_notificacion']): ?>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0" title="Tienes mensajes sin leer"></span>
+                                    <?php endif; ?>
+                                </div>
+                                <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
+                                    <?= htmlspecialchars($r['nombre_estado']) ?>
+                                </span>
+                            </div>
+
+                            <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r['descripcion']) ?></p>
+
+                            <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+                                <span class="px-2 py-1 rounded-lg font-bold bg-slate-100">
+                                    <?= htmlspecialchars($r['nombre_categoria']) ?>
+                                </span>
+                                <!-- Voluntario asignado -->
+                                <?php if (!empty($r['nombre_voluntario'])): ?>
+                                    <span>👤 <?= htmlspecialchars($r['nombre_voluntario']) ?></span>
+                                <?php else: ?>
+                                    <span class="italic text-slate-300">Sin voluntario aún</span>
+                                <?php endif; ?>
+                                <span class="ml-auto"><?= date('d/m/Y', strtotime($r['created_at'])) ?></span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+        </main>
+    </div>
+
+    <script>
+        // Abrir y cerrar el modal de nuevo reset
+        function abrirModal() {
+            document.getElementById('modal-nuevo-reset').classList.remove('hidden');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-nuevo-reset').classList.add('hidden');
+        }
+
+        // Cerrar el modal si se hace clic fuera del contenido
+        document.getElementById('modal-nuevo-reset').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 <?php
 //Inicializamos sesión
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 //Controlamos que el usuario esté logueado y el rol sea de voluntario, sino lo redirigimos al login
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {
@@ -46,6 +48,17 @@ $categorias = $conn->query("SELECT * FROM categoria_reset ORDER BY id")->fetchAl
 $disponibles = $resetModel->obtenerDisponibles($id_categoria);
 $mis_resets = $id_voluntario ? $resetModel->obtenerMisResets($id_voluntario) : [];
 $stats = $id_voluntario ? $resetModel->obtenerStatsVoluntario($id_voluntario) : ["total" => 0, "en_progreso" => 0, "completados" => 0];
+
+// Calculamos las notificaciones de cada reset
+$hay_notificacion = false;
+
+foreach ($mis_resets as &$r) {
+    $r['tiene_notificacion'] = $resetModel->tieneNotificacionVoluntario($r['id']);
+    if ($r['tiene_notificacion']) {
+        $hay_notificacion = true;
+    }
+}
+unset($r);
 
 $flash = $_SESSION["flash"] ?? null;
 unset($_SESSION["flash"]);

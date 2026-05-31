@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 //Inicializamos sesion
 session_start();
 
@@ -97,7 +98,7 @@ if (isset($_SESSION["error_login"])) {
       <div class="mx-auto w-full max-w-md">
 
         <a href="../../../index.php" class="mb-5 flex items-center text-sm text-gray-500 hover:text-gray-700">
-          <span class="mr-2">←</span> Volver al inicio
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5l-7.5-7.5 7.5-7.5"/></svg> Volver al inicio
         </a>
 
 
@@ -122,7 +123,7 @@ if (isset($_SESSION["error_login"])) {
 
 
 
-        <form action="/Proyecto-ong-POO/app/controllers/controller_resetPassword.php" method="POST">
+        <form action="<?= BASE_URL ?>/app/controllers/controller_resetPassword.php" method="POST">
           <label for="email">Introduce tu email</label><br>
           <input type="email" name="email_restablecer_contrasena" class="mt-1 w-full rounded-lg border mb-4 border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf] " placeholder="ejemplo@gmail.com"><br>
 

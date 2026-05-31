@@ -1,1 +1,8 @@
-ErrorDocument 404 /RESET-ong/404.php
+RewriteEngine On
+
+<If "req('Host') == 'localhost' || req('Host') == '127.0.0.1'">
+    ErrorDocument 404 /Proyecto-ong-POO/404.php
+</If>
+<If "req('Host') != 'localhost' && req('Host') != '127.0.0.1'">
+    ErrorDocument 404 /404.php
+</If>

@@ -65,7 +65,7 @@ class Historia
                 ':valoracion' => (int)($datos['valoracion'] ?? 5),
                 ':edad' => (int)($datos['edad'] ?? 0),
                 ':foto' => $datos['foto'] ?? 'foto_defecto.webp',
-                ':icono' => $datos['icono'] ?? '📖',
+                ':icono' => $datos['icono'] ?? '',
                 ':estado' => $datos['estado'] ?? 'Borrador',
                 ':automatica' => (int)($datos['automatica'] ?? 0),
             ]);
@@ -173,7 +173,7 @@ class Historia
                 'valoracion' => 5,
                 'edad' => 0,
                 'foto' => $data['foto_perfil'] ?? 'foto_defecto.webp',
-                'icono' => '🔄',
+                'icono' => '',
                 'estado' => 'Borrador',
                 'automatica' => 1,
             ]);
@@ -183,4 +183,59 @@ class Historia
             return false;
         }
     }
+
+    /** Crea una historia usando los datos del reset + los datos que rellena el voluntario
+     * A diferencia de crearAutomaticaDesdeReset(), aquí el voluntario aporta
+     * el título, descripción, antes y después manualmente
+     */
+    public function crearDesdeResetConDatos(int $id_reset, array $datos_voluntario): bool
+    {
+        try {
+            // Obtenemos los datos del reset para rellenar los campos automáticos
+            $stmt = $this->conn->prepare("
+                SELECT r.created_at,
+                       u.nombre AS user_nombre, u.apellidos AS user_apellidos, u.foto_perfil,
+                       v_u.nombre AS vol_nombre, v_u.apellidos AS vol_apellidos,
+                       c.nombre_categoria
+                FROM reset r
+                JOIN usuario u ON r.id_usuario = u.id
+                LEFT JOIN voluntario v ON r.id_voluntario = v.id
+                LEFT JOIN usuario v_u ON v.id_usuario = v_u.id
+                LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+                WHERE r.id = :id_reset AND r.id_estado = 3
+            ");
+            $stmt->execute([':id_reset' => $id_reset]);
+            $data = $stmt->fetch();
+
+            if (!$data) return false;
+
+            // Calculamos la duración en meses desde que se creó el reset
+            $desde    = new DateTime($data['created_at']);
+            $ahora    = new DateTime();
+            $duracion = $desde->diff($ahora);
+            $meses    = ($duracion->y * 12) + $duracion->m;
+
+            $this->insertar([
+                'titulo'              => $datos_voluntario['titulo'],
+                'solicitante'         => trim(($data['user_nombre'] ?? '') . ' ' . ($data['user_apellidos'] ?? '')),
+                'nombre_categoria'    => $data['nombre_categoria'] ?? '',
+                'descripcion'         => $datos_voluntario['descripcion'],
+                'descripcion_antes'   => $datos_voluntario['descripcion_antes'],
+                'descripcion_despues' => $datos_voluntario['descripcion_despues'],
+                'nombre_voluntario'   => trim(($data['vol_nombre'] ?? '') . ' ' . ($data['vol_apellidos'] ?? '')),
+                'duracion_meses'      => max(1, $meses),
+                'valoracion'          => 5,
+                'edad'                => 0,
+                'foto'                => $data['foto_perfil'] ?? 'foto_defecto.webp',
+                'icono'               => '',
+                'estado'              => 'Borrador', // El admin la revisa antes de publicar
+                'automatica'          => 0,          // La ha rellenado el voluntario
+            ]);
+
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
 }
+?>

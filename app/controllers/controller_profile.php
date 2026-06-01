@@ -18,6 +18,10 @@ $db = new Database();
 $conn = $db->getConnection();
 
 
+    if (!isset($_SESSION['user_id'])) {
+        header('Location: ../views/auth/Login.php');
+        exit();
+    }
     $userId = (int) $_SESSION['user_id'];
     $mensaje_exito = $_SESSION['mensaje_perfil'] ?? null;
     $errores = $_SESSION['errores_perfil'] ?? [];

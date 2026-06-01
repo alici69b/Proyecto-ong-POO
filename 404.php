@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . "/config.php"; ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,8 +32,7 @@
 
     <header class="fade-in fade-in-1 w-full flex justify-center pt-6 z-[110]">
         <div class="w-[95%] max-w-7xl">
-            <?php require_once __DIR__ . "/config.php"; ?>
-<?php require_once __DIR__ . "/src/components/Header.php"; ?>
+            <?php require_once __DIR__ . "/src/components/Header.php"; ?>
         </div>
     </header>
 

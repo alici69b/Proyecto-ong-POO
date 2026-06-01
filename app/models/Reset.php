@@ -30,7 +30,6 @@ class Reset
         ";
 
         if ($id_categoria !== null) {
-            // Agregamos el filtro por categoría solo si se ha pedido
             $sql .= " AND r.id_categoria = :id_categoria";
         }
 
@@ -47,14 +46,13 @@ class Reset
     }
 
     /** Asigna un voluntario a un reset solo si todavía no tiene voluntario
-     * También cambia el estado a activo + cambiar el estado
+     * También cambia el estado a activo
      * @param int $id_reset
      * @param int $id_voluntario
      * @return bool
      */
     public function asignarVoluntario(int $id_reset, int $id_voluntario): bool
     {
-        //Preparamos la consulta
         $stmt = $this->conn->prepare("
             UPDATE reset
             SET id_voluntario = :id_voluntario,
@@ -62,24 +60,19 @@ class Reset
             WHERE id = :id_reset
               AND id_voluntario IS NULL
         ");
-
-        //Ejecutamos con los datos de entrada
         $stmt->execute([
             ":id_voluntario" => $id_voluntario,
-            ":id_reset" => $id_reset,
+            ":id_reset"      => $id_reset,
         ]);
-
-        //Devolvemos true si se ha actualizado un registro, false si no (ya tenía voluntario asignado)
         return $stmt->rowCount() > 0;
     }
 
-    /** Obtiene las estadísticas del voluntario para mostrar en el dashboard 
+    /** Obtiene las estadísticas del voluntario para mostrar en el dashboard
      * @param int $id_voluntario
      * @return array
      */
     public function obtenerStatsVoluntario(int $id_voluntario): array
     {
-        //Preparamos la consulta
         $stmt = $this->conn->prepare("
             SELECT
                 COUNT(*) AS total,
@@ -88,19 +81,16 @@ class Reset
             FROM reset
             WHERE id_voluntario = :id_voluntario
         ");
-
-        //Ejecutamos con el id_voluntario
         $stmt->execute([":id_voluntario" => $id_voluntario]);
         return $stmt->fetch();
     }
 
-    /** Recupera los resets que ya tiene asignados este voluntario para mostrarlos en su dashboard, junto con la categoría y el estado actual de cada uno. 
+    /** Recupera los resets asignados a un voluntario para su dashboard
      * @param int $id_voluntario
      * @return array
      */
     public function obtenerMisResets(int $id_voluntario): array
     {
-        //Preparamos la consulta
         $stmt = $this->conn->prepare("
             SELECT r.id, r.titulo, r.descripcion, r.nombre_contacto,
                    r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado, e.id AS id_estado
@@ -110,15 +100,13 @@ class Reset
             WHERE r.id_voluntario = :id_voluntario
             ORDER BY 
                 CASE e.id 
-                    WHEN 2 THEN 1  -- activo → primero
-                    WHEN 1 THEN 2  -- pendiente → segundo
-                    WHEN 3 THEN 3  -- resuelto → al final
-                    WHEN 4 THEN 4  -- cancelado → al final del todo
+                    WHEN 2 THEN 1
+                    WHEN 1 THEN 2
+                    WHEN 3 THEN 3
+                    WHEN 4 THEN 4
                 END,
             r.created_at DESC
         ");
-
-        //Ejecutamos con el id_voluntario
         $stmt->execute([":id_voluntario" => $id_voluntario]);
         return $stmt->fetchAll();
     }
@@ -148,7 +136,7 @@ class Reset
         return $stmt->fetch();
     }
 
-    /** Cambia el estado de un reset (3 = resuelto, 4 = cancelado)
+    /** Cambia el estado de un reset desde el lado del voluntario (3=resuelto, 4=cancelado)
      * Solo lo permite si el reset pertenece al voluntario y está activo (estado 2)
      * @param int $id_reset
      * @param int $id_voluntario
@@ -171,18 +159,21 @@ class Reset
         ]);
         return $stmt->rowCount() > 0;
     }
+
     /** Reactiva un reset resuelto o cancelado, volviéndolo a estado activo (2)
-     * Solo lo permite si pertenece al voluntario
+     * @param int $id_reset
+     * @param int $id_voluntario
+     * @return bool
      */
     public function reactivar(int $id_reset, int $id_voluntario): bool
     {
         $stmt = $this->conn->prepare("
-        UPDATE reset
-        SET id_estado = 2
-        WHERE id = :id_reset
-          AND id_voluntario = :id_voluntario
-          AND id_estado IN (3, 4)
-    ");
+            UPDATE reset
+            SET id_estado = 2
+            WHERE id = :id_reset
+              AND id_voluntario = :id_voluntario
+              AND id_estado IN (3, 4)
+        ");
         $stmt->execute([
             ':id_reset'      => $id_reset,
             ':id_voluntario' => $id_voluntario,
@@ -190,5 +181,200 @@ class Reset
         return $stmt->rowCount() > 0;
     }
 
+    // ── Métodos para el usuario normal ──────────────────────────────────────
+
+    /** Devuelve todos los resets de un usuario normal
+     * Si se pasa una categoría, filtra por ella
+     * @param int $id_usuario
+     * @param int|null $id_categoria
+     * @return array
+     */
+    public function obtenerPorUsuario(int $id_usuario, ?int $id_categoria = null): array
+    {
+        $sql = "
+            SELECT r.id, r.titulo, r.descripcion, r.created_at, r.id_estado, r.id_categoria,
+                   c.nombre_categoria,
+                   e.nombre_estado,
+                   CONCAT(u.nombre, ' ', u.apellidos) AS nombre_voluntario
+            FROM reset r
+            INNER JOIN categoria_reset c ON r.id_categoria = c.id
+            INNER JOIN estado_maestro  e ON r.id_estado    = e.id
+            LEFT JOIN  voluntario      v ON r.id_voluntario = v.id
+            LEFT JOIN  usuario         u ON v.id_usuario    = u.id
+            WHERE r.id_usuario = :id_usuario
+        ";
+
+        if ($id_categoria !== null) {
+            $sql .= " AND r.id_categoria = :id_categoria";
+        }
+
+        $sql .= " ORDER BY r.created_at DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+
+        if ($id_categoria !== null) {
+            $stmt->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /** Devuelve un reset por su ID comprobando que pertenece al usuario
+     * @param int $id_reset
+     * @param int $id_usuario
+     * @return array|false
+     */
+    public function obtenerPorIdUsuario(int $id_reset, int $id_usuario): array|false
+    {
+        $stmt = $this->conn->prepare("
+            SELECT r.id, r.titulo, r.descripcion, r.causa_abandono,
+                   r.necesidades_reset, r.created_at, r.id_estado,
+                   c.nombre_categoria,
+                   e.nombre_estado,
+                   CONCAT(u.nombre, ' ', u.apellidos) AS nombre_voluntario
+            FROM reset r
+            INNER JOIN categoria_reset c ON r.id_categoria = c.id
+            INNER JOIN estado_maestro  e ON r.id_estado    = e.id
+            LEFT JOIN  voluntario      v ON r.id_voluntario = v.id
+            LEFT JOIN  usuario         u ON v.id_usuario    = u.id
+            WHERE r.id = :id_reset
+              AND r.id_usuario = :id_usuario
+            LIMIT 1
+        ");
+        $stmt->execute([
+            ':id_reset'   => $id_reset,
+            ':id_usuario' => $id_usuario,
+        ]);
+        return $stmt->fetch();
+    }
+
+    /** Cambia el estado de un reset desde el lado del usuario
+     * El usuario SOLO puede cancelar (estado 4), nunca finalizar
+     * @param int $id_reset
+     * @param int $id_usuario
+     * @param int $nuevo_estado
+     * @return bool
+     */
+    public function cambiarEstadoUsuario(int $id_reset, int $id_usuario, int $nuevo_estado): bool
+    {
+        // Seguridad: el usuario solo puede cancelar
+        if ($nuevo_estado !== 4) {
+            return false;
+        }
+
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET id_estado = :nuevo_estado
+            WHERE id = :id_reset
+              AND id_usuario = :id_usuario
+              AND id_estado IN (1, 2)
+        ");
+        $stmt->execute([
+            ':nuevo_estado' => $nuevo_estado,
+            ':id_reset'     => $id_reset,
+            ':id_usuario'   => $id_usuario,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /** Crea un nuevo reset con estado 1 (pendiente) por defecto
+     * @param string $titulo
+     * @param int $id_categoria
+     * @param int $id_usuario
+     * @param string $descripcion
+     * @param string $necesidades_reset
+     * @param string $causa_abandono
+     * @param string $nombre_contacto
+     * @param string $email_contacto
+     * @return bool
+     */
+    public function crear(string $titulo, int $id_categoria, int $id_usuario, string $descripcion, string $necesidades_reset, string $causa_abandono, string $nombre_contacto, string $email_contacto): bool
+    {
+        $stmt = $this->conn->prepare("
+            INSERT INTO reset (titulo, descripcion, causa_abandono, necesidades_reset,
+                               id_categoria, id_usuario, nombre_contacto, email_contacto, id_estado)
+            VALUES (:titulo, :descripcion, :causa_abandono, :necesidades_reset,
+                    :id_categoria, :id_usuario, :nombre_contacto, :email_contacto, 1)
+        ");
+        $stmt->execute([
+            ':titulo'            => $titulo,
+            ':descripcion'       => $descripcion,
+            ':causa_abandono'    => $causa_abandono,
+            ':necesidades_reset' => $necesidades_reset,
+            ':id_categoria'      => $id_categoria,
+            ':id_usuario'        => $id_usuario,
+            ':nombre_contacto'   => $nombre_contacto,
+            ':email_contacto'    => $email_contacto,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /** Actualiza la fecha de última visita del usuario a un reset
+     * Se llama cada vez que el usuario abre el detalle del reset
+     */
+    public function actualizarVisitaUsuario(int $id_reset): void
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET ultima_visita_usuario = NOW()
+            WHERE id = :id_reset
+        ");
+        $stmt->execute([':id_reset' => $id_reset]);
+    }
+
+    /** Comprueba si un usuario tiene mensajes sin leer en un reset
+     * Hay notificación si el último comentario es de un voluntario
+     * y su fecha es posterior a ultima_visita_usuario
+     */
+    public function tieneNotificacionUsuario(int $id_reset): bool
+    {
+        $stmt = $this->conn->prepare("
+            SELECT COUNT(*) FROM reset_comentario rc
+            INNER JOIN reset r ON rc.id_reset = r.id
+            WHERE rc.id_reset = :id_reset
+              AND rc.id_voluntario IS NOT NULL
+              AND (
+                  r.ultima_visita_usuario IS NULL
+                  OR rc.created_at > r.ultima_visita_usuario
+              )
+        ");
+        $stmt->execute([':id_reset' => $id_reset]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    /** Actualiza la fecha de última visita del voluntario a un reset
+     * Se llama cada vez que el voluntario abre el detalle del reset
+     */
+    public function actualizarVisitaVoluntario(int $id_reset): void
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET ultima_visita_voluntario = NOW()
+            WHERE id = :id_reset
+        ");
+        $stmt->execute([':id_reset' => $id_reset]);
+    }
+
+    /** Comprueba si un voluntario tiene mensajes sin leer en un reset
+     * Hay notificación si el último comentario es de un usuario normal
+     * y su fecha es posterior a ultima_visita_voluntario
+     */
+    public function tieneNotificacionVoluntario(int $id_reset): bool
+    {
+        $stmt = $this->conn->prepare("
+            SELECT COUNT(*) FROM reset_comentario rc
+            INNER JOIN reset r ON rc.id_reset = r.id
+            WHERE rc.id_reset = :id_reset
+              AND rc.id_usuario IS NOT NULL
+              AND (
+                  r.ultima_visita_voluntario IS NULL
+                  OR rc.created_at > r.ultima_visita_voluntario
+              )
+        ");
+        $stmt->execute([':id_reset' => $id_reset]);
+        return $stmt->fetchColumn() > 0;
+    }
 }
 ?>

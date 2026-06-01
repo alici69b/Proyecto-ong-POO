@@ -50,6 +50,7 @@ if ($rol === 'admin') {
         <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="<?= BASE_URL ?>/app/controllers/controller_historias.php">Historias</a>
         <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="<?= BASE_URL ?>/app/controllers/controller_impacto.php">Impacto</a>
         <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="<?= BASE_URL ?>/pages/Contact.php">Contacto</a>
+        <a class="text-gray-600 hover:text-[#25a18e] font-medium transition" href="<?= BASE_URL ?>/app/controllers/controller_donacion.php">Donar</a>
     </div>
 
     <div class="flex-1 flex justify-end items-center gap-3">
@@ -83,6 +84,7 @@ if ($rol === 'admin') {
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="<?= BASE_URL ?>/app/controllers/controller_historias.php">Historias</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="<?= BASE_URL ?>/app/controllers/controller_impacto.php">Impacto</a>
                 <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="<?= BASE_URL ?>/pages/Contact.php">Contacto</a>
+                <a class="px-6 py-4 hover:bg-gray-50 text-gray-700 border-b border-gray-50" href="<?= BASE_URL ?>/app/controllers/controller_donacion.php">Donar</a>
                 <div class="bg-gray-50 flex flex-col gap-1 p-4">
                     <?php if ($loggedIn): ?>
                     <a class="w-full py-3 text-center border-2 border-[#00a5cf] text-[#00a5cf] rounded-xl font-bold" href="<?= BASE_URL ?>/app/controllers/controller_profile.php">Configuración</a>

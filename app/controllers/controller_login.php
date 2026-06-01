@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../config.php";
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 //importamos los modelos que vamos a utilizar
 require_once __DIR__ . '/../config/db.php';
@@ -15,6 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 //si existe el metodo post entonces recogeremos los datos
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_login'] = 'Error de seguridad. Inténtalo de nuevo.';
+        header('Location: ../views/auth/Login.php');
+        exit();
+    }
+
     $email    = trim($_POST['email']);
     $password = $_POST['pass'];
 
@@ -44,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         }
 
-        //guardamos en session todos los datos del usuario
+        session_regenerate_id(true);
+
         $_SESSION['user_id']       = $usuario['id'];
         $_SESSION['user_nombre']   = $usuario['nombre'];
         $_SESSION['user_apellidos'] = $usuario['apellidos'];

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 $modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
@@ -8,6 +9,12 @@ $db = new Database();
 $conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionusuarios.php');
+        exit();
+    }
+
     if ($modo_simulado) {
         header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
         exit();
@@ -41,6 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionusuarios.php');
+        exit();
+    }
+
     if ($modo_simulado) {
         header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
         exit();

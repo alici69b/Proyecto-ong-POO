@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Comprobamos que el usuario esté logueado y sea de tipo usuario normal
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
@@ -18,6 +19,12 @@ $id_usuario = $_SESSION['user_id'];
 
 // ── Si se envía un formulario ────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'Error de seguridad.');
+        header('Location: controller_user_perfil.php');
+        exit();
+    }
 
     $action = $_POST['action'];
 

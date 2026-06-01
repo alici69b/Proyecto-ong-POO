@@ -1,11 +1,7 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-
-session_start();
+require_once __DIR__ . '/../../config.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Usuario.php';
@@ -21,7 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // recogemos los datos del formulario
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION['errores'] = ['general' => ['Error de seguridad. Inténtalo de nuevo.']];
+        require_once __DIR__ . '/../views/auth/Register.php';
+        exit();
+    }
+
     $nombre   = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos']);
     $email    = trim($_POST['email']);

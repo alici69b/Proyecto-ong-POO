@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../../config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-voluntario') {
     header('Location: ../auth/Login.php');
@@ -97,6 +98,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                         action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
                         enctype="multipart/form-data"
                         class="flex-1">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="action" value="actualizar_foto">
                         <label class="block text-sm font-bold text-slate-500 mb-2">
                             Sube una nueva imagen (JPG, PNG o WEBP · máx. 2MB)
@@ -121,6 +123,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 <form method="POST"
                     action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
                     class="flex flex-col gap-5">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="actualizar_datos">
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -192,6 +195,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 <form method="POST"
                     action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
                     class="flex flex-col gap-5">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="cambiar_password">
 
                     <div>

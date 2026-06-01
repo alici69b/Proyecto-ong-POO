@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 $modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
@@ -20,6 +21,12 @@ $voluntarios = $conn->query("SELECT u.id, u.nombre, u.apellidos FROM usuario u J
 $categorias = $conn->query("SELECT nombre_categoria FROM categoria_reset ORDER BY id ASC")->fetchAll(PDO::FETCH_COLUMN);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionarhistorias.php');
+        exit();
+    }
+
     $datos = $_POST;
     if (!empty($_FILES['foto']['name'])) {
         $archivo = $_FILES['foto'];
@@ -39,6 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_editar']) && isset($_POST['id'])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionarhistorias.php');
+        exit();
+    }
+
     $datos = $_POST;
     if (!empty($_FILES['foto']['name'])) {
         $archivo = $_FILES['foto'];

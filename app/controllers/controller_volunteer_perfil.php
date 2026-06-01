@@ -24,6 +24,12 @@ $id_usuario = $_SESSION["user_id"];
 //PROCESAR FORMULARIOS DEL PERFIL
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad. Inténtalo de nuevo."];
+        header("Location: /Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php");
+        exit();
+    }
+
     //ACTUALIZAR DATOS PERSONALES
     if ($_POST["action"] === "actualizar_datos") {
 

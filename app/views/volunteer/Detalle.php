@@ -171,6 +171,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
 
                     <form method="POST"
                         action="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $reset['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
 
                         <!-- Nota de cierre (opcional, va al chat) -->
                         <textarea name="nota_cierre"
@@ -238,6 +239,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                     <p class="text-sm text-slate-400 mb-5">Puedes reactivarlo si necesitas retomar el caso.</p>
                     <form method="POST"
                         action="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $reset['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="action" value="reactivar">
                         <button type="submit"
                             onclick="return confirm('¿Reactivar este reset?')"
@@ -290,6 +292,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <?php if ((int)($reset['id_estado'] ?? 0) !== 4): ?>
                     <form method="POST"
                         action="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $reset['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="action" value="comentar">
                         <textarea name="texto"
                             rows="3"

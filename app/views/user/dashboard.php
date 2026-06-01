@@ -33,6 +33,7 @@ if (!isset($mis_resets)) $mis_resets = array();
         </div>
 
         <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php">
+            <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
             <input type="hidden" name="action" value="crear_reset">
 
             <!-- Título -->

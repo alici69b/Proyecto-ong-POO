@@ -233,6 +233,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <button type="button" onclick="cerrarModalEditar()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             </div>
             <form method="POST" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="id_usuario" id="edit-id">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -275,6 +276,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <button type="button" onclick="cerrarModalCrear()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             </div>
             <form method="POST" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action_crear" value="1">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>

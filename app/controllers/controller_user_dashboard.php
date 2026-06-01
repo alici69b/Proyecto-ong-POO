@@ -1,7 +1,11 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
+// Comprobamos que el usuario esté logueado y sea de tipo usuario normal
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
+    header('Location: ../views/auth/Login.php');
+    exit();
+}
 
 $nombreCompleto = htmlspecialchars($_SESSION['user_nombre'] ?? 'Usuario');
 $totalResets = 0;

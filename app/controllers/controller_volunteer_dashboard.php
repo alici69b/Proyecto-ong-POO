@@ -17,7 +17,7 @@ require_once __DIR__ . "/../models/Voluntario.php";
 require_once __DIR__ . "/../models/Reset.php";
 
 //Instanciamos los modelos
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 $resetModel = new Reset($conn);
 

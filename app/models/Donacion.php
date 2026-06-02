@@ -8,7 +8,7 @@ class Donacion
 
     public function __construct()
     {
-        $database = new Database();
+        $database = new Db();
         $this->conn = $database->getConnection();
     }
 

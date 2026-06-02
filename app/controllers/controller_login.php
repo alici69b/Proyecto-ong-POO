@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         //Si el rol del usuario es voluntario, obtenemos su id_voluntario y lo guardamos en sesión para usarlo en el dashboard
         if (strtolower($usuario['nombre_rol']) === 'soy-voluntario') {
-            $db   = new Database();
+            $db   = new Db();
             $conn = $db->getConnection();
             $stmt = $conn->prepare("SELECT id FROM voluntario WHERE id_usuario = :id");
             $stmt->execute([':id' => $usuario['id']]);

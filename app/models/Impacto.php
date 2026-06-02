@@ -9,7 +9,7 @@ class Impacto
     //creamos el constructor
     public function __construct()
     {
-        $database = new Database();
+        $database = new Db();
         $this->conn = $database->getConnection();
     }
     //contamos los resets totales
@@ -104,6 +104,6 @@ class Impacto
         if ($total > 0) {
             return  round(($completados / $total) * 100);
         }
-        return 70;
+        return 0;
     }
 }

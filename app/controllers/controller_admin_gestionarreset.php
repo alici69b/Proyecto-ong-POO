@@ -7,7 +7,7 @@ $modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado']
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
 
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) {

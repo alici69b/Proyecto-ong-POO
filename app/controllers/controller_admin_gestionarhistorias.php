@@ -13,7 +13,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
 $historiaModel = new Historia();
 
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 
 $usuarios = $conn->query("SELECT id, nombre, apellidos FROM usuario WHERE id_rol = 1 ORDER BY nombre ASC")->fetchAll();

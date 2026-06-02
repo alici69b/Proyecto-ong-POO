@@ -14,7 +14,7 @@ require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 
 //creamos la conexion 
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 
 

@@ -12,7 +12,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
 
 // Creamos la conexión y el modelo
-$db         = new Database();
+$db         = new Db();
 $conn       = $db->getConnection();
 $resetModel = new Reset($conn);
 

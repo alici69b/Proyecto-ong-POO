@@ -19,7 +19,7 @@ require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 try {
     //intentamos crear la bbdd
-    $db = new Database();
+    $db = new Db();
     $conn = $db->getConnection();
 
     //primera consulta para mostrar en la vista, contamos todos los usurios

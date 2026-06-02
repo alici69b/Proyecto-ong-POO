@@ -16,7 +16,7 @@ require_once __DIR__ . "/../models/Usuario.php";
 require_once __DIR__ . "/../models/Voluntario.php";
 
 //Conexión y datos básicos del usuario
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 $voluntario = new Voluntario();
 $id_usuario = $_SESSION["user_id"];

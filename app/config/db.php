@@ -1,6 +1,6 @@
 <?php
 //Definimos la clase
-class Database {
+class Db {
     //Atributos
     private PDO $connection;
     private string $host;

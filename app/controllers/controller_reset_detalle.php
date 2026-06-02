@@ -17,7 +17,7 @@ require_once __DIR__ . "/../models/ResetComentario.php";
 require_once __DIR__ . "/../models/Historia.php";
 
 // Instanciamos
-$db               = new Database();
+$db               = new Db();
 $conn             = $db->getConnection();
 $resetModel       = new Reset($conn);
 $comentarioModel  = new ResetComentario($conn);

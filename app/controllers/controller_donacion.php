@@ -8,7 +8,7 @@ require_once __DIR__ . '/../models/Donacion.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
 $dotenv->load();
 
-// ── Stripe: leer clave desde $_ENV (createImmutable no usa putenv) ──
+// Stripe: leer clave desde $_ENV (createImmutable no usa putenv) ──
 $stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'] ?? '';
 
 // Detectar placeholder literal (NO bloquear claves sk_test_ reales)
@@ -17,21 +17,22 @@ if ($stripeSecretKey === 'sk_test_tu_clave_secreta' || $stripeSecretKey === 'sk_
 }
 \Stripe\Stripe::setApiKey($stripeSecretKey);
 
-// ── URL absoluta base para Stripe (necesita URL completa, no relativa) ──
+// URL absoluta base para Stripe (necesita URL completa, no relativa) ──
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $baseFull = $protocol . '://' . $host . BASE_URL;
 
-// ── Cancelación ──
+// Cancelación ──
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['cancel'])) {
     include __DIR__ . '/../views/donacion/cancelado.php';
     exit();
 }
 
-// ── Retorno de Stripe (success) ──
+// Retorno de Stripe (success) ──
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['session_id'])) {
     $sessionId = $_GET['session_id'];
 
+    //si la contraseña "secreta" esta vacia, mandaremos un mensaje
     if (empty($stripeSecretKey)) {
         $error = 'Stripe no está configurado. Define STRIPE_SECRET_KEY en el .env';
         include __DIR__ . '/../views/donacion/cancelado.php';
@@ -58,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['session_id'])) {
     exit();
 }
 
-// ── Procesar formulario y crear sesión de Stripe ──
+// Procesar formulario y crear sesión de Stripe ──
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
 
     if (!validarTokenCSRF($_POST['_csrf'] ?? '')) {
@@ -149,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
     }
 }
 
-// ── Mostrar formulario de donación ──
+// Mostrar formulario de donación ──
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     include __DIR__ . '/../views/donacion/formulario.php';
     exit();

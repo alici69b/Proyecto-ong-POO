@@ -8,10 +8,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     exit();
 }
 
-/** @var array $mensajes - Variable definida en el controlador (controller_admin_gestionarcontacto.php, línea 17) */
-/** @var int $total_mensajes - Variable definida en el controlador (controller_admin_gestionarcontacto.php, línea 18) */
-/** @var int $no_leidos - Variable definida en el controlador (controller_admin_gestionarcontacto.php) */
-/** @var int $leidos - controller_admin_gestionarcontacto.php:39 */
 ?>
 <!DOCTYPE html>
 <html lang="es">

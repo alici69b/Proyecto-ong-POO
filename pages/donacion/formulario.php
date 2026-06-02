@@ -103,9 +103,15 @@
                             <?php endforeach; ?>
                         </div>
 
-                        <?php $errores = $_SESSION['errores_donacion'] ?? []; $old = $_SESSION['old_donacion'] ?? []; ?>
+                        <?php $errores = $_SESSION['errores_donacion'] ?? []; $old = $_SESSION['old_donacion'] ?? []; $errorGeneral = $_SESSION['error_donacion'] ?? ''; ?>
 
                         <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_donacion.php" class="space-y-4">
+                            <?php if ($errorGeneral): ?>
+                                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                                    <?= htmlspecialchars($errorGeneral) ?>
+                                </div>
+                            <?php endif; ?>
+
                             <input type="hidden" name="_csrf" value="<?= generarTokenCSRF() ?>">
 
                             <div>
@@ -114,7 +120,7 @@
                                     placeholder="Otra cantidad..."
                                     class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#25a18e] focus:border-[#25a18e] outline-none transition text-center text-xl font-bold">
                                 <?php if (!empty($errores['cantidad'])): ?>
-                                    <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars($errores['cantidad']) ?></p>
+                                    <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars(is_array($errores['cantidad']) ? implode(', ', $errores['cantidad']) : $errores['cantidad']) ?></p>
                                 <?php endif; ?>
                             </div>
 
@@ -124,7 +130,7 @@
                                     <input type="text" name="nombre" value="<?= htmlspecialchars($old['nombre'] ?? $_SESSION['user_nombre'] ?? '') ?>" required
                                         class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#25a18e] focus:border-[#25a18e] outline-none transition">
                                     <?php if (!empty($errores['nombre'])): ?>
-                                        <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars($errores['nombre']) ?></p>
+                                        <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars(is_array($errores['nombre']) ? implode(', ', $errores['nombre']) : $errores['nombre']) ?></p>
                                     <?php endif; ?>
                                 </div>
                                 <div>
@@ -132,7 +138,7 @@
                                     <input type="email" name="email" value="<?= htmlspecialchars($old['email'] ?? $_SESSION['user_email'] ?? '') ?>" required
                                         class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#25a18e] focus:border-[#25a18e] outline-none transition">
                                     <?php if (!empty($errores['email'])): ?>
-                                        <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars($errores['email']) ?></p>
+                                        <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars(is_array($errores['email']) ? implode(', ', $errores['email']) : $errores['email']) ?></p>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -218,7 +224,7 @@
         </div>
     </section>
 
-    <?php unset($_SESSION['errores_donacion'], $_SESSION['old_donacion']); ?>
+    <?php unset($_SESSION['error_donacion'], $_SESSION['errores_donacion'], $_SESSION['old_donacion']); ?>
     <?php require_once __DIR__ . '/../../src/components/footer.php'; ?>
 
     <script>

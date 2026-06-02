@@ -13,7 +13,7 @@ $dotenv->load();
 
 // Leo la clave secreta de Stripe desde el .env
 // Si no está definida, queda como cadena vacía
-$stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'] ?? '';
+$stripeSecretKey = $_ENV['STRIPE_SECRET_KEY'] ?? getenv('STRIPE_SECRET_KEY') ?? '';
 
 // Si la persona dejó el placeholder del tutorial, lo tratamos como "no configurado"
 // Esto evita que se intente conectar con una clave falsa
@@ -82,13 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
     // que solo nosotros conocemos (guardado en la sesión)
     if (!validarTokenCSRF($_POST['_csrf'] ?? '')) {
         $_SESSION['error_donacion'] = 'Error de seguridad. Inténtalo de nuevo.';
-        header('Location: ' . $baseFull . '/app/controllers/controller_donacion.php');
-        exit();
-    }
-
-    // Comprobamos que Stripe este configurado
-    if (empty($stripeSecretKey)) {
-        $_SESSION['error_donacion'] = 'Stripe no está configurado. Pide a tu profesor las claves de API.';
         header('Location: ' . $baseFull . '/app/controllers/controller_donacion.php');
         exit();
     }

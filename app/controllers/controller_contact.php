@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . "/../../config.php";
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once __DIR__ . '/../models/Mensaje.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION['errores']['general'][] = 'Error de seguridad. Inténtalo de nuevo.';
+        header('Location: ' . BASE_URL . '/pages/Contact.php');
+        exit();
+    }
     $datos = [
         'nombre_remitente' => trim($_POST['nombre_remitente'] ?? ''),
         'email_remitente'  => trim($_POST['email_remitente'] ?? ''),

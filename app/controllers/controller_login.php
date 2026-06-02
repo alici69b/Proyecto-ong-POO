@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__ . "/../../config.php";
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-//importamos los modelos que vamos a utilizar
+//importamos los modelos y helpers
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/UsuarioNormal.php';
+require_once __DIR__ . '/../models/Voluntario.php';
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 // si no  exite el metodo post lo redirigimos al login 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -15,12 +17,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 //si existe el metodo post entonces recogeremos los datos
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION['error_login'] = 'Error de seguridad. Inténtalo de nuevo.';
+        header('Location: ../views/auth/Login.php');
+        exit();
+    }
+
     $email    = trim($_POST['email']);
     $password = $_POST['pass'];
 
-    //si esta vacio entonces guardaremos en session el error y lo mostraremos por la vista
-    if (empty($email) || empty($password)) {
-        $_SESSION['error_login'] = 'Todos los campos son obligatorios.';
+    //validamos email y contraseña con el helper
+    $errores = Validaciones::validarLogin(['email' => $email, 'password' => $password]);
+    if (!empty($errores)) {
+        $_SESSION['error_login'] = reset($errores)[0];
         header('Location: ../views/auth/Login.php');
         exit();
     }
@@ -44,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             exit();
         }
 
-        //guardamos en session todos los datos del usuario
+        session_regenerate_id(true);
+
         $_SESSION['user_id']       = $usuario['id'];
         $_SESSION['user_nombre']   = $usuario['nombre'];
         $_SESSION['user_apellidos'] = $usuario['apellidos'];
@@ -53,14 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'foto_defecto.webp';
         $_SESSION['logged_in']     = true;
 
-        //Si el rol del usuario es voluntario, obtenemos su id_voluntario y lo guardamos en sesión para usarlo en el dashboard
+        //Si el rol del usuario es voluntario, obtenemos su id_voluntario a través del modelo
         if (strtolower($usuario['nombre_rol']) === 'soy-voluntario') {
-            $db   = new Database();
-            $conn = $db->getConnection();
-            $stmt = $conn->prepare("SELECT id FROM voluntario WHERE id_usuario = :id");
-            $stmt->execute([':id' => $usuario['id']]);
-            $vol  = $stmt->fetch();
-            $_SESSION['id_voluntario'] = $vol['id'] ?? null;
+            $volModel = new Voluntario();
+            $_SESSION['id_voluntario'] = $volModel->obtenerIdPorUsuario($usuario['id']);
         }
 
         //comrpobamos que el rol esta en minusculas y los guardamos en una variable

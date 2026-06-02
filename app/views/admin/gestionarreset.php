@@ -155,6 +155,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                         </div>
                     </div>
                     <form method="POST" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="id_reset" value="<?= $r['id_reset'] ?>">
                         <select name="id_voluntario" class="bg-slate-50 text-sm rounded-xl px-4 py-2.5 border border-slate-200 focus:ring-2 focus:ring-[#00a5cf] outline-none">
                             <option value="">Sin voluntario</option>

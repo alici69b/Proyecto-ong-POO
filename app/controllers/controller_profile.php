@@ -14,7 +14,7 @@ require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 
 //creamos la conexion 
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 
 
@@ -50,13 +50,9 @@ $conn = $db->getConnection();
             $foto_perfil = $usuario['foto_perfil'] ?? 'default.png';
 
             if (empty($errores) && isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
-                $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                $fileInfo = finfo_open(FILEINFO_MIME_TYPE);
-                $mime = finfo_file($fileInfo, $_FILES['foto_perfil']['tmp_name']);
-                finfo_close($fileInfo);
-
-                if (!in_array($mime, $allowed)) {
-                    $errores['foto'] = ['La imagen debe ser JPG, PNG, GIF o WebP.'];
+                $errFoto = Validaciones::validarFoto($_FILES['foto_perfil']);
+                if (!empty($errFoto)) {
+                    $errores['foto'] = $errFoto;
                 } else {
                     $ext = pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION);
                     $nombreFoto = 'user_' . $userId . '_' . time() . '.' . $ext;
@@ -104,13 +100,11 @@ $conn = $db->getConnection();
                 $errores['password_actual'] = ['La contraseña actual no es correcta.'];
             }
 
-            $err_pass = Validaciones::validarContrasena($nueva_password);
-            if (!empty($err_pass)) {
-                $errores['nueva_password'] = $err_pass;
-            }
-
-            if ($nueva_password !== $confirmar_password) {
-                $errores['confirmar_password'] = ['Las contraseñas no coinciden.'];
+            $errPass = Validaciones::validarPasswordConConfirmacion([
+                'password_nueva' => $nueva_password, 'password_confirmar' => $confirmar_password
+            ]);
+            if (!empty($errPass)) {
+                $errores = array_merge($errores, $errPass);
             }
 
             if (empty($errores)) {

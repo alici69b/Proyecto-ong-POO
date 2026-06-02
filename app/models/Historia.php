@@ -8,7 +8,7 @@ class Historia
 
     public function __construct()
     {
-        $database = new Database();
+        $database = new Db();
         $this->conn = $database->getConnection();
     }
 

@@ -224,7 +224,7 @@
         </div>
     </section>
 
-    <?php unset($_SESSION['errores_donacion'], $_SESSION['old_donacion']); ?>
+    <?php unset($_SESSION['error_donacion'], $_SESSION['errores_donacion'], $_SESSION['old_donacion']); ?>
     <?php require_once __DIR__ . '/../../src/components/footer.php'; ?>
 
     <script>

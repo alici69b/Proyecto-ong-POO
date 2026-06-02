@@ -90,11 +90,10 @@ class Donacion
         return $result ?: null;
     }
 
-    /**
-     * obtenerPorSessionId(): Busca una donación por stripe_session_id
-     * 
-     *  Cuando Stripe redirige al usuario de vuelta,usamos este método para buscar la donación que corresponde a esa sesión de pago
-     */
+    
+    // obtenerPorSessionId(): Busca una donación por stripe_session_id
+    // Cuando Stripe redirige al usuario de vuelta,usamos este método para buscar la donación que corresponde a esa sesión de pago
+    
     public function obtenerPorSessionId(string $sessionId): ?array
     {
         $stmt = $this->conn->prepare("SELECT * FROM donacion WHERE stripe_session_id = :session_id");

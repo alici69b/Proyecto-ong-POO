@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
 
     // Comprobamos que Stripe este configurado
     if (empty($stripeSecretKey)) {
-        $_SESSION['error_donacion'] = 'Stripe no está configurado. Pide a tu profesor las claves de API.';
+        $_SESSION['error_donacion'] = 'Stripe no está configurado.';
         header('Location: ' . $baseFull . '/app/controllers/controller_donacion.php');
         exit();
     }

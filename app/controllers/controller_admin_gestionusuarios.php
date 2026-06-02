@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 $modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 $db = new Db();
 $conn = $db->getConnection();
 
@@ -24,6 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $id_rol = (int)$_POST['id_rol'];
+
+    $errores = Validaciones::validarUsuario([
+        'nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'password' => $password
+    ]);
+    if (!empty($errores)) {
+        header('Location: controller_admin_gestionusuarios.php?errorvalidacion=1');
+        exit();
+    }
 
     $check = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
     $check->execute([':email' => $email]);
@@ -63,6 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
     $apellidos = trim($_POST['apellidos'] ?? '');
     $email = trim($_POST['email']);
     $id_rol = (int)$_POST['id_rol'];
+
+    $datosValidar = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email];
+    if (!empty($_POST['password_nuevo'])) {
+        $datosValidar['password'] = $_POST['password_nuevo'];
+    }
+    $errores = Validaciones::validarUsuario($datosValidar);
+    if (!empty($errores)) {
+        header('Location: controller_admin_gestionusuarios.php?errorvalidacion=1');
+        exit();
+    }
 
     $stmt = $conn->prepare("UPDATE usuario SET nombre = :nombre, apellidos = :apellidos, email = :email, id_rol = :id_rol WHERE id = :id");
     $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':id_rol' => $id_rol, ':id' => $id]);

@@ -7,6 +7,8 @@ class Validaciones
         $errores = [];
         if (empty($nombre)) {
             $errores[] = "El nombre es obligatorio";
+        } elseif (strlen(trim($nombre)) < 2) {
+            $errores[] = "El nombre debe tener al menos 2 caracteres";
         }
         return $errores;
     }
@@ -75,11 +77,8 @@ class Validaciones
         $errores = [];
 
         $errNombre = self::validarNombre($datos['nombre'] ?? '');
-        // validarNombre solo comprueba empty, pero queremos mínimo 2 caracteres
-        if (empty($datos['nombre'] ?? '')) {
-            $errores['nombre'] = ['El nombre es obligatorio'];
-        } elseif (strlen(trim($datos['nombre'])) < 2) {
-            $errores['nombre'] = ['El nombre debe tener al menos 2 caracteres'];
+        if (!empty($errNombre)) {
+            $errores['nombre'] = $errNombre;
         }
 
         $errEmail = self::validarEmail($datos['email'] ?? '');
@@ -95,12 +94,10 @@ class Validaciones
         return $errores;
     }
 
-    //funcion para validar la pagina de contacto
     public static function validarContacto(array $datos): array
     {
         $errores = [];
 
-        //cuando hablamos del slt:: es una calse que no necesita instanciarse
         $errNombre = self::validarNombre($datos['nombre_remitente'] ?? '');
         if (!empty($errNombre)) {
             $errores['nombre_remitente'] = $errNombre;
@@ -119,6 +116,146 @@ class Validaciones
         $errMensaje = self::validarMensaje($datos['cuerpo_mensaje'] ?? '');
         if (!empty($errMensaje)) {
             $errores['cuerpo_mensaje'] = $errMensaje;
+        }
+
+        return $errores;
+    }
+
+    public static function validarLogin(array $datos): array
+    {
+        $errores = [];
+
+        $errEmail = self::validarEmail($datos['email'] ?? '');
+        if (!empty($errEmail)) {
+            $errores['email'] = $errEmail;
+        }
+
+        $errPass = self::validarContrasena($datos['password'] ?? '');
+        if (!empty($errPass)) {
+            $errores['password'] = $errPass;
+        }
+
+        return $errores;
+    }
+
+    public static function validarConfirmacionPassword(string $password, string $confirmacion): array
+    {
+        $errores = [];
+        if ($password !== $confirmacion) {
+            $errores[] = "Las contraseñas no coinciden";
+        }
+        return $errores;
+    }
+
+    public static function validarPasswordConConfirmacion(array $datos, string $campoPassword = 'password_nueva', string $campoConfirmar = 'password_confirmar'): array
+    {
+        $errores = [];
+
+        $errPass = self::validarContrasena($datos[$campoPassword] ?? '');
+        if (!empty($errPass)) {
+            $errores[$campoPassword] = $errPass;
+        }
+
+        $errConfirm = self::validarConfirmacionPassword(
+            $datos[$campoPassword] ?? '',
+            $datos[$campoConfirmar] ?? ''
+        );
+        if (!empty($errConfirm)) {
+            $errores[$campoConfirmar] = $errConfirm;
+        }
+
+        return $errores;
+    }
+
+    public static function validarDatosPersonales(array $datos): array
+    {
+        $errores = [];
+
+        $errNombre = self::validarNombre($datos['nombre'] ?? '');
+        if (!empty($errNombre)) {
+            $errores['nombre'] = $errNombre;
+        }
+
+        $errApellidos = self::validarNombre($datos['apellidos'] ?? '');
+        if (!empty($errApellidos)) {
+            $errores['apellidos'] = $errApellidos;
+        }
+
+        if (isset($datos['tipo_ayuda'])) {
+            $errTipo = self::validarTipoAyuda($datos['tipo_ayuda']);
+            if (!empty($errTipo)) {
+                $errores['tipo_ayuda'] = $errTipo;
+            }
+        }
+
+        return $errores;
+    }
+
+    public static function validarFoto(array $archivo, array $opciones = []): array
+    {
+        $errores = [];
+        $permitidas = $opciones['extensiones'] ?? ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        $maxTamano = $opciones['max_tamano'] ?? 2 * 1024 * 1024;
+
+        if (empty($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
+            $errores[] = "Error al subir el archivo";
+            return $errores;
+        }
+
+        $extension = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
+        if (!in_array($extension, $permitidas)) {
+            $errores[] = "Formato no permitido. Usa: " . implode(', ', $permitidas);
+        }
+
+        if ($archivo['size'] > $maxTamano) {
+            $maxMB = $maxTamano / (1024 * 1024);
+            $errores[] = "La imagen no puede superar los {$maxMB}MB";
+        }
+
+        return $errores;
+    }
+
+    public static function validarUsuario(array $datos): array
+    {
+        $errores = [];
+
+        $errNombre = self::validarNombre($datos['nombre'] ?? '');
+        if (!empty($errNombre)) {
+            $errores['nombre'] = $errNombre;
+        }
+
+        $errApellidos = self::validarNombre($datos['apellidos'] ?? '');
+        if (!empty($errApellidos)) {
+            $errores['apellidos'] = $errApellidos;
+        }
+
+        $errEmail = self::validarEmail($datos['email'] ?? '');
+        if (!empty($errEmail)) {
+            $errores['email'] = $errEmail;
+        }
+
+        if (isset($datos['password']) && $datos['password'] !== '') {
+            $errPass = self::validarContrasena($datos['password']);
+            if (!empty($errPass)) {
+                $errores['password'] = $errPass;
+            }
+        }
+
+        return $errores;
+    }
+
+    public static function validarHistoria(array $datos): array
+    {
+        $errores = [];
+
+        $errTitulo = self::validarNombre($datos['titulo'] ?? '');
+        if (!empty($errTitulo)) {
+            $errores['titulo'] = $errTitulo;
+        }
+
+        $errContenido = self::validarMensaje($datos['contenido'] ?? '');
+        if (!empty($errContenido)) {
+            $errores['contenido'] = $errContenido;
         }
 
         return $errores;

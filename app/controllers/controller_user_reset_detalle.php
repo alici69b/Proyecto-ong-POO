@@ -11,6 +11,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../models/ResetComentario.php';
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 $db              = new Db();
 $conn            = $db->getConnection();
@@ -67,12 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // No puede comentar si está cancelado
         if ($reset['id_estado'] != 4) {
             $texto = trim($_POST['texto']);
-            if ($texto != '') {
-                // id_voluntario = null porque quien comenta es el usuario
+            $errMsg = Validaciones::validarMensaje($texto);
+            if (empty($errMsg)) {
                 $comentarioModel->insertar($id_reset, $id_usuario, null, $texto);
                 $_SESSION['flash'] = array('tipo' => 'success', 'msg' => 'Mensaje enviado.');
             } else {
-                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'El mensaje no puede estar vacío.');
+                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => $errMsg[0]);
             }
         }
     }

@@ -11,6 +11,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 $historiaModel = new Historia();
 
 $db = new Db();
@@ -29,13 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 
     $datos = $_POST;
     if (!empty($_FILES['foto']['name'])) {
-        $archivo = $_FILES['foto'];
-        $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        if (in_array($ext, $permitidas)) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
             $nombreArchivo = 'historia_nueva_' . time() . '.' . $ext;
             $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
-            if (move_uploaded_file($archivo['tmp_name'], $ruta)) {
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
                 $datos['foto'] = $nombreArchivo;
             }
         }
@@ -54,13 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_editar']) && i
 
     $datos = $_POST;
     if (!empty($_FILES['foto']['name'])) {
-        $archivo = $_FILES['foto'];
-        $ext = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-        if (in_array($ext, $permitidas)) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
             $nombreArchivo = 'historia_' . $_POST['id'] . '_' . time() . '.' . $ext;
             $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
-            if (move_uploaded_file($archivo['tmp_name'], $ruta)) {
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
                 $datos['foto'] = $nombreArchivo;
             }
         }

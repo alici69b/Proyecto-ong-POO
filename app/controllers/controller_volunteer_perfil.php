@@ -14,6 +14,7 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario"
 require_once __DIR__ . "/../config/db.php";
 require_once __DIR__ . "/../models/Usuario.php";
 require_once __DIR__ . "/../models/Voluntario.php";
+require_once __DIR__ . "/../Helpers/Validaciones.php";
 
 //Conexión y datos básicos del usuario
 $db = new Db();
@@ -39,16 +40,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
         $tipo_ayuda = trim($_POST["tipo_ayuda"] ?? "");
         $disponibilidad = trim($_POST["disponibilidad"] ?? "");
 
-        //Validación básica
-        if (empty($nombre) || empty($apellidos)) {
+        //Validación con helper
+        $errores = Validaciones::validarDatosPersonales([
+            'nombre' => $nombre, 'apellidos' => $apellidos, 'tipo_ayuda' => $tipo_ayuda
+        ]);
 
-            $_SESSION["flash"] = [
-                "tipo" => "error",
-                "msg" => "Nombre y apellidos son obligatorios."
-            ];
+        if (!empty($errores)) {
+            $_SESSION["flash"] = ["tipo" => "error", "msg" => "Nombre y apellidos son obligatorios."];
         } else {
-
-            //Guardamos cambios en la base de datos
             $voluntario->actualizarDatos($id_usuario, [
                 "nombre" => $nombre,
                 "apellidos" => $apellidos,
@@ -56,14 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
                 "disponibilidad" => $disponibilidad
             ]);
 
-            //Actualizamos también los datos de sesión
             $_SESSION["user_nombre"] = $nombre;
             $_SESSION["user_apellidos"] = $apellidos;
-
-            $_SESSION["flash"] = [
-                "tipo" => "success",
-                "msg" => "Datos actualizados correctamente."
-            ];
+            $_SESSION["flash"] = ["tipo" => "success", "msg" => "Datos actualizados correctamente."];
         }
 
     //ACTUALIZAR FOTO DE PERFIL
@@ -75,24 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
             //Sacamos extensión de la imagen
             $ext = strtolower(pathinfo($_FILES["foto"]["name"], PATHINFO_EXTENSION));
 
-            //Extensiones permitidas
-            $permitidas = ["jpg", "jpeg", "png", "webp"];
+            //Validamos formato y tamaño con helper
+            $errFoto = Validaciones::validarFoto($_FILES["foto"]);
 
-            //Validamos formato
-            if (!in_array($ext, $permitidas)) {
-
-                $_SESSION["flash"] = [
-                    "tipo" => "error",
-                    "msg" => "Solo se permiten imágenes JPG, JPEG, PNG o WEBP."
-                ];
-
-                //Limitamos tamaño máximo a 2MB
-            } elseif ($_FILES["foto"]["size"] > 2 * 1024 * 1024) {
-
-                $_SESSION["flash"] = [
-                    "tipo" => "error",
-                    "msg" => "La imagen no puede superar 2MB."
-                ];
+            if (!empty($errFoto)) {
+                $_SESSION["flash"] = ["tipo" => "error", "msg" => $errFoto[0]];
             } else {
 
                 //Generamos nombre único para evitar conflictos
@@ -138,25 +119,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
         $nueva = $_POST["password_nueva"] ?? "";
         $repetir = $_POST["password_repetir"] ?? "";
 
-        //Comprobaciones básicas
-        if (empty($actual) || empty($nueva) || empty($repetir)) {
+        //Validamos contraseñas con helper
+        $errPass = Validaciones::validarPasswordConConfirmacion([
+            'password_nueva' => $nueva, 'password_confirmar' => $repetir
+        ]);
 
-            $_SESSION["flash"] = [
-                "tipo" => "error",
-                "msg" => "Todos los campos de contraseña son obligatorios."
-            ];
-        } elseif (strlen($nueva) < 6) {
-
-            $_SESSION["flash"] = [
-                "tipo" => "error",
-                "msg" => "La nueva contraseña debe tener al menos 6 caracteres."
-            ];
-        } elseif ($nueva !== $repetir) {
-
-            $_SESSION["flash"] = [
-                "tipo" => "error",
-                "msg" => "Las contraseñas nuevas no coinciden."
-            ];
+        if (!empty($errPass)) {
+            $_SESSION["flash"] = ["tipo" => "error", "msg" => reset($errPass)[0]];
         } else {
 
             //Intentamos cambiar la contraseña y capturamos el resultado

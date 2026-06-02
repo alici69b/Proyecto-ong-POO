@@ -11,6 +11,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/UsuarioNormal.php';
+require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 // Usamos UsuarioNormal, que hereda de Usuario
 $usuarioModel = new UsuarioNormal();
@@ -34,19 +35,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $apellidos  = trim($_POST['apellidos']);
         $tipo_ayuda = trim($_POST['tipo_ayuda']);
 
-        $ok = $usuarioModel->actualizarDatos($id_usuario, array(
-            'nombre'     => $nombre,
-            'apellidos'  => $apellidos,
-            'tipo_ayuda' => $tipo_ayuda
-        ));
+        $errores = Validaciones::validarDatosPersonales([
+            'nombre' => $nombre, 'apellidos' => $apellidos, 'tipo_ayuda' => $tipo_ayuda
+        ]);
 
-        if ($ok) {
-            // Actualizamos también los datos de la sesión
-            $_SESSION['user_nombre']    = $nombre;
-            $_SESSION['user_apellidos'] = $apellidos;
-            $_SESSION['flash'] = array('tipo' => 'success', 'msg' => 'Datos actualizados correctamente.');
+        if (!empty($errores)) {
+            $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'Revisa los campos obligatorios.'];
         } else {
-            $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'No se pudieron guardar los cambios.');
+            $ok = $usuarioModel->actualizarDatos($id_usuario, [
+                'nombre' => $nombre, 'apellidos' => $apellidos, 'tipo_ayuda' => $tipo_ayuda
+            ]);
+
+            if ($ok) {
+                $_SESSION['user_nombre'] = $nombre;
+                $_SESSION['user_apellidos'] = $apellidos;
+                $_SESSION['flash'] = ['tipo' => 'success', 'msg' => 'Datos actualizados correctamente.'];
+            } else {
+                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'No se pudieron guardar los cambios.'];
+            }
         }
 
         // Acción: cambiar contraseña
@@ -55,32 +61,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $nuevo     = $_POST['password_nuevo'];
         $confirmar = $_POST['password_confirmar'];
 
-        if ($nuevo != $confirmar) {
-            $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'Las contraseñas nuevas no coinciden.');
-        } elseif (strlen($nuevo) < 6) {
-            $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'La contraseña debe tener al menos 6 caracteres.');
+        $errores = Validaciones::validarPasswordConConfirmacion([
+            'password_nueva' => $nuevo, 'password_confirmar' => $confirmar
+        ]);
+
+        if (!empty($errores)) {
+            $_SESSION['flash'] = ['tipo' => 'error', 'msg' => reset($errores)[0]];
         } else {
-            // Primero verificamos que la contraseña actual sea correcta
             $datosUsuario = $usuarioModel->buscarPorId($id_usuario);
             if (password_verify($actual, $datosUsuario['password'])) {
                 $usuarioModel->cambiarPassword($id_usuario, $nuevo);
-                $_SESSION['flash'] = array('tipo' => 'success', 'msg' => 'Contraseña actualizada correctamente.');
+                $_SESSION['flash'] = ['tipo' => 'success', 'msg' => 'Contraseña actualizada correctamente.'];
             } else {
-                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'La contraseña actual no es correcta.');
+                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'La contraseña actual no es correcta.'];
             }
         }
 
         // Acción: cambiar foto de perfil
     } elseif ($action == 'foto') {
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
-            $extension  = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
-            $permitidas = array('jpg', 'jpeg', 'png', 'webp');
-            $maxTamano  = 2 * 1024 * 1024; // 2 MB
+            $errFoto = Validaciones::validarFoto($_FILES['foto']);
 
-            if (!in_array($extension, $permitidas)) {
-                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'Formato no permitido. Usa JPG, PNG o WEBP.');
-            } elseif ($_FILES['foto']['size'] > $maxTamano) {
-                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'La imagen supera los 2MB.');
+            if (!empty($errFoto)) {
+                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => $errFoto[0]];
             } else {
                 $nombreArchivo  = 'user_' . $id_usuario . '_' . time() . '.' . $extension;
                 $carpetaDestino = __DIR__ . '/../../public/img/';

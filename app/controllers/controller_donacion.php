@@ -32,7 +32,7 @@ $baseFull = $protocol . '://' . $host . BASE_URL;
 
 // si el usuario vuelve de Stripe y pulse "cancel" O si viene con ?cancel=1 en la URL
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['cancel'])) {
-    include __DIR__ . '/../views/donacion/cancelado.php';
+    include __DIR__ . '/../../pages/donacion/cancelado.php';
     exit();
 }
 
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['session_id'])) {
     // Si Stripe no está configurado, mostramos error
     if (empty($stripeSecretKey)) {
         $error = 'Stripe no está configurado. Define STRIPE_SECRET_KEY en el .env';
-        include __DIR__ . '/../views/donacion/cancelado.php';
+        include __DIR__ . '/../../pages/donacion/cancelado.php';
         exit();
     }
 
@@ -63,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['session_id'])) {
         }
 
         // Muestro la vista de éxito
-        include __DIR__ . '/../views/donacion/exito.php';
+        include __DIR__ . '/../../pages/donacion/exito.php';
     } catch (Exception $e) {
         // Si algo falla (sesión inválida, error de conexión...)
         $error = 'Error al verificar el pago.';
-        include __DIR__ . '/../views/donacion/cancelado.php';
+        include __DIR__ . '/../../pages/donacion/cancelado.php';
     }
     exit();
 }
@@ -173,6 +173,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    include __DIR__ . '/../views/donacion/formulario.php';
+    include __DIR__ . '/../../pages/donacion/formulario.php';
     exit();
 }

@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . "/../../../config.php"; ?>
+<?php require_once __DIR__ . "/../../config.php"; ?>
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 
@@ -22,7 +22,7 @@
 </head>
 
 <body class="bg-[#f4f9fa]" id="inicio">
-    <?php require_once __DIR__ . "/../../../src/components/Header.php"; ?>
+    <?php require_once __DIR__ . "/../../src/components/Header.php"; ?>
 
     <a href="#inicio" class="fixed bottom-10 right-10 z-[9999] p-3 rounded-full bg-[#25a18e] text-white hover:bg-[#1a7a6b] transition-all shadow-xl flex items-center justify-center border-2 border-white/20" aria-label="Volver al inicio">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -37,8 +37,8 @@
     $totalResetsCompletados = 0;
     $totalVoluntarios = 0;
     try {
-        require_once __DIR__ . '/../../models/Donacion.php';
-        require_once __DIR__ . '/../../models/Impacto.php';
+        require_once __DIR__ . '/../../app/models/Donacion.php';
+        require_once __DIR__ . '/../../app/models/Impacto.php';
         $donacionModel = new Donacion();
         $impactoModel = new Impacto();
         $totalDonaciones = $donacionModel->contarCompletadas();
@@ -198,7 +198,7 @@
                 <div class="bg-white rounded-2xl p-8 text-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all border border-gray-100">
                     <div class="w-14 h-14 bg-[#004e64]/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
                         <svg class="w-7 h-7 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
                         </svg>
                     </div>
                     <h3 class="text-lg font-bold text-gray-800 mb-2">100% destinado a la causa</h3>
@@ -219,7 +219,7 @@
     </section>
 
     <?php unset($_SESSION['errores_donacion'], $_SESSION['old_donacion']); ?>
-    <?php require_once __DIR__ . '/../../../src/components/footer.php'; ?>
+    <?php require_once __DIR__ . '/../../src/components/footer.php'; ?>
 
     <script>
         function seleccionarCantidad(cant) {

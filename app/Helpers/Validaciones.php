@@ -60,6 +60,41 @@ class Validaciones
         return $errores;
     }
 
+    public static function validarCantidad(mixed $cantidad): array
+    {
+        $errores = [];
+        $cantidad = floatval($cantidad);
+        if ($cantidad < 1 || $cantidad > 99999) {
+            $errores[] = "La cantidad debe estar entre 1€ y 99.999€";
+        }
+        return $errores;
+    }
+
+    public static function validarDonacion(array $datos): array
+    {
+        $errores = [];
+
+        $errNombre = self::validarNombre($datos['nombre'] ?? '');
+        // validarNombre solo comprueba empty, pero queremos mínimo 2 caracteres
+        if (empty($datos['nombre'] ?? '')) {
+            $errores['nombre'] = ['El nombre es obligatorio'];
+        } elseif (strlen(trim($datos['nombre'])) < 2) {
+            $errores['nombre'] = ['El nombre debe tener al menos 2 caracteres'];
+        }
+
+        $errEmail = self::validarEmail($datos['email'] ?? '');
+        if (!empty($errEmail)) {
+            $errores['email'] = $errEmail;
+        }
+
+        $errCantidad = self::validarCantidad($datos['cantidad'] ?? 0);
+        if (!empty($errCantidad)) {
+            $errores['cantidad'] = $errCantidad;
+        }
+
+        return $errores;
+    }
+
     //funcion para validar la pagina de contacto
     public static function validarContacto(array $datos): array
     {

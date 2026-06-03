@@ -105,7 +105,7 @@ $disponibles = $disponibles ?? [];
                     </svg>
                     Resets disponibles
                 </a>
-                <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
+                <a href="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm font-bold">
                     <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
@@ -314,7 +314,7 @@ $disponibles = $disponibles ?? [];
                                     </div>
 
                                     <!-- Botón asignarse -->
-                                    <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php">
+                                    <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
                                         <input type="hidden" name="action" value="asignar">
                                         <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
                                         <button type="button" onclick="abrirModal(this.closest('form'))"

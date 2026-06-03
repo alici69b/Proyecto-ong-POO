@@ -20,8 +20,8 @@ class Reset
     public function obtenerDisponibles(?int $id_categoria = null): array
     {
         $sql = "
-            SELECT r.id, r.titulo, r.descripcion, r.nombre_contacto,
-                   r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado
+            SELECT r.id, r.titulo, r.descripcion, r.causa_abandono, r.necesidades_reset, r.nombre_contacto,
+                   r.email_contacto, r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado
             FROM reset r
             INNER JOIN categoria_reset c ON r.id_categoria = c.id
             INNER JOIN estado_maestro e ON r.id_estado = e.id
@@ -92,7 +92,7 @@ class Reset
      */
     public function obtenerMisResets(int $id_voluntario, ?int $id_estado = null): array
     {
-        $sql = "SELECT r.id, r.titulo, r.descripcion, r.nombre_contacto,
+        $sql = "SELECT r.id, r.titulo, r.descripcion, r.causa_abandono, r.necesidades_reset, r.nombre_contacto,
                     r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado, e.id AS id_estado
                 FROM reset r
                 INNER JOIN categoria_reset c ON r.id_categoria = c.id

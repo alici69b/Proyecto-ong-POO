@@ -9,7 +9,9 @@ require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 // Cargo las variables del .env (ahí guardamos STRIPE_SECRET_KEY, que es la clave secreta)
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+if (file_exists(__DIR__ . '/../../.env')) {
+    $dotenv->load();
+}
 
 // Leo la clave secreta de Stripe desde el .env
 // Si no está definida, queda como cadena vacía

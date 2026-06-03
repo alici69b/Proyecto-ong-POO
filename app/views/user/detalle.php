@@ -2,19 +2,16 @@
 require_once __DIR__ . "/../../../config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Si no está logueado o no es usuario, lo mandamos al login
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-// Evitamos errores si las variables no vienen definidas
 if (!isset($reset)) $reset = array();
 if (!isset($comentarios)) $comentarios = array();
 if (!isset($flash)) $flash = null;
 
-// Comprobamos el estado del reset para saber qué mostrar
-$estado = isset($reset['id_estado']) ? (int)$reset['id_estado'] : 0;
+$estado         = isset($reset['id_estado']) ? (int)$reset['id_estado'] : 0;
 $puede_cancelar = ($estado == 1 || $estado == 2);
 $esta_resuelto  = ($estado == 3);
 $esta_cancelado = ($estado == 4);
@@ -29,13 +26,10 @@ $esta_cancelado = ($estado == 4);
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            background-color: #f4f9fa;
-        }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f4f9fa; }
     </style>
 </head>
-<!-- Modal de confirmación para cancelar -->
+<!-- Modal cancelar -->
 <div id="modal-cancelar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl">
         <h4 class="text-lg font-extrabold mb-2">¿Cancelar este reset?</h4>
@@ -53,10 +47,12 @@ $esta_cancelado = ($estado == 4);
     </div>
 </div>
 <body class="text-[#004e64] min-h-screen">
-    <div class="flex">
+     <!-- Overlay móvil -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
 
         <!-- SIDEBAR -->
-        <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="mt-6 px-2">
                 <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
                     <svg fill="#ff3b30" class="w-6 h-6" viewBox="0 0 612 612">
@@ -80,217 +76,236 @@ $esta_cancelado = ($estado == 4);
                     <p class="text-[#9fffcb] text-[10px]">Usuario</p>
                 </div>
             </div>
-            <nav class="flex flex-col gap-2">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
-                    ← Volver al panel
-                </a>
-            </nav>
-            <div class="mt-auto pt-6 border-t border-white/10">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
-                    Cerrar sesión
-                </a>
-            </div>
-        </aside>
+            <!-- Botón cerrar sidebar en móvil -->
+            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-2">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
+                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                Volver al panel
+            </a>
+        </nav>
+        <div class="mt-auto pt-6 border-t border-white/10">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
+                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/>
+                </svg>
+                Cerrar sesión
+            </a>
+        </div>
+    </aside>
 
-        <!-- CONTENIDO -->
-        <main class="flex-1 md:ml-64 p-6 md:p-12 w-full max-w-4xl">
+<!-- Contenido -->
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <main class="flex-1 p-4 md:p-8 w-full max-w-4xl">
 
-            <!-- Mensaje flash -->
-            <?php if ($flash != null): ?>
-                <?php if ($flash['tipo'] == 'success'): ?>
-                    <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-green-50 text-green-700 border border-green-200">
-                        <?= htmlspecialchars($flash['msg']) ?>
-                    </div>
-                <?php else: ?>
-                    <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-red-50 text-red-700 border border-red-200">
-                        <?= htmlspecialchars($flash['msg']) ?>
-                    </div>
-                <?php endif; ?>
+        <!-- Barra superior móvil -->
+        <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+            <span class="text-sm font-bold text-[#004e64]">Mi Reset</span>
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                class="p-2 rounded-lg hover:bg-gray-100 transition text-[#004e64]" title="Volver al panel">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Flash -->
+        <?php if ($flash != null): ?>
+            <?php if ($flash['tipo'] == 'success'): ?>
+                <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-green-50 text-green-700 border border-green-200">
+                    <?= htmlspecialchars($flash['msg']) ?>
+                </div>
+            <?php else: ?>
+                <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-red-50 text-red-700 border border-red-200">
+                    <?= htmlspecialchars($flash['msg']) ?>
+                </div>
             <?php endif; ?>
+        <?php endif; ?>
 
-            <!-- DATOS DEL RESET -->
+        <!-- Datos del reset -->
+        <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <h2 class="text-3xl font-extrabold"><?= htmlspecialchars($reset['titulo']) ?></h2>
+                <?php
+                if ($estado == 1) {
+                    $badgeClass = 'bg-amber-50 text-amber-700';
+                } elseif ($estado == 2) {
+                    $badgeClass = 'bg-blue-50 text-blue-700';
+                } elseif ($estado == 3) {
+                    $badgeClass = 'bg-green-50 text-green-700';
+                } elseif ($estado == 4) {
+                    $badgeClass = 'bg-red-50 text-red-700';
+                } else {
+                    $badgeClass = 'bg-slate-100 text-slate-500';
+                }
+                ?>
+                <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
+                    <?= htmlspecialchars($reset['nombre_estado']) ?>
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-600 mb-4">
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Categoría</p>
+                    <p class="font-bold"><?= htmlspecialchars($reset['nombre_categoria']) ?></p>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Voluntario asignado</p>
+                    <?php if (!empty($reset['nombre_voluntario'])): ?>
+                        <p class="font-bold text-[#00a5cf]"><?= htmlspecialchars($reset['nombre_voluntario']) ?></p>
+                    <?php else: ?>
+                        <p class="font-bold text-slate-400 italic">Pendiente de asignación</p>
+                    <?php endif; ?>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Fecha</p>
+                    <p class="font-bold"><?= date('d/m/Y', strtotime($reset['created_at'])) ?></p>
+                </div>
+            </div>
+
+            <?php if (!empty($reset['descripcion'])): ?>
+                <div class="mb-3">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Descripción</p>
+                    <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['descripcion'])) ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($reset['necesidades_reset'])): ?>
+                <div class="mb-3">
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Qué necesito</p>
+                    <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['necesidades_reset'])) ?></p>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($reset['causa_abandono'])): ?>
+                <div>
+                    <p class="text-xs font-bold text-slate-400 uppercase mb-1">Causa del bloqueo</p>
+                    <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['causa_abandono'])) ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Botón cancelar -->
+        <?php if ($puede_cancelar): ?>
             <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
-                <div class="flex items-start justify-between gap-4 mb-4">
-                    <h2 class="text-3xl font-extrabold"><?= htmlspecialchars($reset['titulo']) ?></h2>
-                    <?php
-                    // Badge de estado
-                    if ($estado == 1) {
-                        $badgeClass = 'bg-amber-50 text-amber-700';
-                    } elseif ($estado == 2) {
-                        $badgeClass = 'bg-blue-50 text-blue-700';
-                    } elseif ($estado == 3) {
-                        $badgeClass = 'bg-green-50 text-green-700';
-                    } elseif ($estado == 4) {
-                        $badgeClass = 'bg-red-50 text-red-700';
-                    } else {
-                        $badgeClass = 'bg-slate-100 text-slate-500';
-                    }
-                    ?>
-                    <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
-                        <?= htmlspecialchars($reset['nombre_estado']) ?>
-                    </span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-600 mb-4">
-                    <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Categoría</p>
-                        <p class="font-bold"><?= htmlspecialchars($reset['nombre_categoria']) ?></p>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Voluntario asignado</p>
-                        <?php if (!empty($reset['nombre_voluntario'])): ?>
-                            <p class="font-bold text-[#00a5cf]"><?= htmlspecialchars($reset['nombre_voluntario']) ?></p>
-                        <?php else: ?>
-                            <p class="font-bold text-slate-400 italic">Pendiente de asignación</p>
-                        <?php endif; ?>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Fecha</p>
-                        <p class="font-bold"><?= date('d/m/Y', strtotime($reset['created_at'])) ?></p>
-                    </div>
-                </div>
-
-                <?php if (!empty($reset['descripcion'])): ?>
-                    <div class="mb-3">
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Descripción</p>
-                        <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['descripcion'])) ?></p>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (!empty($reset['necesidades_reset'])): ?>
-                    <div class="mb-3">
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Qué necesito</p>
-                        <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['necesidades_reset'])) ?></p>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (!empty($reset['causa_abandono'])): ?>
-                    <div>
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-1">Causa del bloqueo</p>
-                        <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($reset['causa_abandono'])) ?></p>
-                    </div>
-                <?php endif; ?>
+                <h3 class="text-lg font-extrabold mb-2">¿Ya no necesitas ayuda con esto?</h3>
+                <p class="text-sm text-slate-500 mb-5">Puedes cancelar esta solicitud en cualquier momento.</p>
+                <form method="POST" id="form-cancelar"
+                    action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="action" value="cancelar">
+                    <button type="button" onclick="abrirModal()"
+                        class="w-full bg-red-50 text-red-600 border border-red-200 font-extrabold text-sm py-3 rounded-2xl hover:bg-red-100">
+                        Cancelar solicitud
+                    </button>
+                </form>
             </div>
+        <?php endif; ?>
 
-            <!-- BOTÓN CANCELAR (solo si está pendiente o activo) -->
-            <?php if ($puede_cancelar): ?>
-                <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
-                    <h3 class="text-lg font-extrabold mb-2">¿Ya no necesitas ayuda con esto?</h3>
-                    <p class="text-sm text-slate-500 mb-5">Puedes cancelar esta solicitud en cualquier momento.</p>
-                    <form method="POST" id="form-cancelar"
-                        action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
-                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                        <input type="hidden" name="action" value="cancelar">
-                        <button type="button" onclick="abrirModal()"
-                            class="w-full bg-red-50 text-red-600 border border-red-200 font-extrabold text-sm py-3 rounded-2xl hover:bg-red-100">
-                            Cancelar solicitud
-                        </button>
-                    </form>
+        <!-- Aviso resuelto -->
+        <?php if ($esta_resuelto): ?>
+            <div class="bg-green-50 rounded-3xl border border-green-200 p-6 mb-6 flex items-center gap-4">
+                <span class="text-3xl">🎉</span>
+                <div>
+                    <p class="font-extrabold text-green-700">¡Reset completado!</p>
+                    <p class="text-sm text-green-600">Tu voluntario marcó este proceso como resuelto. ¡Enhorabuena!</p>
                 </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <!-- Aviso si está resuelto -->
-            <?php if ($esta_resuelto): ?>
-                <div class="bg-green-50 rounded-3xl border border-green-200 p-6 mb-6 flex items-center gap-4">
-                    <span class="text-3xl">🎉</span>
-                    <div>
-                        <p class="font-extrabold text-green-700">¡Reset completado!</p>
-                        <p class="text-sm text-green-600">Tu voluntario marcó este proceso como resuelto. ¡Enhorabuena!</p>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-            <!-- SEGUIMIENTO / CHAT -->
-            <div class="bg-white rounded-3xl border border-slate-100 p-8">
-                <h3 class="text-lg font-extrabold mb-6">
-                    Seguimiento
-                    <span class="text-slate-400 font-bold text-sm ml-2">(<?= count($comentarios) ?>)</span>
-                </h3>
-
-                <!-- Lista de comentarios -->
-                <?php if (count($comentarios) == 0): ?>
-                    <p class="text-sm text-slate-400 text-center py-6">
-                        <?php if ($estado == 1): ?>
-                            En cuanto un voluntario tome tu caso, verás el seguimiento aquí.
-                        <?php else: ?>
-                            Aún no hay mensajes en este caso.
-                        <?php endif; ?>
-                    </p>
-                <?php else: ?>
-                    <div class="flex flex-col gap-4 mb-8">
-                        <?php foreach ($comentarios as $c): ?>
-                            <?php
-                            // Si es_voluntario tiene valor, el mensaje es del voluntario
-                            // Si no, es del usuario (o sea, del que está viendo la página)
-                            $es_voluntario = !empty($c['es_voluntario']);
-                            ?>
-                            <div class="flex gap-3 <?php if (!$es_voluntario) echo 'flex-row-reverse'; ?>">
-                                <!-- Foto -->
-                                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
-                                    alt="Avatar"
-                                    class="shrink-0 w-8 h-8 rounded-full object-cover">
-                                <!-- Burbuja del mensaje -->
-                                <div class="flex-1 rounded-2xl px-4 py-3
+        <!-- Chat / seguimiento -->
+        <div class="bg-white rounded-3xl border border-slate-100 p-8">
+            <h3 class="text-lg font-extrabold mb-6">
+                Seguimiento
+                <span class="text-slate-400 font-bold text-sm ml-2">(<?= count($comentarios) ?>)</span>
+            </h3>
+            <?php if (count($comentarios) == 0): ?>
+                <p class="text-sm text-slate-400 text-center py-6">
+                    <?php if ($estado == 1): ?>
+                        En cuanto un voluntario tome tu caso, verás el seguimiento aquí.
+                    <?php else: ?>
+                        Aún no hay mensajes en este caso.
+                    <?php endif; ?>
+                </p>
+            <?php else: ?>
+                <div class="flex flex-col gap-4 mb-8">
+                    <?php foreach ($comentarios as $c): ?>
+                        <?php $es_voluntario = !empty($c['es_voluntario']); ?>
+                        <div class="flex gap-3 <?php if (!$es_voluntario) echo 'flex-row-reverse'; ?>">
+                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
+                                alt="Avatar" class="shrink-0 w-8 h-8 rounded-full object-cover">
+                            <div class="flex-1 rounded-2xl px-4 py-3
                                 <?php if ($es_voluntario): ?>
                                     bg-slate-50 mr-12
                                 <?php else: ?>
                                     bg-gradient-to-br from-[#e0f7ff] to-[#d0fff0] ml-12
                                 <?php endif; ?>">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <span class="text-xs font-extrabold text-[#004e64]">
-                                            <?= htmlspecialchars($c['nombre_usuario'] ?? 'Usuario') ?>
-                                            <?php if ($es_voluntario): ?>
-                                                <span class="ml-1 text-[10px] bg-[#004e64] text-white px-2 py-0.5 rounded-full">voluntario</span>
-                                            <?php else: ?>
-                                                <span class="ml-1 text-[10px] bg-[#00a5cf] text-white px-2 py-0.5 rounded-full">tú</span>
-                                            <?php endif; ?>
-                                        </span>
-                                        <span class="text-[10px] text-slate-400">
-                                            <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
-                                        </span>
-                                    </div>
-                                    <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($c['texto'])) ?></p>
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="text-xs font-extrabold text-[#004e64]">
+                                        <?= htmlspecialchars($c['nombre_usuario'] ?? 'Usuario') ?>
+                                        <?php if ($es_voluntario): ?>
+                                            <span class="ml-1 text-[10px] bg-[#004e64] text-white px-2 py-0.5 rounded-full">voluntario</span>
+                                        <?php else: ?>
+                                            <span class="ml-1 text-[10px] bg-[#00a5cf] text-white px-2 py-0.5 rounded-full">tú</span>
+                                        <?php endif; ?>
+                                    </span>
+                                    <span class="text-[10px] text-slate-400">
+                                        <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
+                                    </span>
                                 </div>
+                                <p class="text-sm text-slate-600"><?= nl2br(htmlspecialchars($c['texto'])) ?></p>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
-                <!-- Formulario para enviar un mensaje (desactivado si está cancelado) -->
-                <?php if (!$esta_cancelado): ?>
-                    <form method="POST"
-                        action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
-                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                        <input type="hidden" name="action" value="comentar">
-                        <textarea name="texto" rows="3"
-                            placeholder="Escribe un mensaje a tu voluntario..."
-                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
-                        <button type="submit"
-                            class="w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90">
-                            Enviar mensaje
-                        </button>
-                    </form>
-                <?php else: ?>
-                    <p class="text-xs text-center text-slate-400 mt-4">Esta solicitud está cancelada y no admite más mensajes.</p>
-                <?php endif; ?>
-            </div>
+            <?php if (!$esta_cancelado): ?>
+                <form method="POST"
+                    action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="action" value="comentar">
+                    <textarea name="texto" rows="3"
+                        placeholder="Escribe un mensaje a tu voluntario..."
+                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-3 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90">
+                        Enviar mensaje
+                    </button>
+                </form>
+            <?php else: ?>
+                <p class="text-xs text-center text-slate-400 mt-4">Esta solicitud está cancelada y no admite más mensajes.</p>
+            <?php endif; ?>
+        </div>
 
-        </main>
+    </main>
     </div>
 
     <script>
         function abrirModal() {
             document.getElementById('modal-cancelar').classList.remove('hidden');
         }
-
         function cerrarModal() {
             document.getElementById('modal-cancelar').classList.add('hidden');
         }
-
         function confirmarCancelar() {
             document.getElementById('form-cancelar').submit();
+        }
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         }
     </script>
 </body>

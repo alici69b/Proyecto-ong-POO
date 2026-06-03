@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . "/../../config.php";
-if (session_status() === PHP_SESSION_NONE) session_start();
+session_start();
 
 // Comprobamos que el usuario esté logueado y sea de tipo usuario normal
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
@@ -11,7 +10,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../models/ResetComentario.php';
-require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 $db              = new Db();
 $conn            = $db->getConnection();
@@ -41,12 +39,6 @@ if (!$reset) {
 // ── Si se envía un formulario ────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
-        $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'Error de seguridad. Inténtalo de nuevo.');
-        header('Location: controller_user_reset_detalle.php?id=' . $id_reset);
-        exit();
-    }
-
     $action = $_POST['action'];
 
     // Acción: cancelar el reset
@@ -68,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // No puede comentar si está cancelado
         if ($reset['id_estado'] != 4) {
             $texto = trim($_POST['texto']);
-            $errMsg = Validaciones::validarMensaje($texto);
-            if (empty($errMsg)) {
+            if ($texto != '') {
+                // id_voluntario = null porque quien comenta es el usuario
                 $comentarioModel->insertar($id_reset, $id_usuario, null, $texto);
                 $_SESSION['flash'] = array('tipo' => 'success', 'msg' => 'Mensaje enviado.');
             } else {
-                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => $errMsg[0]);
+                $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'El mensaje no puede estar vacío.');
             }
         }
     }
@@ -94,5 +86,5 @@ $flash = isset($_SESSION['flash']) ? $_SESSION['flash'] : null;
 unset($_SESSION['flash']);
 
 // Cargamos la vista
-require_once __DIR__ . '/../views/user/detalle.php';
+require_once __DIR__ . '/../views/user/Detalle.php';
 ?>

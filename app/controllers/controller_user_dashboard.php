@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . "/../../config.php";
-if (session_status() === PHP_SESSION_NONE) session_start();
+session_start();
 
 // Comprobamos que el usuario esté logueado y sea de tipo usuario normal
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
@@ -20,12 +19,6 @@ $id_usuario = $_SESSION['user_id'];
 
 // ── Si se envía el formulario de crear reset 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'crear_reset') {
-
-    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
-        $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'Error de seguridad.');
-        header('Location: controller_user_dashboard.php');
-        exit();
-    }
 
     $titulo            = trim($_POST['titulo']);
     $id_categoria      = (int)$_POST['id_categoria'];
@@ -54,14 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'crear_reset') {
     exit();
 }
 
-// ── Recogemos el filtro de categoría si viene en la URL ──────────────────────
+// ── Recogemos el filtro de categoría y estado si vienen en la URL ──────────────────────
 $id_categoria = null;
 if (isset($_GET['categoria']) && $_GET['categoria'] != '') {
     $id_categoria = (int)$_GET['categoria'];
 }
 
+$id_estado = null;
+if (isset($_GET['estado']) && $_GET['estado'] != '') {
+    $id_estado = (int)$_GET['estado'];
+}
+
 // ── Obtenemos los datos para la vista ────────────────────────────────────────
-$mis_resets = $resetModel->obtenerPorUsuario($id_usuario, $id_categoria);
+$mis_resets = $resetModel->obtenerPorUsuario($id_usuario, $id_categoria, $id_estado);
 
 // Obtenemos las categorías directamente con una consulta simple
 $stmtCat    = $conn->query("SELECT id, nombre_categoria FROM categoria_reset ORDER BY nombre_categoria");

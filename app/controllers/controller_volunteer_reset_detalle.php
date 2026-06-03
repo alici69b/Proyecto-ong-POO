@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
     }
 
     // Redirigimos a la misma página para evitar reenvío del formulario al refrescar
-    header("Location: controller_reset_detalle.php?id=$id_reset");
+    header("Location: controller_volunteer_reset_detalle.php?id=$id_reset");
     exit();
 }
 

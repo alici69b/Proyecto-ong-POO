@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../../config.php";
 //Inicializamos las variables para evitar posibles errores
+$id_estado_mis = $id_estado_mis ?? null;
 $flash = $flash ?? null;
 $stats = $stats ?? ["total" => 0, "en_progreso" => 0, "completados" => 0];
 $categorias = $categorias ?? [];
@@ -44,8 +45,9 @@ $disponibles = $disponibles ?? [];
         </div>
     </div>
 </div>
-
 <body class="text-[#004e64] min-h-screen" id="inicio">
+    <!-- Overlay oscuro al abrir sidebar en movil -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
     <div class="flex">
         <!-- BOTON DE IR A INICIO ─────────────────────────────────────────────────────── -->
         <a href="#inicio" class="fixed bottom-10 right-10 z-[9999] p-3 rounded-full bg-[#25a18e] text-white hover:bg-[#1a7a6b] transition-all shadow-xl flex items-center justify-center border-2 border-white/20" aria-label="Volver al inicio"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -53,7 +55,7 @@ $disponibles = $disponibles ?? [];
             </svg>
         </a>
         <!-- ── Sidebar ─────────────────────────────────────────────────────── -->
-        <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="mt-6 px-2">
                 <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
                     <svg fill="#ff3b30" class="w-6 h-6 transition-transform group-hover:rotate-12" viewBox="0 0 612.00 612.00">
@@ -68,6 +70,12 @@ $disponibles = $disponibles ?? [];
                     <p class="font-bold text-white text-sm">Panel Voluntario</p>
                     <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
                 </div>
+                <!-- Botón cerrar sidebar en móvil -->
+                <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
             <nav class="flex flex-col gap-2">
                 <a href="#mis-actividades"
@@ -108,198 +116,211 @@ $disponibles = $disponibles ?? [];
                 </a>
             </div>
         </aside>
-
-        <!-- ── Contenido principal ──────────────────────────────────────────── -->
-        <main class="flex-1 md:ml-64 p-6 md:p-12 w-full">
-            <?php if (isset($modo_simulado) && $modo_simulado): ?>
-                <div class="flex flex-col gap-2 mb-6">
-                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
-                        <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+        <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+            <!-- ── Contenido principal ──────────────────────────────────────────── -->
+            <main class="flex-1 p-4 md:p-8 w-full">
+                <!-- Barra superior móvil con botón hamburguesa -->
+                <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+                    <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                        <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
                         </svg>
-                        <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
+                    </button>
+                    <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION["user_nombre"]) ?></span>
+                </div>
+                <!-- Cabecera -->
+                <header class="mb-10">
+                    <h2 class="text-4xl font-extrabold tracking-tight mb-2">
+                        Bienvenido, <?= htmlspecialchars($_SESSION["user_nombre"]) ?>
+                    </h2>
+                    <p class="text-gray-400 text-sm italic">Panel de voluntario · <?= date("d/m/Y") ?></p>
+                </header>
+
+                <!-- Flash message -->
+                <?php if ($flash): ?>
+                    <div class="mb-8 px-5 py-4 rounded-2xl text-sm font-bold
+                    <?= $flash["tipo"] === "success"
+                        ? "bg-green-50 text-green-700 border border-green-200"
+                        : "bg-red-50 text-red-700 border border-red-200" ?>">
+                        <?= htmlspecialchars($flash["msg"]) ?>
                     </div>
-                    <?php if (isset($_GET['sim_bloqueado'])): ?>
-                        <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
-                            <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-                            </svg>
-                            <span>Acción bloqueada: estás en modo simulación.</span>
+                <?php endif; ?>
+
+                <!-- ── Stats ────────────────────────────────────────────────────── -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
+                    <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Mis RESETs asignados</p>
+                        <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["total"] ?></div>
+                    </div>
+                    <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">En progreso</p>
+                        <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["en_progreso"] ?></div>
+                    </div>
+                    <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
+                        <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Completados</p>
+                        <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["completados"] ?></div>
+                    </div>
+                </div>
+
+                <!-- ── Mis actividades ──────────────────────────────────────────── -->
+                <section id="mis-actividades" class="mb-14">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <h3 class="text-2xl font-extrabold">Mis actividades</h3>
+
+                        <!-- Filtro por estado -->
+                        <form method="GET" action="" class="flex flex-wrap items-center gap-2">
+                            <!-- Conservamos el filtro de categoría de resets disponibles si estuviera activo -->
+                            <select name="estado_mis" onchange="this.form.submit()"
+                                class="text-sm border border-slate-200 rounded-xl px-4 py-2 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                                <option value="">Todos los estados</option>
+                                <option value="2" <?php if (isset($id_estado_mis) && $id_estado_mis == 2) echo 'selected'; ?>>Activo</option>
+                                <option value="3" <?php if (isset($id_estado_mis) && $id_estado_mis == 3) echo 'selected'; ?>>Resuelto</option>
+                                <option value="4" <?php if (isset($id_estado_mis) && $id_estado_mis == 4) echo 'selected'; ?>>Cancelado</option>
+                            </select>
+                            <?php if (isset($id_estado_mis) && $id_estado_mis): ?>
+                                <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                    Limpiar
+                                </a>
+                            <?php endif; ?>
+                        </form>
+                    </div>
+
+                    <?php if (empty($mis_resets)): ?>
+                        <div class="bg-white rounded-3xl border border-slate-100 p-10 text-center text-slate-400">
+                            <p class="text-lg font-bold mb-1">Todavía no tienes resets asignados</p>
+                            <p class="text-sm">Explora los disponibles más abajo y apúntate al que mejor encaje contigo.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                            <?php foreach ($mis_resets as $r): ?>
+                                <?php
+                                $badgeClass = match ($r["id_estado"]) {
+                                    2 => "bg-blue-50 text-blue-700",
+                                    3 => "bg-green-50 text-green-700",
+                                    4 => "bg-red-50 text-red-700",
+                                    default => "bg-slate-100 text-slate-500",
+                                };
+                                $categoriaClass = match ($r["id_categoria"]) {
+                                    1 => "bg-cyan-50 text-cyan-700",     // estudio
+                                    2 => "bg-green-50 text-green-700",   // salud
+                                    3 => "bg-purple-50 text-purple-700", // creatividad
+                                    4 => "bg-yellow-50 text-yellow-700", // proyecto
+                                    5 => "bg-slate-100 text-slate-600",  // otros
+                                    default => "bg-slate-100 text-slate-500",
+                                };
+                                ?>
+                                <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
+                                <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $r['id'] ?>"
+                                    class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer <?= $cerrado
+                                                                                                                        ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
+                                                                                                                        : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="flex items-center gap-2">
+                                            <h4 class="font-extrabold text-base leading-snug">
+                                                <?= htmlspecialchars($r["titulo"]) ?>
+                                            </h4>
+                                            <?php if ($r['tiene_notificacion']): ?>
+                                                <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
+                                            <?php endif; ?>
+                                        </div>
+                                        <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
+                                            <?= htmlspecialchars($r["nombre_estado"]) ?>
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
+                                    <div class="flex items-center gap-4 text-xs text-slate-400 mt-1">
+                                        <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
+                                            <?= htmlspecialchars($r["nombre_categoria"]) ?>
+                                        </span>
+                                        <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
+                                        <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
+                                    </div>
+                                </a>
+                            <?php endforeach; ?>
                         </div>
                     <?php endif; ?>
-                </div>
-            <?php endif; ?>
+                </section>
+                <!-- ── Resets disponibles ───────────────────────────────────────── -->
+                <section id="resets-disponibles">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <h3 class="text-2xl font-extrabold">Resets disponibles</h3>
 
-            <!-- Cabecera -->
-            <header class="mb-10">
-                <h2 class="text-4xl font-extrabold tracking-tight mb-2">
-                    Bienvenido, <?= htmlspecialchars($_SESSION["user_nombre"]) ?>
-                </h2>
-                <p class="text-gray-400 text-sm italic">Panel de voluntario · <?= date("d/m/Y") ?></p>
-            </header>
-
-            <!-- Flash message -->
-            <?php if ($flash): ?>
-                <div class="mb-8 px-5 py-4 rounded-2xl text-sm font-bold
-                <?= $flash["tipo"] === "success"
-                    ? "bg-green-50 text-green-700 border border-green-200"
-                    : "bg-red-50 text-red-700 border border-red-200" ?>">
-                    <?= htmlspecialchars($flash["msg"]) ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- ── Stats ────────────────────────────────────────────────────── -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-14">
-                <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Mis RESETs asignados</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["total"] ?></div>
-                </div>
-                <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">En progreso</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["en_progreso"] ?></div>
-                </div>
-                <div class="bg-white rounded-[2.5rem] shadow-xl shadow-blue-900/5 border border-slate-100 p-8">
-                    <p class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Completados</p>
-                    <div class="text-5xl font-extrabold text-slate-800"><?= (int)$stats["completados"] ?></div>
-                </div>
-            </div>
-
-            <!-- ── Mis actividades ──────────────────────────────────────────── -->
-            <section id="mis-actividades" class="mb-14">
-                <h3 class="text-2xl font-extrabold mb-6">Mis actividades</h3>
-
-                <?php if (empty($mis_resets)): ?>
-                    <div class="bg-white rounded-3xl border border-slate-100 p-10 text-center text-slate-400">
-                        <p class="text-lg font-bold mb-1">Todavía no tienes resets asignados</p>
-                        <p class="text-sm">Explora los disponibles más abajo y apúntate al que mejor encaje contigo.</p>
+                        <!-- Filtro por categoría -->
+                        <form method="GET" action="" class="flex items-center gap-2">
+                            <select name="categoria"
+                                onchange="this.form.submit()"
+                                class="text-sm border border-slate-200 rounded-xl px-4 py-2 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                                <option value="">Todas las categorías</option>
+                                <?php foreach ($categorias as $cat): ?>
+                                    <option value="<?= $cat["id"] ?>"
+                                        <?= ($id_categoria === (int)$cat["id"]) ? "selected" : "" ?>>
+                                        <?= htmlspecialchars(ucfirst($cat["nombre_categoria"])) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($id_categoria): ?>
+                                <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg> Limpiar</a>
+                            <?php endif; ?>
+                        </form>
                     </div>
-                <?php else: ?>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                        <?php foreach ($mis_resets as $r): ?>
-                            <?php
-                            $badgeClass = match ($r["id_estado"]) {
-                                2 => "bg-blue-50 text-blue-700",
-                                3 => "bg-green-50 text-green-700",
-                                4 => "bg-red-50 text-red-700",
-                                default => "bg-slate-100 text-slate-500",
-                            };
-                            $categoriaClass = match ($r["id_categoria"]) {
-                                1 => "bg-cyan-50 text-cyan-700",     // estudio
-                                2 => "bg-green-50 text-green-700",   // salud
-                                3 => "bg-purple-50 text-purple-700", // creatividad
-                                4 => "bg-yellow-50 text-yellow-700", // proyecto
-                                5 => "bg-slate-100 text-slate-600",  // otros
-                                default => "bg-slate-100 text-slate-500",
-                            };
-                            ?>
-                            <?php $cerrado = in_array((int)$r['id_estado'], [3, 4]); ?>
-                            <a href="<?= BASE_URL ?>/app/controllers/controller_reset_detalle.php?id=<?= $r['id'] ?>"
-                                class="rounded-3xl border p-6 flex flex-col gap-3 transition-all cursor-pointer <?= $cerrado
-                                                                                                                    ? 'bg-slate-50 border-slate-200 opacity-60 hover:opacity-80'
-                                                                                                                    : 'bg-white border-slate-100 hover:border-[#00a5cf] hover:shadow-md' ?>">
-                                <div class="flex items-start justify-between gap-3">
-                                    <div class="flex items-center gap-2">
+
+                    <?php if (empty($disponibles)): ?>
+                        <div class="bg-white rounded-3xl border border-slate-100 p-10 text-center text-slate-400">
+                            <p class="text-lg font-bold mb-1">No hay resets disponibles ahora mismo</p>
+                            <p class="text-sm">Vuelve más tarde o prueba con otra categoría.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                            <?php foreach ($disponibles as $r): ?>
+                                <?php
+                                $categoriaClass = match ($r["id_categoria"]) {
+                                    1 => "bg-cyan-50 text-cyan-700",     // estudio
+                                    2 => "bg-green-50 text-green-700",   // salud
+                                    3 => "bg-purple-50 text-purple-700", // creatividad
+                                    4 => "bg-yellow-50 text-yellow-700", // proyecto
+                                    5 => "bg-slate-100 text-slate-600",  // otros
+                                    default => "bg-slate-100 text-slate-500",
+                                };
+                                ?>
+                                <div class="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col gap-3">
+                                    <div class="flex items-start justify-between gap-3">
                                         <h4 class="font-extrabold text-base leading-snug">
                                             <?= htmlspecialchars($r["titulo"]) ?>
                                         </h4>
-                                        <?php if ($r['tiene_notificacion']): ?>
-                                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></span>
-                                        <?php endif; ?>
+                                        <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-700">
+                                            pendiente
+                                        </span>
                                     </div>
-                                    <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full <?= $badgeClass ?>">
-                                        <?= htmlspecialchars($r["nombre_estado"]) ?>
-                                    </span>
-                                </div>
-                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
-                                <div class="flex items-center gap-4 text-xs text-slate-400 mt-1">
-                                    <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
-                                        <?= htmlspecialchars($r["nombre_categoria"]) ?>
-                                    </span>
-                                    <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
-                                    <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
-                                </div>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </section>
-            <!-- ── Resets disponibles ───────────────────────────────────────── -->
-            <section id="resets-disponibles">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                    <h3 class="text-2xl font-extrabold">Resets disponibles</h3>
+                                    <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
+                                    <div class="flex items-center gap-4 text-xs text-slate-400">
+                                        <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
+                                            <?= htmlspecialchars($r["nombre_categoria"]) ?>
+                                        </span>
+                                        <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
+                                        <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
+                                    </div>
 
-                    <!-- Filtro por categoría -->
-                    <form method="GET" action="" class="flex items-center gap-2">
-                        <select name="categoria"
-                            onchange="this.form.submit()"
-                            class="text-sm border border-slate-200 rounded-xl px-4 py-2 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                            <option value="">Todas las categorías</option>
-                            <?php foreach ($categorias as $cat): ?>
-                                <option value="<?= $cat["id"] ?>"
-                                    <?= ($id_categoria === (int)$cat["id"]) ? "selected" : "" ?>>
-                                    <?= htmlspecialchars(ucfirst($cat["nombre_categoria"])) ?>
-                                </option>
+                                    <!-- Botón asignarse -->
+                                    <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
+                                        <input type="hidden" name="action" value="asignar">
+                                        <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
+                                        <button type="button" onclick="abrirModal(this.closest('form'))"
+                                            class="mt-1 w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90 transition-all">
+                                            Asignarme este reset
+                                        </button>
+                                    </form>
+                                </div>
                             <?php endforeach; ?>
-                        </select>
-                        <?php if ($id_categoria): ?>
-                            <a href="?" class="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-slate-600 font-bold"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg> Limpiar</a>
-                        <?php endif; ?>
-                    </form>
-                </div>
-
-                <?php if (empty($disponibles)): ?>
-                    <div class="bg-white rounded-3xl border border-slate-100 p-10 text-center text-slate-400">
-                        <p class="text-lg font-bold mb-1">No hay resets disponibles ahora mismo</p>
-                        <p class="text-sm">Vuelve más tarde o prueba con otra categoría.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                        <?php foreach ($disponibles as $r): ?>
-                            <?php
-                            $categoriaClass = match ($r["id_categoria"]) {
-                                1 => "bg-cyan-50 text-cyan-700",     // estudio
-                                2 => "bg-green-50 text-green-700",   // salud
-                                3 => "bg-purple-50 text-purple-700", // creatividad
-                                4 => "bg-yellow-50 text-yellow-700", // proyecto
-                                5 => "bg-slate-100 text-slate-600",  // otros
-                                default => "bg-slate-100 text-slate-500",
-                            };
-                            ?>
-                            <div class="bg-white rounded-3xl border border-slate-100 p-6 flex flex-col gap-3">
-                                <div class="flex items-start justify-between gap-3">
-                                    <h4 class="font-extrabold text-base leading-snug">
-                                        <?= htmlspecialchars($r["titulo"]) ?>
-                                    </h4>
-                                    <span class="shrink-0 text-xs font-bold px-3 py-1 rounded-full bg-amber-50 text-amber-700">
-                                        pendiente
-                                    </span>
-                                </div>
-                                <p class="text-sm text-slate-500 line-clamp-2"><?= htmlspecialchars($r["descripcion"]) ?></p>
-                                <div class="flex items-center gap-4 text-xs text-slate-400">
-                                    <span class="px-2 py-1 rounded-lg font-bold <?= $categoriaClass ?>">
-                                        <?= htmlspecialchars($r["nombre_categoria"]) ?>
-                                    </span>
-                                    <span><?= htmlspecialchars($r["nombre_contacto"] ?? "—") ?></span>
-                                    <span class="ml-auto"><?= date("d/m/Y", strtotime($r["created_at"])) ?></span>
-                                </div>
-
-                                <!-- Botón asignarse -->
-                                <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
-                                    <input type="hidden" name="action" value="asignar">
-                                    <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
-                                    <button type="button" onclick="abrirModal(this.closest('form'))"
-                                        class="mt-1 w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90 transition-all">
-                                        Asignarme este reset
-                                    </button>
-                                </form>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php endif; ?>
-            </section>
-        </main>
+                        </div>
+                    <?php endif; ?>
+                </section>
+            </main>
+        </div>
     </div>
     <!-- Script para el modal -->
     <script>
@@ -363,6 +384,13 @@ $disponibles = $disponibles ?? [];
                 });
             });
         });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
     </script>
 </body>
 

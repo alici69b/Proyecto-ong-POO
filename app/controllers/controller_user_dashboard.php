@@ -47,14 +47,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'crear_reset') {
     exit();
 }
 
-// ── Recogemos el filtro de categoría si viene en la URL ──────────────────────
+// ── Recogemos el filtro de categoría y estado si vienen en la URL ──────────────────────
 $id_categoria = null;
 if (isset($_GET['categoria']) && $_GET['categoria'] != '') {
     $id_categoria = (int)$_GET['categoria'];
 }
 
+$id_estado = null;
+if (isset($_GET['estado']) && $_GET['estado'] != '') {
+    $id_estado = (int)$_GET['estado'];
+}
+
 // ── Obtenemos los datos para la vista ────────────────────────────────────────
-$mis_resets = $resetModel->obtenerPorUsuario($id_usuario, $id_categoria);
+$mis_resets = $resetModel->obtenerPorUsuario($id_usuario, $id_categoria, $id_estado);
 
 // Obtenemos las categorías directamente con una consulta simple
 $stmtCat    = $conn->query("SELECT id, nombre_categoria FROM categoria_reset ORDER BY nombre_categoria");

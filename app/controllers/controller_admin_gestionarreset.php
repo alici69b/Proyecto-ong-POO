@@ -14,9 +14,14 @@ if ($_SESSION['user_rol'] !== 'admin') {
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
+require_once __DIR__ . '/../models/Usuario.php';
+require_once __DIR__ . '/../models/Reset.php';
+require_once __DIR__ . '/../models/Voluntario.php';
 
 $db = new Db();
 $conn = $db->getConnection();
+$resetModel = new Reset($conn);
+$volModel = new Voluntario();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) {
 
@@ -29,8 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) 
     $id_voluntario = !empty($_POST['id_voluntario']) ? (int)$_POST['id_voluntario'] : null;
     $id_estado = (int)$_POST['id_estado'];
 
-    $stmt = $conn->prepare("UPDATE reset SET id_voluntario = :id_voluntario, id_estado = :id_estado WHERE id = :id");
-    $stmt->execute([':id_voluntario' => $id_voluntario, ':id_estado' => $id_estado, ':id' => $id_reset]);
+    if ($id_voluntario !== null && !$volModel->existe($id_voluntario)) {
+        $id_voluntario = null;
+    }
+
+    $resetModel->actualizarAsignacionYEstado($id_reset, $id_voluntario, $id_estado);
 
     if ($id_estado === 3) {
         $historiaModel = new Historia();

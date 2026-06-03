@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Usuario.php';
+
 //creamos la clase hija de usuario Voluntario
 
 class Voluntario extends Usuario
@@ -130,6 +132,17 @@ class Voluntario extends Usuario
         $stmt->execute([':id_usuario' => $id_usuario]);
         $fila = $stmt->fetch();
         return $fila ? (int)$fila['id'] : null;
+    }
+
+    /** Comprueba si existe un voluntario por su ID
+     * @param int $id_voluntario
+     * @return bool
+     */
+    public function existe(int $id_voluntario): bool
+    {
+        $stmt = $this->conn->prepare("SELECT 1 FROM voluntario WHERE id = :id_voluntario");
+        $stmt->execute([':id_voluntario' => $id_voluntario]);
+        return (bool)$stmt->fetchColumn();
     }
 
     /** Cambia la contraseña (firma compatible con la clase padre)

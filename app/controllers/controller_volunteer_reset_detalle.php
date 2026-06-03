@@ -25,6 +25,12 @@ $comentarioModel  = new ResetComentario($conn);
 // Datos de sesión
 $id_voluntario = $_SESSION["id_voluntario"] ?? null;
 $id_usuario    = $_SESSION["user_id"]       ?? null;
+if (!$id_voluntario && !empty($id_usuario)) {
+    $id_voluntario = (new Voluntario())->obtenerIdPorUsuario((int)$id_usuario);
+    if ($id_voluntario) {
+        $_SESSION['id_voluntario'] = $id_voluntario;
+    }
+}
 
 // Recogemos el id del reset de la URL (?id=X)
 $id_reset = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);

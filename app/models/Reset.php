@@ -67,6 +67,32 @@ class Reset
         return $stmt->rowCount() > 0;
     }
 
+    /** Actualiza la asignación de un reset desde el administrador
+     * @param int $id_reset
+     * @param int|null $id_voluntario
+     * @param int $id_estado
+     * @return bool
+     */
+    public function actualizarAsignacionYEstado(int $id_reset, ?int $id_voluntario, int $id_estado): bool
+    {
+        if ($id_voluntario !== null && in_array($id_estado, [1, 2], true)) {
+            $id_estado = 2;
+        }
+
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET id_voluntario = :id_voluntario,
+                id_estado = :id_estado
+            WHERE id = :id_reset
+        ");
+        $stmt->execute([
+            ':id_voluntario' => $id_voluntario,
+            ':id_estado'     => $id_estado,
+            ':id_reset'      => $id_reset,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
     /** Obtiene las estadísticas del voluntario para mostrar en el dashboard
      * @param int $id_voluntario
      * @return array

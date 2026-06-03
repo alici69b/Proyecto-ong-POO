@@ -57,10 +57,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         <div class="flex items-center justify-between px-2 mb-10">
             <div class="flex items-center gap-3">
                 <div class="flex items-center gap-3 mb-4">
-                    <div
-                        class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -139,12 +142,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </svg>
             </button>
             <div class="flex items-center gap-2">
-                <span
-                    class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
-        <header class="flex justify-between items-center mb-10">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Vista General</h1>
                 <div class="flex items-center gap-2 mt-1">
@@ -152,9 +158,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                     <p class="text-gray-400 text-sm"><?= date('l, d F Y · H:i') ?>hs</p>
                 </div>
             </div>
-            <div class="flex gap-3">
+            <div class="flex gap-3 w-full sm:w-auto">
                 <button onclick="location.reload()"
-                    class="px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    class="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M1 4v6h6M23 20v-6h-6" />
                         <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
@@ -236,11 +242,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
                 <?php if ($total_resets > 0): ?>
                     <div class="h-64">
-                        <canvas id="chartResets" width="400" height="256"></canvas>
+                        <canvas id="chartResets"></canvas>
                     </div>
                 <?php else: ?>
                     <div class="h-64 flex flex-col items-center justify-center bg-slate-50 rounded-xl">
-                        <canvas id="chartResets" width="400" height="256" class="h-64 w-full"></canvas>
+                        <canvas id="chartResets" class="h-64 w-full"></canvas>
                     </div>
                 <?php endif; ?>
             </div>

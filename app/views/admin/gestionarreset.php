@@ -37,9 +37,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         <div class="flex items-center gap-3 px-2 mb-10">
                 <div class="flex items-center gap-3  mb-4">
-                    <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -84,7 +88,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
@@ -112,47 +120,47 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
             <?php endif; ?>
             <?php foreach ($resets as $r): ?>
-                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col xl:flex-row xl:items-center justify-between gap-6 hover:shadow-md transition-shadow">
-                    <div class="flex items-start gap-4 flex-1 min-w-0">
-                        <div class="w-12 h-12 rounded-xl bg-cyan-50 flex items-center justify-center text-xl flex-shrink-0">
-                            <svg class="w-6 h-6 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6 hover:shadow-md transition-shadow">
+                    <div class="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-cyan-50 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 text-cyan-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                         </div>
                         <div class="min-w-0 flex-1">
-                            <h2 class="font-bold text-lg text-slate-800 truncate"><?= htmlspecialchars($r['titulo'] ?? 'Sin título') ?></h2>
-                            <div class="flex flex-wrap items-center gap-2 mt-1 text-sm text-slate-400">
-                                <span class="font-semibold text-slate-600"><?= htmlspecialchars($r['solicitante'] ?? 'Anónimo') ?></span>
-                                <span class="hidden sm:inline">•</span>
-                                <span class="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase"><?= htmlspecialchars($r['nombre_categoria'] ?? 'General') ?></span>
-                                <span class="hidden sm:inline">•</span>
-                                <span><?= date('d/m/Y', strtotime($r['fecha'])) ?></span>
-                                <span class="ml-auto">
-                                    <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold <?= $r['nombre_estado'] === 'resuelto' ? 'bg-green-50 text-green-700' : ($r['nombre_estado'] === 'activo' ? 'bg-blue-50 text-blue-700' : ($r['nombre_estado'] === 'cancelado' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700')) ?>">
-                                        <span class="h-1.5 w-1.5 rounded-full <?= $r['nombre_estado'] === 'resuelto' ? 'bg-green-500' : ($r['nombre_estado'] === 'activo' ? 'bg-blue-500' : ($r['nombre_estado'] === 'cancelado' ? 'bg-red-500' : 'bg-amber-500')) ?>"></span>
-                                        <?= htmlspecialchars($r['nombre_estado'] ?? 'pendiente') ?>
-                                    </span>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <h2 class="font-bold text-base sm:text-lg text-slate-800 truncate"><?= htmlspecialchars($r['titulo'] ?? 'Sin título') ?></h2>
+                                <span class="inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold flex-shrink-0 <?= $r['nombre_estado'] === 'resuelto' ? 'bg-green-50 text-green-700' : ($r['nombre_estado'] === 'activo' ? 'bg-blue-50 text-blue-700' : ($r['nombre_estado'] === 'cancelado' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700')) ?>">
+                                    <span class="h-1.5 w-1.5 rounded-full <?= $r['nombre_estado'] === 'resuelto' ? 'bg-green-500' : ($r['nombre_estado'] === 'activo' ? 'bg-blue-500' : ($r['nombre_estado'] === 'cancelado' ? 'bg-red-500' : 'bg-amber-500')) ?>"></span>
+                                    <?= htmlspecialchars($r['nombre_estado'] ?? 'pendiente') ?>
                                 </span>
                             </div>
+                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1 text-xs sm:text-sm text-slate-400">
+                                <span class="font-semibold text-slate-600"><?= htmlspecialchars($r['solicitante'] ?? 'Anónimo') ?></span>
+                                <span class="hidden sm:inline text-slate-300">•</span>
+                                <span class="bg-slate-100 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase"><?= htmlspecialchars($r['nombre_categoria'] ?? 'General') ?></span>
+                                <span class="hidden sm:inline text-slate-300">•</span>
+                                <span><?= date('d/m/Y', strtotime($r['fecha'])) ?></span>
+                            </div>
                             <?php if (!empty($r['descripcion'])): ?>
-                                <p class="mt-2 text-slate-500 text-sm line-clamp-2 italic">"<?= htmlspecialchars($r['descripcion']) ?>"</p>
+                                <p class="mt-2 text-slate-500 text-xs sm:text-sm line-clamp-2 italic">"<?= htmlspecialchars($r['descripcion']) ?>"</p>
                             <?php endif; ?>
                         </div>
                     </div>
-                    <form method="POST" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-shrink-0">
+                    <form method="POST" class="grid grid-cols-2 sm:flex sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 flex-shrink-0">
                         <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="id_reset" value="<?= $r['id_reset'] ?>">
-                        <select name="id_voluntario" class="bg-slate-50 text-sm rounded-xl px-4 py-2.5 border border-slate-200 focus:ring-2 focus:ring-[#00a5cf] outline-none">
+                        <select name="id_voluntario" class="text-xs sm:text-sm rounded-xl px-2 sm:px-4 py-2 border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#00a5cf] outline-none">
                             <option value="">Sin voluntario</option>
                             <?php foreach ($voluntarios as $vol): ?>
                                 <option value="<?= $vol['id_voluntario'] ?>" <?= ($r['id_voluntario'] == $vol['id_voluntario']) ? 'selected' : '' ?>><?= htmlspecialchars($vol['nombre']) ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <select name="id_estado" class="bg-white text-sm font-bold rounded-xl px-4 py-2.5 border border-slate-200 focus:ring-2 focus:ring-[#00a5cf] outline-none cursor-pointer">
+                        <select name="id_estado" class="text-xs sm:text-sm font-bold rounded-xl px-2 sm:px-4 py-2 border border-slate-200 bg-white focus:ring-2 focus:ring-[#00a5cf] outline-none cursor-pointer">
                             <?php foreach ($estados as $est): ?>
                                 <option value="<?= $est['id_estado'] ?>" <?= ($r['id_estado'] == $est['id_estado']) ? 'selected' : '' ?>><?= htmlspecialchars($est['nombre_estado']) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <input type="hidden" name="actualizar_reset" value="1">
-                        <button type="submit" class="bg-[#00a5cf] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#0088aa] transition-all active:scale-95">Guardar</button>
+                        <button type="submit" class="col-span-2 sm:col-auto bg-[#00a5cf] text-white px-4 sm:px-5 py-2 rounded-xl text-xs sm:text-sm font-bold hover:bg-[#0088aa] transition-all active:scale-95">Guardar</button>
                     </form>
                 </div>
             <?php endforeach; ?>

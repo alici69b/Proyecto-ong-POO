@@ -38,7 +38,7 @@
         </svg>
     </a>
 
-    <main class="fade-in fade-in-1 bg-linear-to-r from-[#00a5cf] to-[#9fffcb] min-h-130  pt-60 ">
+    <main class="fade-in fade-in-1 bg-linear-to-r from-[#00a5cf] to-[#9fffcb] min-h-130 pt-30 md:pt-60">
         <div class="md:px-20 flex justify-center ">
             <div class="flex bg-white/40 backdrop-blur-md items-center justify-center rounded-full shadow-sm">
                 <p class=" text-gray-900 py-2 px-5 font-bold text-sm  md:text-md whitespace-nowrap">ONG de Segundas Oportunidades</p>
@@ -51,9 +51,9 @@
                     Nada está <i class="text-white">perdido</i> hasta que decides <i class="text-white">reiniciarlo</i>
                 </h1>
             </div>
-            <div class=" max-w-xl mx-auto text-center top-0">
-                <p class="px-15  text-gray-800  text-md md:text-md lg:text-lg">Volvemos a dar vida a proyectos, hábitos, ideas, estudios y pequeños sueños que quedaron en pausa.</p>
-                <div class=" flex justify-center text-center items-center  gap-3 px-15 pt-15">
+            <div class="max-w-xl mx-auto text-center top-0">
+                <p class="px-6 md:px-15 text-gray-800 text-md lg:text-lg">Volvemos a dar vida a proyectos, hábitos, ideas, estudios y pequeños sueños que quedaron en pausa.</p>
+                <div class="flex justify-center text-center items-center gap-3 px-6 md:px-15 pt-10 md:pt-15">
                     <a class="px-5 py-3 text-sm w-50 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold  shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=usuario">Solicitar RESET</a>
                     <a class="px-5  py-3 w-53 md:w-47 md:text-md lg:text-md bg-[#25a18e] text-white rounded-full hover:bg-[#1a7a6b] font-bold text-sm shadow-md  hover:shadow-lg  hover:-translate-y-1 transition transform duration-300" href="<?= BASE_URL ?>/app/controllers/controller_register.php?rol=voluntario">Quiero ser voluntario</a>
                 </div>

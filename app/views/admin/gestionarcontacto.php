@@ -37,9 +37,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         <div class="flex items-center gap-3 px-2 mb-10">
                 <div class="flex items-center gap-3  mb-4">
-                    <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -84,7 +88,11 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
@@ -160,10 +168,10 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                     Marcar leído
                                 </a>
                             <?php endif; ?>
-                            <a href="<?= BASE_URL ?>/app/controllers/controller_admin_gestionarcontacto.php?action=delete&id=<?= $m['id'] ?>" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100" onclick="return confirm('¿Eliminar este mensaje?')">
+                            <button onclick="abrirModalEliminar(<?= $m['id'] ?>)" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-red-400 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
                                 Eliminar
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -172,6 +180,21 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         </div>
     </main>
 </div>
+<div id="modal-eliminar" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full text-center">
+        <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"/>
+            </svg>
+        </div>
+        <h3 class="text-xl font-black mb-2">¿Eliminar mensaje?</h3>
+        <p class="text-slate-500 text-sm mb-6">Esta acción no se puede deshacer.</p>
+        <div class="flex gap-3">
+            <button onclick="cerrarModalEliminar()" class="flex-1 py-3 bg-slate-100 font-bold rounded-xl">Cancelar</button>
+            <a id="btn-confirmar-eliminar" href="#" class="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl shadow-lg">Eliminar</a>
+        </div>
+    </div>
+</div>
 <script>
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
@@ -179,6 +202,19 @@ function toggleSidebar() {
     sidebar.classList.toggle('-translate-x-full');
     overlay.classList.toggle('hidden');
 }
+function abrirModalEliminar(id) {
+    document.getElementById('btn-confirmar-eliminar').href = '<?= BASE_URL ?>/app/controllers/controller_admin_gestionarcontacto.php?action=delete&id=' + id;
+    document.getElementById('modal-eliminar').classList.remove('hidden');
+}
+function cerrarModalEliminar() {
+    document.getElementById('modal-eliminar').classList.add('hidden');
+}
+window.addEventListener('click', function(e) {
+    if (e.target === document.getElementById('modal-eliminar')) cerrarModalEliminar();
+});
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') cerrarModalEliminar();
+});
 </script>
 </body>
 </html>

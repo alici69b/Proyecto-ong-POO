@@ -93,7 +93,7 @@
                         <h3 class="text-xl font-bold text-gray-800 mb-1">¿Cuánto quieres donar?</h3>
                         <p class="text-gray-400 text-sm mb-6">Elige una cantidad o personalízala</p>
 
-                        <div class="grid grid-cols-5 gap-2 mb-6">
+                        <div class="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-6">
                             <?php $cantidades = [5, 10, 25, 50, 100]; ?>
                             <?php foreach ($cantidades as $cant): ?>
                             <button type="button" onclick="seleccionarCantidad(<?= $cant ?>)"
@@ -124,7 +124,7 @@
                                 <?php endif; ?>
                             </div>
 
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 mb-1">Nombre</label>
                                     <input type="text" name="nombre" value="<?= htmlspecialchars($old['nombre'] ?? $_SESSION['user_nombre'] ?? '') ?>" required

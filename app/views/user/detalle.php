@@ -2,19 +2,16 @@
 require_once __DIR__ . "/../../../config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-// Si no está logueado o no es usuario, lo mandamos al login
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
     header('Location: ../auth/Login.php');
     exit();
 }
 
-// Evitamos errores si las variables no vienen definidas
 if (!isset($reset)) $reset = array();
 if (!isset($comentarios)) $comentarios = array();
 if (!isset($flash)) $flash = null;
 
-// Comprobamos el estado del reset para saber qué mostrar
-$estado = isset($reset['id_estado']) ? (int)$reset['id_estado'] : 0;
+$estado         = isset($reset['id_estado']) ? (int)$reset['id_estado'] : 0;
 $puede_cancelar = ($estado == 1 || $estado == 2);
 $esta_resuelto  = ($estado == 3);
 $esta_cancelado = ($estado == 4);
@@ -29,13 +26,10 @@ $esta_cancelado = ($estado == 4);
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            background-color: #f4f9fa;
-        }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f4f9fa; }
     </style>
 </head>
-<!-- Modal de confirmación para cancelar -->
+<!-- Modal cancelar -->
 <div id="modal-cancelar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl">
         <h4 class="text-lg font-extrabold mb-2">¿Cancelar este reset?</h4>
@@ -58,7 +52,7 @@ $esta_cancelado = ($estado == 4);
 
 
         <!-- SIDEBAR -->
-        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="mt-6 px-2">
                 <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
                     <svg fill="#ff3b30" class="w-6 h-6" viewBox="0 0 612 612">
@@ -82,21 +76,34 @@ $esta_cancelado = ($estado == 4);
                     <p class="text-[#9fffcb] text-[10px]">Usuario</p>
                 </div>
             </div>
-            <nav class="flex flex-col gap-2">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
-                    ← Volver al panel
-                </a>
-            </nav>
-            <div class="mt-auto pt-6 border-t border-white/10">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
-                    Cerrar sesión
-                </a>
-            </div>
-        </aside>
+            <!-- Botón cerrar sidebar en móvil -->
+            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-2">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
+                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+                Volver al panel
+            </a>
+        </nav>
+        <div class="mt-auto pt-6 border-t border-white/10">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
+                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"/>
+                </svg>
+                Cerrar sesión
+            </a>
+        </div>
+    </aside>
 
-        <!-- Contenido -->
+<!-- Contenido -->
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
     <main class="flex-1 p-4 md:p-8 w-full max-w-4xl">
 
@@ -223,7 +230,6 @@ $esta_cancelado = ($estado == 4);
                 Seguimiento
                 <span class="text-slate-400 font-bold text-sm ml-2">(<?= count($comentarios) ?>)</span>
             </h3>
-
             <?php if (count($comentarios) == 0): ?>
                 <p class="text-sm text-slate-400 text-center py-6">
                     <?php if ($estado == 1): ?>
@@ -237,7 +243,7 @@ $esta_cancelado = ($estado == 4);
                     <?php foreach ($comentarios as $c): ?>
                         <?php $es_voluntario = !empty($c['es_voluntario']); ?>
                         <div class="flex gap-3 <?php if (!$es_voluntario) echo 'flex-row-reverse'; ?>">
-                            <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
+                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
                                 alt="Avatar" class="shrink-0 w-8 h-8 rounded-full object-cover">
                             <div class="flex-1 rounded-2xl px-4 py-3
                                 <?php if ($es_voluntario): ?>

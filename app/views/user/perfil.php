@@ -24,17 +24,14 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Bricolage Grotesque', sans-serif;
-            background-color: #f4f9fa;
-        }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #f4f9fa; }
     </style>
 </head>
 <body class="text-[#004e64] min-h-screen">
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
         <!-- SIDEBAR -->
-        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
             <div class="mt-6 px-2">
                 <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
                     <svg fill="#ff3b30" class="w-6 h-6" viewBox="0 0 612 612">
@@ -58,25 +55,31 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                     <p class="text-[#9fffcb] text-[10px]">Usuario</p>
                 </div>
             </div>
-            <nav class="flex flex-col gap-2">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
-                    ← Volver al panel
-                </a>
-                <a href="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php"
-                    class="bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-extrabold">
-                    Mi perfil
-                </a>
-            </nav>
-            <div class="mt-auto pt-6 border-t border-white/10">
-                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
-                    Cerrar sesión
-                </a>
-            </div>
-        </aside>
-
-        <!-- CONTENIDO PRINCIPAL -->
+            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col gap-2">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 text-sm font-bold">
+                ← Volver al panel
+            </a>
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php"
+                class="bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-extrabold">
+                Mi perfil
+            </a>
+        </nav>
+        <div class="mt-auto pt-6 border-t border-white/10">
+            <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 text-sm font-bold">
+                Cerrar sesión
+            </a>
+        </div>
+    </aside>
+    <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 p-4 md:p-8 w-full">
 
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
@@ -117,7 +120,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
             <h3 class="text-lg font-extrabold mb-6">Foto de perfil</h3>
             <div class="flex items-center gap-6">
                 <!-- Previsualización de la foto -->
-                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
+                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
                     alt="Foto de perfil"
                     id="preview-foto"
                     class="w-20 h-20 rounded-full object-cover border-4 border-slate-100">

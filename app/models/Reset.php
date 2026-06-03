@@ -87,27 +87,39 @@ class Reset
 
     /** Recupera los resets asignados a un voluntario para su dashboard
      * @param int $id_voluntario
+     * @param int|null $id_estado Si se pasa, filtra por ese estado
      * @return array
      */
-    public function obtenerMisResets(int $id_voluntario): array
+    public function obtenerMisResets(int $id_voluntario, ?int $id_estado = null): array
     {
-        $stmt = $this->conn->prepare("
-            SELECT r.id, r.titulo, r.descripcion, r.nombre_contacto,
-                   r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado, e.id AS id_estado
-            FROM reset r
-            INNER JOIN categoria_reset c ON r.id_categoria = c.id
-            INNER JOIN estado_maestro e ON r.id_estado = e.id
-            WHERE r.id_voluntario = :id_voluntario
-            ORDER BY 
-                CASE e.id 
-                    WHEN 2 THEN 1
-                    WHEN 1 THEN 2
-                    WHEN 3 THEN 3
-                    WHEN 4 THEN 4
-                END,
-            r.created_at DESC
-        ");
-        $stmt->execute([":id_voluntario" => $id_voluntario]);
+        $sql = "SELECT r.id, r.titulo, r.descripcion, r.nombre_contacto,
+                    r.created_at, r.id_categoria, c.nombre_categoria, e.nombre_estado, e.id AS id_estado
+                FROM reset r
+                INNER JOIN categoria_reset c ON r.id_categoria = c.id
+                INNER JOIN estado_maestro e ON r.id_estado = e.id
+                WHERE r.id_voluntario = :id_voluntario";
+
+        if ($id_estado !== null) {
+            $sql .= " AND r.id_estado = :id_estado";
+        }
+
+        $sql .= " ORDER BY 
+                    CASE e.id 
+                        WHEN 2 THEN 1
+                        WHEN 1 THEN 2
+                        WHEN 3 THEN 3
+                        WHEN 4 THEN 4
+                    END,
+                r.created_at DESC";
+
+        $params = array(':id_voluntario' => $id_voluntario);
+
+        if ($id_estado !== null) {
+            $params[':id_estado'] = $id_estado;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
@@ -187,9 +199,10 @@ class Reset
      * Si se pasa una categoría, filtra por ella
      * @param int $id_usuario
      * @param int|null $id_categoria
+     * @param int|null $id_estado
      * @return array
      */
-    public function obtenerPorUsuario(int $id_usuario, ?int $id_categoria = null): array
+    public function obtenerPorUsuario(int $id_usuario, ?int $id_categoria = null, ?int $id_estado = null): array
     {
         $sql = "
             SELECT r.id, r.titulo, r.descripcion, r.created_at, r.id_estado, r.id_categoria,
@@ -208,16 +221,25 @@ class Reset
             $sql .= " AND r.id_categoria = :id_categoria";
         }
 
-        $sql .= " ORDER BY r.created_at DESC";
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
-
-        if ($id_categoria !== null) {
-            $stmt->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
+        if ($id_estado !== null) {
+            $sql .= " AND r.id_estado = :id_estado";
         }
 
-        $stmt->execute();
+        $sql .= " ORDER BY r.created_at DESC";
+
+        // Construimos el array de parámetros según los filtros activos
+        $params = array(':id_usuario' => $id_usuario);
+
+        if ($id_categoria !== null) {
+            $params[':id_categoria'] = $id_categoria;
+        }
+
+        if ($id_estado !== null) {
+            $params[':id_estado'] = $id_estado;
+        }
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 

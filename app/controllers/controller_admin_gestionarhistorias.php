@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
-
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     header('Location: ../auth/Login.php');
     exit();

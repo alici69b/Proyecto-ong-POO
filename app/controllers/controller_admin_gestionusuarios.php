@@ -2,8 +2,6 @@
 require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
 $db = new Db();
@@ -16,10 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
         exit();
     }
 
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
-        exit();
-    }
     $nombre = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos'] ?? '');
     $email = trim($_POST['email']);
@@ -63,10 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
         exit();
     }
 
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
-        exit();
-    }
     $id = (int)$_POST['id_usuario'];
     $nombre = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos'] ?? '');
@@ -97,10 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
-        exit();
-    }
     $id = (int)$_GET['id'];
     if ($id !== (int)$_SESSION['user_id']) {
         $conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id")->execute([':id' => $id]);

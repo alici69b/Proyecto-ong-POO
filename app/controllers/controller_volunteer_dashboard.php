@@ -1,8 +1,6 @@
 <?php
-//Inicializamos sesión
+require_once __DIR__ . "/../../config.php";
 if (session_status() === PHP_SESSION_NONE) session_start();
-
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
 
 //Controlamos que el usuario esté logueado y el rol sea de voluntario, sino lo redirigimos al login
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {
@@ -17,7 +15,7 @@ require_once __DIR__ . "/../models/Voluntario.php";
 require_once __DIR__ . "/../models/Reset.php";
 
 //Instanciamos los modelos
-$db = new Database();
+$db = new Db();
 $conn = $db->getConnection();
 $resetModel = new Reset($conn);
 
@@ -26,7 +24,13 @@ $id_voluntario = $_SESSION["id_voluntario"] ?? null;
 
 //Si se pulsa el boton de asignarse un reset
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "asignar") {
-    //Validamos y guardamos
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad."];
+        header("Location: controller_volunteer_dashboard.php");
+        exit();
+    }
+
     $id_reset = filter_input(INPUT_POST, "id_reset", FILTER_VALIDATE_INT);
 
     //Comprobamos que tenemos los dos datos necesarios para la asignacion

@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../../config.php";
-$rol = $_GET["rol"] ?? "usuario";
+$rol = htmlspecialchars($_GET["rol"] ?? "usuario");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -131,6 +131,7 @@ $rol = $_GET["rol"] ?? "usuario";
                 <form id="registerForm" class="space-y-5" method="post" action="<?= BASE_URL ?>/app/controllers/controller_register.php" novalidate>
 
                     <!--  El value inicial es 'soy-usuario', que coincide con el botón que arranca activo -->
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="tipo" id="input-rol" value="<?= $rol; ?>">
 
                     <div class="flex w-full flex-col mx-auto mb-5">

@@ -11,8 +11,8 @@ abstract class Usuario
     //constructor 
     public function __construct()
     {
-        $database = new Database();
-        $this->conn = $database->getConnection();
+        $Db = new Db();
+        $this->conn = $Db->getConnection();
     }
 
     //fdunciones donde los hijos van a heredar y no cambian para ellos

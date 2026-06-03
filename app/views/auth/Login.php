@@ -67,11 +67,12 @@ if(isset($_SESSION["error_login"])) {
 
 
       <form id="loginForm" action="<?= BASE_URL ?>/app/controllers/controller_login.php" method="POST" class="space-y-6" novalidate>
+        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
 <!-- Muestro los errores de el error del login  -->
         <?php if (isset($mensajeError)): ?>
           <div class="bg-red-100 border-l-4 border-[#ff3b30] text-[#ff3b30] p-4 mb-6 rounded shadow-sm animate-pulse">
               <p class="font-bold">Atención:</p>
-              <p><?= $mensajeError ?></p>
+              <p><?= htmlspecialchars($mensajeError) ?></p>
           </div>
         <?php endif; ?>
 

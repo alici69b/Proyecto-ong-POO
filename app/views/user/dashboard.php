@@ -31,6 +31,7 @@ if (!isset($mis_resets)) $mis_resets = array();
         </div>
 
         <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php">
+            <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
             <input type="hidden" name="action" value="crear_reset">
 
             <!-- Título -->
@@ -94,11 +95,8 @@ if (!isset($mis_resets)) $mis_resets = array();
     </div>
 </div>
 <body class="text-[#004e64] min-h-screen">
-
-    <!-- Overlay oscuro al abrir sidebar en móvil -->
     <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
-    <!-- SIDEBAR -->
     <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8 -translate-x-full lg:translate-x-0 transition-transform duration-300">
         <div class="mt-6 px-2">
             <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
@@ -109,14 +107,20 @@ if (!isset($mis_resets)) $mis_resets = array();
                 <h3 class="font-black text-lg tracking-tighter text-white">RESET</h3>
             </a>
         </div>
-        <div class="flex items-center justify-between px-2">
-            <div>
-                <p class="font-bold text-white text-sm">Mi Panel</p>
-                <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
+        <div class="flex items-center gap-3 mb-4 px-2">
+            <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+            <?php else: ?>
+                <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                </div>
+            <?php endif; ?>
+            <div class="text-xs">
+                <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
+                <p class="text-[#9fffcb] text-[10px]">Usuario</p>
             </div>
-            <!-- Botón cerrar sidebar en móvil -->
-            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-white/60 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
@@ -142,9 +146,8 @@ if (!isset($mis_resets)) $mis_resets = array();
         </div>
     </aside>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
-    <main class="flex-1 p-4 md:p-8 w-full">
+        <main class="flex-1 p-4 md:p-8 w-full">
 
         <!-- Barra superior móvil con botón hamburguesa -->
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">

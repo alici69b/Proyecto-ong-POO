@@ -177,7 +177,7 @@ session_start();
                         <h4 class="text-xl font-bold mt-6 text-slate-800"><b>Ubicación</b></h4>
                         <p class="text-[#004e64] font-bold">Lepe, Huelva</p>
                         <!-- Api de google maps de donde nos situamos-->
-                        <div class="w-full lg:w-[170px] lg:h-[180px] md:w-[170] md:h-[180]">
+                        <div class="w-full lg:w-[170px] lg:h-[180px] md:w-[170px] md:h-[180]">
                             <iframe class="w-full h-full rounded-lg" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3175.4900009912135!2d-7.211520187600835!3d37.25980607200345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd1031db3f21c39d%3A0x25ae42e91b0f6fdb!2sAv.%20Arboleda%2C%2021440%20Lepe%2C%20Huelva!5e0!3m2!1ses!2ses!4v1769950943506!5m2!1ses!2ses" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
@@ -239,6 +239,7 @@ session_start();
             <div id="Formulario" class="fade-in fade-in-2 max-w-100% grid">
 
                 <form id="contactForm" action="<?= BASE_URL ?>/app/controllers/controller_contact.php" method="post" class="bg-white rounded-4xl p-8 border border-slate-100" novalidate>
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
 
                     <h3 class=" text-black font-bold text-lg md:text-xl p-2 lg:text-xl">Envíanos un mensaje</h3><br>
 

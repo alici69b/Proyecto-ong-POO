@@ -120,6 +120,18 @@ class Voluntario extends Usuario
         return $stmt->rowCount() > 0;
     }
 
+    /** Obtiene el id del voluntario a partir del id de usuario
+     * @param int $id_usuario
+     * @return int|null
+     */
+    public function obtenerIdPorUsuario(int $id_usuario): ?int
+    {
+        $stmt = $this->conn->prepare("SELECT id FROM voluntario WHERE id_usuario = :id_usuario");
+        $stmt->execute([':id_usuario' => $id_usuario]);
+        $fila = $stmt->fetch();
+        return $fila ? (int)$fila['id'] : null;
+    }
+
     /** Cambia la contraseña (firma compatible con la clase padre)
      * @param int $id
      * @param string $nueva_password

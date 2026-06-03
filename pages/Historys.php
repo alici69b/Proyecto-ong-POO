@@ -60,7 +60,7 @@
                 <div class="top-24 flex flex-col <?= $reverse ? 'lg:flex-row-reverse' : 'lg:flex-row' ?> gap-12 items-center mb-12 transition-all duration-300 bg-white rounded-3xl shadow-2xl p-6 z-<?= ($index + 1) * 10 ?>">
                     <div class="w-full lg:w-auto shrink-0 flex justify-center lg:justify-end">
                         <div class="relative inline-block">
-                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-100 h-100 aspect-square object-cover rounded-3xl shadow-medium">
+                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" alt="<?= htmlspecialchars($h['solicitante']) ?>" class="w-full max-w-xs aspect-square object-cover rounded-3xl shadow-medium">
                             <div class="absolute -bottom-4 -right-4 px-4 py-2 rounded-xl text-sm font-medium shadow-lg text-white bg-teal-600">
                                 <?= htmlspecialchars($h['nombre_categoria']) ?>
                             </div>
@@ -89,7 +89,6 @@
                                     <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($foto) ?>" class="h-10 w-10 rounded-full object-cover">
                                     <div>
                                         <p class="font-semibold"><?= htmlspecialchars($h['solicitante']) ?></p>
-                                        <p class="text-gray-500 text-sm"><?= (int)$h['edad'] ?> años</p>
                                     </div>
                                 </div>
                                 <div class="h-8 w-px bg-gray-300"></div>

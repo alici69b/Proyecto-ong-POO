@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Controlamos acceso
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {
@@ -16,7 +17,7 @@ require_once __DIR__ . "/../models/ResetComentario.php";
 require_once __DIR__ . "/../models/Historia.php";
 
 // Instanciamos
-$db               = new Database();
+$db               = new Db();
 $conn             = $db->getConnection();
 $resetModel       = new Reset($conn);
 $comentarioModel  = new ResetComentario($conn);
@@ -45,6 +46,12 @@ if (!$reset) {
 
 // ── Acción: cambiar estado (finalizar o cancelar) ────────────────────────────
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad."];
+        header("Location: controller_reset_detalle.php?id=$id_reset");
+        exit();
+    }
 
     // Primero insertamos el comentario de cierre si viene relleno
     $nota = trim($_POST["nota_cierre"] ?? "");

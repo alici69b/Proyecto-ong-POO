@@ -1,22 +1,32 @@
 <?php
+require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
-
 require_once __DIR__ . '/../config/db.php';
-$db = new Database();
+require_once __DIR__ . '/../Helpers/Validaciones.php';
+$db = new Db();
 $conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionusuarios.php');
         exit();
     }
+
     $nombre = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos'] ?? '');
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $id_rol = (int)$_POST['id_rol'];
+
+    $errores = Validaciones::validarUsuario([
+        'nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'password' => $password
+    ]);
+    if (!empty($errores)) {
+        header('Location: controller_admin_gestionusuarios.php?errorvalidacion=1');
+        exit();
+    }
 
     $check = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
     $check->execute([':email' => $email]);
@@ -41,15 +51,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
+
+    if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
+        header('Location: controller_admin_gestionusuarios.php');
         exit();
     }
+
     $id = (int)$_POST['id_usuario'];
     $nombre = trim($_POST['nombre']);
     $apellidos = trim($_POST['apellidos'] ?? '');
     $email = trim($_POST['email']);
     $id_rol = (int)$_POST['id_rol'];
+
+    $datosValidar = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email];
+    if (!empty($_POST['password_nuevo'])) {
+        $datosValidar['password'] = $_POST['password_nuevo'];
+    }
+    $errores = Validaciones::validarUsuario($datosValidar);
+    if (!empty($errores)) {
+        header('Location: controller_admin_gestionusuarios.php?errorvalidacion=1');
+        exit();
+    }
 
     $stmt = $conn->prepare("UPDATE usuario SET nombre = :nombre, apellidos = :apellidos, email = :email, id_rol = :id_rol WHERE id = :id");
     $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':id_rol' => $id_rol, ':id' => $id]);
@@ -65,10 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionusuarios.php?sim_bloqueado=1');
-        exit();
-    }
     $id = (int)$_GET['id'];
     if ($id !== (int)$_SESSION['user_id']) {
         $conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id")->execute([':id' => $id]);

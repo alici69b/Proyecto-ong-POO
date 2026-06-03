@@ -58,10 +58,17 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <h3 class="font-black text-lg tracking-tighter text-white">RESET</h3>
             </a>
         </div>
-        <div class="flex items-center justify-between px-2">
-            <div>
-                <p class="font-bold text-white text-sm">Panel Voluntario</p>
-                <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
+        <div class="flex items-center gap-3 mb-4 px-2">
+            <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+            <?php else: ?>
+                <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                </div>
+            <?php endif; ?>
+            <div class="text-xs">
+                <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
+                <p class="text-[#9fffcb] text-[10px]">Voluntario</p>
             </div>
             <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -91,7 +98,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
 
     <!-- Contenido -->
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
-    <main class="flex-1 p-4 md:p-8 w-full max-w-4xl">
+    <main class="flex-1 p-4 md:p-8 w-full">
 
         <!-- Barra superior móvil -->
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
@@ -101,7 +108,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 </svg>
             </button>
             <span class="text-sm font-bold text-[#004e64]">Panel Voluntario</span>
-            <a href="/Proyecto-ong-POO/app/controllers/controller_volunteer_dashboard.php"
+            <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php"
                 class="p-2 rounded-lg hover:bg-gray-100 transition text-[#004e64]" title="Volver al panel">
                 <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
@@ -261,7 +268,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                     <?php foreach ($comentarios as $c): ?>
                         <?php $es_voluntario = !empty($c['es_voluntario']); ?>
                         <div class="flex gap-3 <?php if ($es_voluntario) echo 'flex-row-reverse'; ?>">
-                            <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
+                            <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
                                 alt="Avatar" class="shrink-0 w-8 h-8 rounded-full object-cover">
                             <div class="flex-1 rounded-2xl px-4 py-3
                                 <?php if ($es_voluntario): ?>

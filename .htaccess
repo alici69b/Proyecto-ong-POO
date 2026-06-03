@@ -1,5 +1,19 @@
 RewriteEngine On
+RewriteBase /Proyecto-ong-POO
 
+# Friendly URLs
+RewriteRule ^Donar$              app/controllers/controller_donacion.php [L,QSA]
+RewriteRule ^Contacto$           pages/Contact.php [L,QSA]
+RewriteRule ^Impacto$            app/controllers/controller_impacto.php [L,QSA]
+RewriteRule ^Historias$          app/controllers/controller_historias.php [L,QSA]
+RewriteRule ^Transparencia$      app/controllers/controller_transparencia.php [L,QSA]
+RewriteRule ^Login$              app/controllers/controller_login.php [L,QSA]
+RewriteRule ^Registro$           app/controllers/controller_register.php [L,QSA]
+RewriteRule ^Inicio$             index.php [L,QSA]
+RewriteRule ^Perfil$             app/controllers/controller_profile.php [L,QSA]
+RewriteRule ^Cerrar-sesion$      app/controllers/controller_logout.php [L,QSA]
+
+# 404
 <If "req('Host') == 'localhost' || req('Host') == '127.0.0.1'">
     ErrorDocument 404 /Proyecto-ong-POO/404.php
 </If>

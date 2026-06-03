@@ -1,15 +1,14 @@
 <?php
+require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
-
 if (!isset($_SESSION['logged_in'])) {
-    header('Location: ../views/auth/Login.php');
+    header('Location: ' . BASE_URL . '/Login');
     exit();
 }
 
 if ($_SESSION['user_rol'] !== 'admin') {
-    header('Location: ../views/auth/Login.php');
+    header('Location: ' . BASE_URL . '/Inicio');
     exit();
 }
 
@@ -19,7 +18,7 @@ require_once __DIR__ . '/../Helpers/Validaciones.php';
 
 try {
     //intentamos crear la bbdd
-    $db = new Database();
+    $db = new Db();
     $conn = $db->getConnection();
 
     //primera consulta para mostrar en la vista, contamos todos los usurios
@@ -86,33 +85,59 @@ try {
     $usuarios_por_categoria = [];
 }
 
+$chart_labels = [];
+$chart_data = [];
+$chart_bg_colors = [];
+$chart_border_colors = [];
+
+$color_map = [
+    'pendiente' => ['bg' => 'rgba(255, 159, 10, 0.3)',  'border' => '#ff9f0a'],
+    'activo'    => ['bg' => 'rgba(0, 165, 207, 0.3)',   'border' => '#00a5cf'],
+    'resuelto'  => ['bg' => 'rgba(37, 161, 142, 0.3)',  'border' => '#25a18e'],
+    'cancelado' => ['bg' => 'rgba(239, 68, 68, 0.3)',   'border' => '#ef4444'],
+];
+
+$fallback_color = ['bg' => 'rgba(148, 163, 184, 0.3)', 'border' => '#94a3b8'];
+
+if (!empty($resets_por_estado)) {
+    foreach ($resets_por_estado as $fila) {
+        $chart_labels[] = $fila['nombre_estado'];
+        $chart_data[] = (int)$fila['total'];
+        $c = $color_map[$fila['nombre_estado']] ?? $fallback_color;
+        $chart_bg_colors[] = $c['bg'];
+        $chart_border_colors[] = $c['border'];
+    }
+} else {
+    $chart_labels = ['pendiente', 'activo', 'resuelto'];
+    $chart_data = [0, 0, 0];
+    $chart_bg_colors = ['rgba(255, 159, 10, 0.3)', 'rgba(0, 165, 207, 0.3)', 'rgba(37, 161, 142, 0.3)'];
+    $chart_border_colors = ['#ff9f0a', '#00a5cf', '#25a18e'];
+}
+
+$chart_labels_json = json_encode($chart_labels);
+$chart_data_json = json_encode($chart_data);
+$chart_bg_colors_json = json_encode($chart_bg_colors);
+$chart_border_colors_json = json_encode($chart_border_colors);
+
 $nuevos = 0;
 $pendientes = 0;
 $completados = 0;
+$cancelados = 0;
 
-//lo que guardamos en la consulta seis, tendremso que compararlo con los estados que tenemos 
 foreach ($resets_por_estado as $fila) {
-    $estado = strtolower($fila['nombre_estado']);
-    $total = $fila['total'];
-
-    if (strpos($estado, 'nuevo') !== false) {
-        $nuevos = $total;
-    }
-
-    if (strpos($estado, 'progreso') !== false) {
-        $pendientes = $total;
-    }
-
-    if (strpos($estado, 'pendiente') !== false) {
-        $pendientes = $total;
-    }
-
-    if (strpos($estado, 'completado') !== false) {
-        $completados = $total;
-    }
-
-    if (strpos($estado, 'exito') !== false) {
-        $completados = $total;
+    switch ($fila['nombre_estado']) {
+        case 'pendiente':
+            $nuevos = (int)$fila['total'];
+            break;
+        case 'activo':
+            $pendientes = (int)$fila['total'];
+            break;
+        case 'resuelto':
+            $completados = (int)$fila['total'];
+            break;
+        case 'cancelado':
+            $cancelados = (int)$fila['total'];
+            break;
     }
 }
 

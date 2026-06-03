@@ -8,8 +8,8 @@ class Historia
 
     public function __construct()
     {
-        $database = new Database();
-        $this->conn = $database->getConnection();
+        $Db = new Db();
+        $this->conn = $Db->getConnection();
     }
 
     public function obtenerPublicadas(): array

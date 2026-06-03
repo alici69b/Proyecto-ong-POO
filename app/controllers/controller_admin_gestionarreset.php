@@ -2,7 +2,15 @@
 require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
-$modo_simulado = isset($_SESSION['modo_simulado']) && $_SESSION['modo_simulado'];
+if (!isset($_SESSION['logged_in'])) {
+    header('Location: ' . BASE_URL . '/Login');
+    exit();
+}
+
+if ($_SESSION['user_rol'] !== 'admin') {
+    header('Location: ' . BASE_URL . '/Inicio');
+    exit();
+}
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
@@ -13,14 +21,10 @@ $conn = $db->getConnection();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) {
 
     if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
-        header('Location: controller_admin_gestionarreset.php');
+        header('Location: ' . BASE_URL . '/app/controllers/controller_admin_gestionarreset.php');
         exit();
     }
 
-    if ($modo_simulado) {
-        header('Location: controller_admin_gestionarreset.php?sim_bloqueado=1');
-        exit();
-    }
     $id_reset = (int)$_POST['id_reset'];
     $id_voluntario = !empty($_POST['id_voluntario']) ? (int)$_POST['id_voluntario'] : null;
     $id_estado = (int)$_POST['id_estado'];
@@ -33,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) 
         $historiaModel->crearAutomaticaDesdeReset($id_reset);
     }
 
-    header('Location: controller_admin_gestionarreset.php?updated=1');
+    header('Location: ' . BASE_URL . '/app/controllers/controller_admin_gestionarreset.php?updated=1');
     exit();
 }
 

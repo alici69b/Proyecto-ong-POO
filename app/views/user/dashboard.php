@@ -111,9 +111,19 @@ if (!isset($mis_resets)) $mis_resets = array();
                     <h3 class="font-black text-lg tracking-tighter text-white">RESET</h3>
                 </a>
             </div>
-            <div class="px-2">
-                <p class="font-bold text-white text-sm">Mi Panel</p>
-                <p class="text-[10px] text-[#9fffcb] uppercase tracking-widest font-bold">RESET ONG</p>
+            
+            <div class="flex items-center gap-3 mb-4 px-2">
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                <?php else: ?>
+                    <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                    </div>
+                <?php endif; ?>
+                <div class="text-xs">
+                    <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
+                    <p class="text-[#9fffcb] text-[10px]">Usuario</p>
+                </div>
             </div>
             <nav class="flex flex-col gap-2">
                 <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"

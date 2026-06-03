@@ -38,9 +38,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         <div class="flex items-center gap-3 px-2 mb-10">
                 <div class="flex items-center gap-3  mb-4">
-                    <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -80,26 +84,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
     <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
-        <?php if (isset($modo_simulado) && $modo_simulado): ?>
-        <div class="flex flex-col gap-2 mb-6">
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
-            </div>
-            <?php if (isset($_GET['sim_bloqueado'])): ?>
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-                <span>Acción bloqueada: estás en modo simulación.</span>
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
@@ -208,7 +202,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                         </span>
                                     <?php endif; ?>
                                     <div class="flex items-center gap-1 text-slate-400">
-                                        <button onclick="abrirModalEditar(<?= $h['id'] ?>, '<?= addslashes($h['titulo']) ?>', '<?= addslashes($h['solicitante'] ?? '') ?>', '<?= addslashes($h['nombre_voluntario'] ?? '') ?>', '<?= addslashes($h['nombre_categoria'] ?? '') ?>', '<?= addslashes($h['descripcion'] ?? '') ?>', '<?= addslashes($h['descripcion_antes'] ?? '') ?>', '<?= addslashes($h['descripcion_despues'] ?? '') ?>', '<?= (int)($h['edad'] ?? 0) ?>', '<?= (int)($h['duracion_meses'] ?? 0) ?>', '<?= (int)($h['valoracion'] ?? 5) ?>', '<?= addslashes($h['foto'] ?? '') ?>', '<?= addslashes($h['icono'] ?? '') ?>', '<?= addslashes($h['estado'] ?? 'Borrador') ?>')" title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
+                                        <button onclick="abrirModalEditar(<?= $h['id'] ?>, '<?= addslashes($h['titulo']) ?>', '<?= addslashes($h['solicitante'] ?? '') ?>', '<?= addslashes($h['nombre_voluntario'] ?? '') ?>', '<?= addslashes($h['nombre_categoria'] ?? '') ?>', '<?= addslashes($h['descripcion'] ?? '') ?>', '<?= addslashes($h['descripcion_antes'] ?? '') ?>', '<?= addslashes($h['descripcion_despues'] ?? '') ?>', '<?= (int)($h['duracion_meses'] ?? 0) ?>', '<?= (int)($h['valoracion'] ?? 5) ?>', '<?= addslashes($h['foto'] ?? '') ?>', '<?= addslashes($h['icono'] ?? '') ?>', '<?= addslashes($h['estado'] ?? 'Borrador') ?>')" title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
                                             <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                                         </button>
                                         <a href="controller_admin_preview_historia.php?id=<?= $h['id'] ?>" target="_blank" title="Vista previa" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
@@ -276,10 +270,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Edad</label>
-                    <input type="number" name="edad" min="0" max="120" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
-                </div>
                 <div>
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Duración (meses)</label>
                     <input type="number" name="duracion_meses" min="0" max="999" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
@@ -383,10 +373,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Edad</label>
-                    <input type="number" name="edad" id="edit-edad" min="0" max="120" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
-                </div>
-                <div>
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Duración (meses)</label>
                     <input type="number" name="duracion_meses" id="edit-duracion" min="0" max="999" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
                 </div>
@@ -459,7 +445,7 @@ function toggleSidebar() {
 }
 function abrirModalCrear() { document.getElementById('modal-crear').classList.remove('hidden'); }
 function cerrarModalCrear() { document.getElementById('modal-crear').classList.add('hidden'); }
-function abrirModalEditar(id, titulo, solicitante, voluntario, categoria, descripcion, antes, despues, edad, duracion, valoracion, foto, icono, estado) {
+function abrirModalEditar(id, titulo, solicitante, voluntario, categoria, descripcion, antes, despues, duracion, valoracion, foto, icono, estado) {
     document.getElementById('edit-id').value = id;
     document.getElementById('edit-titulo').value = titulo;
     document.getElementById('edit-solicitante').value = solicitante;
@@ -468,7 +454,6 @@ function abrirModalEditar(id, titulo, solicitante, voluntario, categoria, descri
     document.getElementById('edit-descripcion').value = descripcion;
     document.getElementById('edit-antes').value = antes;
     document.getElementById('edit-despues').value = despues;
-    document.getElementById('edit-edad').value = edad;
     document.getElementById('edit-duracion').value = duracion;
     document.getElementById('edit-valoracion').value = valoracion;
     document.getElementById('edit-icono').value = icono;

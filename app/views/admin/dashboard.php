@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: ../auth/Login.php');
+    header('Location: ' . BASE_URL . '/Login');
     exit();
 }
 
@@ -18,7 +18,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     <link rel="icon" type="image/svg+xml" href="../../../public/img/Logo_RESET.svg">
     <title>Dashboard Admin - RESET</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7"></script>
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;500;800&display=swap"
         rel="stylesheet">
     <style>
@@ -57,10 +57,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         <div class="flex items-center justify-between px-2 mb-10">
             <div class="flex items-center gap-3">
                 <div class="flex items-center gap-3 mb-4">
-                    <div
-                        class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -129,20 +132,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     </aside>
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
     <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
-        <?php if (isset($modo_simulado) && $modo_simulado): ?>
-        <div class="flex flex-col gap-2 mb-6">
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
-            </div>
-            <?php if (isset($_GET['sim_bloqueado'])): ?>
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-                <span>Acción bloqueada: estás en modo simulación.</span>
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
         <div
             class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
@@ -153,12 +142,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </svg>
             </button>
             <div class="flex items-center gap-2">
-                <span
-                    class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
-        <header class="flex justify-between items-center mb-10">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Vista General</h1>
                 <div class="flex items-center gap-2 mt-1">
@@ -166,9 +158,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                     <p class="text-gray-400 text-sm"><?= date('l, d F Y · H:i') ?>hs</p>
                 </div>
             </div>
-            <div class="flex gap-3">
+            <div class="flex gap-3 w-full sm:w-auto">
                 <button onclick="location.reload()"
-                    class="px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95 flex items-center gap-2">
+                    class="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M1 4v6h6M23 20v-6h-6" />
                         <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" />
@@ -246,22 +238,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                         <span class="w-2 h-2 bg-[#00a5cf] rounded-full"></span>
                         Estado de Resets
                     </h3>
-                    <span class="text-[10px] font-bold text-slate-400">Total: <?= $total_resets ?></span>
+                    
                 </div>
                 <?php if ($total_resets > 0): ?>
                     <div class="h-64">
                         <canvas id="chartResets"></canvas>
                     </div>
                 <?php else: ?>
-                    <div class="flex flex-col items-center justify-center h-64 bg-slate-50 rounded-xl">
-                        <svg class="w-16 h-16 text-slate-300 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="1">
-                            <path
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        <p class="text-slate-400 font-bold">No hay datos de resets todavía</p>
-                        <p class="text-slate-300 text-sm">Los datos aparecerán aquí cuando los usuarios soliciten resets.
-                        </p>
+                    <div class="h-64 flex flex-col items-center justify-center bg-slate-50 rounded-xl">
+                        <canvas id="chartResets" class="h-64 w-full"></canvas>
                     </div>
                 <?php endif; ?>
             </div>
@@ -326,23 +311,23 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
     </div>
 
-    <?php
-    //  Grafico para mostrar los reset realizados 
-    if ($total_resets > 0): ?>
+    <?php if ($total_resets > 0): ?>
         <script>
             new Chart(document.getElementById('chartResets'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Nuevos', 'En progreso', 'Completados'],
+                    labels: <?= $chart_labels_json ?>,
                     datasets: [{
-                        data: [<?= $nuevos ?>, <?= $pendientes ?>, <?= $completados ?>],
-                        backgroundColor: ['#f59e0b', '#3b82f6', '#10b981'],
-                        borderWidth: 0
+                        data: <?= $chart_data_json ?>,
+                        backgroundColor: <?= $chart_bg_colors_json ?>,
+                        borderColor: <?= $chart_border_colors_json ?>,
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '50%',
                     plugins: {
                         legend: {
                             position: 'bottom',
@@ -356,6 +341,48 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                 }
                             }
                         }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        </script>
+    <?php else: ?>
+        <script>
+            new Chart(document.getElementById('chartResets'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['pendiente', 'activo', 'resuelto'],
+                    datasets: [{
+                        data: [22, 12, 66],
+                        backgroundColor: ['rgba(255, 159, 10, 0.3)', 'rgba(0, 165, 207, 0.3)', 'rgba(37, 161, 142, 0.3)'],
+                        borderColor: ['#ff9f0a', '#00a5cf', '#25a18e'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '50%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    family: 'Bricolage Grotesque',
+                                    weight: 'bold',
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeInOutQuart'
                     }
                 }
             });

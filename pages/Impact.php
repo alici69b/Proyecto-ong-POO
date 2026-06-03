@@ -99,7 +99,7 @@
                 </div>
                 <div class="bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col flex-1 p-7 lg:h-full h-70 justify-between lg:justify-normal lg:space-y-38">
                     <h2 class="font-semibold text-xl">Evolución mensual</h2>
-                    <div class="flex flex-row justify-around items-center text-center">
+                    <div class="flex flex-row flex-wrap justify-around items-center text-center gap-2">
                         <?php foreach ($evolucion as $e): ?>
                         <div>
                             <span><?= $e['total'] ?></span>

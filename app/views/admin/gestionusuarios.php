@@ -8,11 +8,6 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
     exit();
 }
 
-/** @var int $total_usuarios - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 57) */
-/** @var int $pagina - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 42) */
-/** @var int $total_paginas - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 58) */
-/** @var string $buscar - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 41) */
-/** @var array $usuarios - Variable definida en el controlador (controller_admin_gestionusuarios.php, línea 63) */
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -43,9 +38,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         <div class="flex items-center gap-3 px-2 mb-10">
                 <div class="flex items-center gap-3  mb-4">
-                    <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
-                    </div>
+                    <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                        <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-9 h-9 rounded-full object-cover border-2 border-white/30">
+                    <?php else: ?>
+                        <div class="w-9 h-9 bg-[#00a5cf] rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            <?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="text-xs">
                         <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                         <p class="text-[#9fffcb] text-[10px]">Administrador</p>
@@ -85,26 +84,16 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
     <main class="flex-1 p-4 md:p-8 max-w-[90rem] mx-auto w-full">
-        <?php if (isset($modo_simulado) && $modo_simulado): ?>
-        <div class="flex flex-col gap-2 mb-6">
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
-                <span>Modo simulación — Las acciones están deshabilitadas. Solo puedes visualizar los datos.</span>
-            </div>
-            <?php if (isset($_GET['sim_bloqueado'])): ?>
-            <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-300 text-red-700 text-sm font-medium">
-                <svg class="w-5 h-5 shrink-0 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
-                <span>Acción bloqueada: estás en modo simulación.</span>
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
             <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
             </button>
             <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php if (!empty($_SESSION['foto_perfil'])): ?>
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($_SESSION['foto_perfil']) ?>" class="w-8 h-8 rounded-full object-cover">
+                <?php else: ?>
+                    <span class="w-8 h-8 rounded-full bg-[#00a5cf] flex items-center justify-center text-white font-bold text-xs"><?= strtoupper(substr($_SESSION['user_nombre'] ?? 'A', 0, 1)) ?></span>
+                <?php endif; ?>
                 <span class="text-sm font-bold text-[#004e64]"><?= htmlspecialchars($_SESSION['user_nombre']) ?></span>
             </div>
         </div>
@@ -157,14 +146,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         <?php endif; ?>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div class="overflow-x-auto">
+            <?php /* Desktop: tabla completa */ ?>
+            <div class="hidden lg:block overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 text-slate-400 text-[11px] font-bold uppercase tracking-widest">
                         <tr>
                             <th class="px-6 py-4">Usuario</th>
-                            <th class="px-6 py-4 hidden md:table-cell">Email</th>
-                            <th class="px-6 py-4 hidden sm:table-cell">Rol</th>
-                            <th class="px-6 py-4 hidden sm:table-cell">Registro</th>
+                            <th class="px-6 py-4">Email</th>
+                            <th class="px-6 py-4">Rol</th>
+                            <th class="px-6 py-4">Registro</th>
                             <th class="px-6 py-4 text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -190,13 +180,13 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-3.5 text-slate-600 hidden md:table-cell"><?= htmlspecialchars($u['email']) ?></td>
-                                <td class="px-6 py-3.5 hidden sm:table-cell">
+                                <td class="px-6 py-3.5 text-slate-600"><?= htmlspecialchars($u['email']) ?></td>
+                                <td class="px-6 py-3.5">
                                     <span class="text-[10px] font-bold px-2.5 py-1 rounded-full <?= $u['nombre_rol'] === 'admin' ? 'bg-red-50 text-red-600' : ($u['nombre_rol'] === 'soy-voluntario' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600') ?>">
                                         <?= $u['nombre_rol'] === 'soy-usuario' ? 'Usuario' : ($u['nombre_rol'] === 'soy-voluntario' ? 'Voluntario' : 'Admin') ?>
                                     </span>
                                 </td>
-                                <td class="px-6 py-3.5 text-slate-500 text-xs hidden sm:table-cell"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
+                                <td class="px-6 py-3.5 text-slate-500 text-xs"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
                                 <td class="px-6 py-3.5 text-center">
                                     <div class="flex justify-center gap-1">
                                         <button onclick="abrirModalEditar(<?= $u['id'] ?>, '<?= addslashes($u['nombre']) ?>', '<?= addslashes($u['apellidos'] ?? '') ?>', '<?= addslashes($u['email']) ?>', <?= (int)$u['id_rol'] ?>)" class="p-2 hover:bg-blue-50 text-blue-500 rounded-xl transition-all active:scale-90" title="Editar">
@@ -212,6 +202,47 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                         <?php endif; ?>
                     </tbody>
                 </table>
+            </div>
+            <?php /* Móvil y tablet: cards en grid */ ?>
+            <div class="lg:hidden p-4 sm:p-6">
+                <?php if (empty($usuarios)): ?>
+                    <div class="py-12 text-center text-slate-400">No se encontraron usuarios.</div>
+                <?php else: ?>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <?php foreach ($usuarios as $u): ?>
+                        <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-start gap-3">
+                                <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
+                                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($u['foto_perfil'] ?? 'foto_defecto.webp') ?>" alt="Foto"
+                                         class="w-full h-full object-cover"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                    <div class="w-full h-full hidden items-center justify-center text-xs font-bold text-slate-400 bg-gradient-to-br from-[#00a5cf] to-[#9fffcb] text-white">
+                                        <?= $u['iniciales'] ?>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-bold text-slate-700 truncate"><?= htmlspecialchars($u['nombre'] . ' ' . ($u['apellidos'] ?? '')) ?></p>
+                                    <p class="text-xs text-slate-400 truncate"><?= htmlspecialchars($u['email']) ?></p>
+                                    <div class="flex flex-wrap items-center gap-2 mt-2">
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full <?= $u['nombre_rol'] === 'admin' ? 'bg-red-50 text-red-600' : ($u['nombre_rol'] === 'soy-voluntario' ? 'bg-blue-50 text-blue-600' : 'bg-green-50 text-green-600') ?>">
+                                            <?= $u['nombre_rol'] === 'soy-usuario' ? 'Usuario' : ($u['nombre_rol'] === 'soy-voluntario' ? 'Voluntario' : 'Admin') ?>
+                                        </span>
+                                        <span class="text-[10px] text-slate-400"><?= date('d/m/Y', strtotime($u['created_at'])) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1 mt-3 pt-3 border-t border-slate-50">
+                                        <button onclick="abrirModalEditar(<?= $u['id'] ?>, '<?= addslashes($u['nombre']) ?>', '<?= addslashes($u['apellidos'] ?? '') ?>', '<?= addslashes($u['email']) ?>', <?= (int)$u['id_rol'] ?>)" class="flex-1 py-2 text-xs font-bold text-blue-500 hover:bg-blue-50 rounded-xl transition-all" title="Editar">
+                                            Editar
+                                        </button>
+                                        <button onclick="abrirModal(<?= $u['id'] ?>)" class="flex-1 py-2 text-xs font-bold text-red-400 hover:bg-red-50 rounded-xl transition-all" title="Eliminar">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="p-4 bg-slate-50 flex flex-col sm:flex-row justify-between items-center border-t border-slate-100 gap-4">
                 <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>

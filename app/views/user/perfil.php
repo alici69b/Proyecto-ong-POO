@@ -31,10 +31,10 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
     </style>
 </head>
 <body class="text-[#004e64] min-h-screen">
-    <div class="flex">
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
         <!-- SIDEBAR -->
-        <aside class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
+        <aside id="sidebar" class="fixed left-0 top-0 z-50 h-screen w-64 bg-[#004e64] text-blue-100 p-6 flex flex-col gap-8">
             <div class="mt-6 px-2">
                 <a href="<?= BASE_URL ?>/index.php" class="flex items-center gap-2 hover:opacity-80 transition group mb-4">
                     <svg fill="#ff3b30" class="w-6 h-6" viewBox="0 0 612 612">
@@ -76,152 +76,170 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
             </div>
         </aside>
 
-        <!-- CONTENIDO -->
-        <main class="flex-1 md:ml-64 p-6 md:p-12 w-full max-w-3xl">
+        <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-1 p-4 md:p-8 w-full">
 
-            <div class="mb-10">
-                <h2 class="text-4xl font-extrabold tracking-tight mb-2">Mi perfil</h2>
-                <p class="text-gray-400 text-sm italic">Gestiona tu información personal</p>
-            </div>
+        <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
+            <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-gray-100 transition">
+                <svg class="w-6 h-6 text-[#004e64]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                </svg>
+            </button>
+            <span class="text-sm font-bold text-[#004e64]">Mi perfil</span>
+            <a href="<?= BASE_URL ?>/app/controllers/controller_user_dashboard.php"
+                class="p-2 rounded-lg hover:bg-gray-100 transition text-[#004e64]" title="Volver al panel">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+            </a>
+        </div>
 
-            <!-- Mensaje flash -->
-            <?php if ($flash != null): ?>
-                <?php if ($flash['tipo'] == 'success'): ?>
-                    <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-green-50 text-green-700 border border-green-200">
-                        <?= htmlspecialchars($flash['msg']) ?>
-                    </div>
-                <?php else: ?>
-                    <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-red-50 text-red-700 border border-red-200">
-                        <?= htmlspecialchars($flash['msg']) ?>
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
+        <div class="mb-10">
+            <h2 class="text-4xl font-extrabold tracking-tight mb-2">Mi perfil</h2>
+            <p class="text-gray-400 text-sm italic">Gestiona tu información personal</p>
+        </div>
 
-            <!-- FOTO DE PERFIL -->
-            <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
-                <h3 class="text-lg font-extrabold mb-6">Foto de perfil</h3>
-                <div class="flex items-center gap-6">
-                    <!-- Previsualización de la foto -->
-                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
-                        alt="Foto de perfil"
-                        id="preview-foto"
-                        class="w-20 h-20 rounded-full object-cover border-4 border-slate-100">
-
-                    <!-- Formulario para subir foto (se envía solo al seleccionar archivo) -->
-                    <form method="POST" enctype="multipart/form-data"
-                        action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
-                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                        <input type="hidden" name="action" value="foto">
-                        <label class="cursor-pointer">
-                            <span class="inline-block text-sm font-bold border border-slate-200 rounded-2xl px-4 py-2 hover:bg-slate-50 text-slate-600">
-                                Elegir imagen
-                            </span>
-                            <!-- Al cambiar el archivo se previsualiza y se envía el formulario automáticamente -->
-                            <input type="file" name="foto" accept="image/*" class="hidden"
-                                onchange="previewFoto(this); this.closest('form').submit()">
-                        </label>
-                        <p class="text-xs text-slate-400 mt-2">JPG, PNG o WEBP. Máx. 2MB.</p>
-                    </form>
+        <!-- Mensaje flash -->
+        <?php if ($flash != null): ?>
+            <?php if ($flash['tipo'] == 'success'): ?>
+                <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-green-50 text-green-700 border border-green-200">
+                    <?= htmlspecialchars($flash['msg']) ?>
                 </div>
-            </div>
+            <?php else: ?>
+                <div class="mb-6 px-5 py-4 rounded-2xl text-sm font-bold bg-red-50 text-red-700 border border-red-200">
+                    <?= htmlspecialchars($flash['msg']) ?>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
 
-            <!-- DATOS PERSONALES -->
-            <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
-                <h3 class="text-lg font-extrabold mb-6">Datos personales</h3>
-                <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
-                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                    <input type="hidden" name="action" value="datos">
+        <!-- FOTO DE PERFIL -->
+        <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
+            <h3 class="text-lg font-extrabold mb-6">Foto de perfil</h3>
+            <div class="flex items-center gap-6">
+                <!-- Previsualización de la foto -->
+                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
+                    alt="Foto de perfil"
+                    id="preview-foto"
+                    class="w-20 h-20 rounded-full object-cover border-4 border-slate-100">
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nombre</label>
-                            <input type="text" name="nombre"
-                                value="<?= htmlspecialchars($perfil['nombre'] ?? '') ?>"
-                                class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Apellidos</label>
-                            <input type="text" name="apellidos"
-                                value="<?= htmlspecialchars($perfil['apellidos'] ?? '') ?>"
-                                class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                        </div>
-                    </div>
-
-                    <div class="mb-5">
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Email</label>
-                        <input type="email" name="email"
-                            value="<?= htmlspecialchars($perfil['email'] ?? '') ?>"
-                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                    </div>
-
-                    <!-- Tipo de ayuda (único campo extra del usuario normal) -->
-                    <div class="mb-5">
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Tipo de ayuda que busco</label>
-                        <select name="tipo_ayuda"
-                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                            <?php foreach ($tipos_ayuda as $tipo): ?>
-                                <option value="<?= $tipo ?>"
-                                    <?php if (isset($perfil['tipo_ayuda']) && $perfil['tipo_ayuda'] == $tipo) echo 'selected'; ?>>
-                                    <?= ucfirst($tipo) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90">
-                        Guardar cambios
-                    </button>
+                <!-- Formulario para subir foto (se envía solo al seleccionar archivo) -->
+                <form method="POST" enctype="multipart/form-data"
+                    action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                    <input type="hidden" name="action" value="foto">
+                    <label class="cursor-pointer">
+                        <span class="inline-block text-sm font-bold border border-slate-200 rounded-2xl px-4 py-2 hover:bg-slate-50 text-slate-600">
+                            Elegir imagen
+                        </span>
+                        <!-- Al cambiar el archivo se previsualiza y se envía el formulario automáticamente -->
+                        <input type="file" name="foto" accept="image/*" class="hidden"
+                            onchange="previewFoto(this); this.closest('form').submit()">
+                    </label>
+                    <p class="text-xs text-slate-400 mt-2">JPG, PNG o WEBP. Máx. 2MB.</p>
                 </form>
             </div>
+        </div>
 
-            <!-- CAMBIAR CONTRASEÑA -->
-            <div class="bg-white rounded-3xl border border-slate-100 p-8">
-                <h3 class="text-lg font-extrabold mb-6">Cambiar contraseña</h3>
-                <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
-                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
-                    <input type="hidden" name="action" value="password">
+        <!-- DATOS PERSONALES -->
+        <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
+            <h3 class="text-lg font-extrabold mb-6">Datos personales</h3>
+            <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                <input type="hidden" name="action" value="datos">
 
-                    <div class="mb-5">
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Contraseña actual</label>
-                        <input type="password" name="password_actual"
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nombre</label>
+                        <input type="text" name="nombre"
+                            value="<?= htmlspecialchars($perfil['nombre'] ?? '') ?>"
                             class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nueva contraseña</label>
-                            <input type="password" name="password_nuevo"
-                                class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Repetir nueva contraseña</label>
-                            <input type="password" name="password_confirmar"
-                                class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Apellidos</label>
+                        <input type="text" name="apellidos"
+                            value="<?= htmlspecialchars($perfil['apellidos'] ?? '') ?>"
+                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
                     </div>
+                </div>
 
-                    <button type="submit"
-                        class="w-full border-2 border-slate-200 text-slate-600 font-extrabold text-sm py-3 rounded-2xl hover:border-[#00a5cf] hover:text-[#00a5cf]">
-                        Actualizar contraseña
-                    </button>
-                </form>
-            </div>
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Email</label>
+                    <input type="email" name="email"
+                        value="<?= htmlspecialchars($perfil['email'] ?? '') ?>"
+                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                </div>
 
-        </main>
-    </div>
+                <!-- Tipo de ayuda (único campo extra del usuario normal) -->
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Tipo de ayuda que busco</label>
+                    <select name="tipo_ayuda"
+                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 bg-white font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                        <?php foreach ($tipos_ayuda as $tipo): ?>
+                            <option value="<?= $tipo ?>"
+                                <?php if (isset($perfil['tipo_ayuda']) && $perfil['tipo_ayuda'] == $tipo) echo 'selected'; ?>>
+                                <?= ucfirst($tipo) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-    <script>
-        // Muestra una previsualización de la foto antes de subirla
-        function previewFoto(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-foto').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
+                <button type="submit"
+                    class="w-full bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm py-3 rounded-2xl hover:opacity-90">
+                    Guardar cambios
+                </button>
+            </form>
+        </div>
+
+        <!-- CAMBIAR CONTRASEÑA -->
+        <div class="bg-white rounded-3xl border border-slate-100 p-8">
+            <h3 class="text-lg font-extrabold mb-6">Cambiar contraseña</h3>
+            <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                <input type="hidden" name="action" value="password">
+
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Contraseña actual</label>
+                    <input type="password" name="password_actual"
+                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Nueva contraseña</label>
+                        <input type="password" name="password_nuevo"
+                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Repetir nueva contraseña</label>
+                        <input type="password" name="password_confirmar"
+                            class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full border-2 border-slate-200 text-slate-600 font-extrabold text-sm py-3 rounded-2xl hover:border-[#00a5cf] hover:text-[#00a5cf]">
+                    Actualizar contraseña
+                </button>
+            </form>
+        </div>
+
+    </main>
+</div>
+<script>
+    // Muestra una previsualización de la foto antes de subirla
+    function previewFoto(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview-foto').src = e.target.result;
             }
+            reader.readAsDataURL(input.files[0]);
         }
-    </script>
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
+    }
+</script>
 </body>
 </html>

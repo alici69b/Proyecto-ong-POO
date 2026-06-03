@@ -78,18 +78,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         // Acción: cambiar foto de perfil
-    } elseif ($action == 'foto') {
+        } elseif ($action == 'foto') {
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
             $errFoto = Validaciones::validarFoto($_FILES['foto']);
 
             if (!empty($errFoto)) {
                 $_SESSION['flash'] = ['tipo' => 'error', 'msg' => $errFoto[0]];
             } else {
+                $extension = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
                 $nombreArchivo  = 'user_' . $id_usuario . '_' . time() . '.' . $extension;
                 $carpetaDestino = __DIR__ . '/../../public/img/';
 
                 if (move_uploaded_file($_FILES['foto']['tmp_name'], $carpetaDestino . $nombreArchivo)) {
                     $usuarioModel->actualizarFoto($id_usuario, $nombreArchivo);
+                    $_SESSION['foto_perfil'] = $nombreArchivo;
                     $_SESSION['flash'] = array('tipo' => 'success', 'msg' => 'Foto actualizada correctamente.');
                 } else {
                     $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'No se pudo guardar la imagen.');

@@ -110,6 +110,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                     <!-- Formulario para subir foto (se envía solo al seleccionar archivo) -->
                     <form method="POST" enctype="multipart/form-data"
                         action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                         <input type="hidden" name="action" value="foto">
                         <label class="cursor-pointer">
                             <span class="inline-block text-sm font-bold border border-slate-200 rounded-2xl px-4 py-2 hover:bg-slate-50 text-slate-600">
@@ -128,6 +129,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
             <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
                 <h3 class="text-lg font-extrabold mb-6">Datos personales</h3>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="datos">
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -177,6 +179,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
             <div class="bg-white rounded-3xl border border-slate-100 p-8">
                 <h3 class="text-lg font-extrabold mb-6">Cambiar contraseña</h3>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="password">
 
                     <div class="mb-5">

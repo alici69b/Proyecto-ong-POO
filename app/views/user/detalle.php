@@ -105,7 +105,7 @@ $esta_cancelado = ($estado == 4);
 
 <!-- Contenido -->
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
-    <main class="flex-1 p-4 md:p-8 w-full max-w-4xl">
+    <main class="flex-1 p-4 md:p-8 w-full">
 
         <!-- Barra superior móvil -->
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">

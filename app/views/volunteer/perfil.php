@@ -59,14 +59,14 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 </div>
             </div>
             <nav class="flex flex-col gap-2">
-                <a href="/Proyecto-ong-POO/app/controllers/controller_volunteer_dashboard.php"
+                <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all text-sm font-bold">
                     <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 1.41-1.41L7.83 13H20v-2z" />
                     </svg>
                     Volver al panel
                 </a>
-                <a href="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
+                <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                     class="bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-extrabold">
                     <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
@@ -75,7 +75,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 </a>
             </nav>
             <div class="mt-auto pt-6 border-t border-white/10">
-                <a href="/Proyecto-ong-POO/app/controllers/controller_logout.php"
+                <a href="<?= BASE_URL ?>/app/controllers/controller_logout.php"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/20 text-red-300 transition-all text-sm font-bold">
                     <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
                         <path d="M16 17v-4H9v-2h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z" />
@@ -108,13 +108,13 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 <h3 class="text-lg font-extrabold mb-6">Foto de perfil</h3>
                 <div class="flex items-center gap-6">
                     <!-- Avatar actual -->
-                    <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
                         alt="Foto de perfil"
                         class="w-20 h-20 rounded-full object-cover border-4 border-[#00a5cf]/30">
 
                     <!-- Formulario subida -->
                     <form method="POST"
-                        action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
+                        action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                         enctype="multipart/form-data"
                         class="flex-1">
                         <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
@@ -140,7 +140,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
             <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
                 <h3 class="text-lg font-extrabold mb-6">Datos personales</h3>
                 <form method="POST"
-                    action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
+                    action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                     class="flex flex-col gap-5">
                     <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="actualizar_datos">
@@ -212,7 +212,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
             <div class="bg-white rounded-3xl border border-slate-100 p-8">
                 <h3 class="text-lg font-extrabold mb-6">Cambiar contraseña</h3>
                 <form method="POST"
-                    action="/Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php"
+                    action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                     class="flex flex-col gap-5">
                     <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="cambiar_password">

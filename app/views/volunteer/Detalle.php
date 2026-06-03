@@ -275,7 +275,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                         <?php foreach ($comentarios as $c): ?>
                             <div class="flex gap-3">
                                 <!-- Avatar -->
-                                <img src="/Proyecto-ong-POO/public/img/<?= $c["foto_voluntario"] ?? 'default.png' ?>" alt="Avatar" class="shrink-0 w-8 h-8 rounded-full overflow-hidden">
+                                <img src="<?= BASE_URL ?>/public/img/<?= $c["foto_voluntario"] ?? 'default.png' ?>" alt="Avatar" class="shrink-0 w-8 h-8 rounded-full overflow-hidden">
                                 <!-- Burbuja -->
                                 <div class="flex-1 bg-slate-50 rounded-2xl px-4 py-3">
                                     <div class="flex items-center justify-between mb-1">

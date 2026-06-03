@@ -102,7 +102,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                 <h3 class="text-lg font-extrabold mb-6">Foto de perfil</h3>
                 <div class="flex items-center gap-6">
                     <!-- Previsualización de la foto -->
-                    <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
+                    <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($perfil['foto_perfil'] ?? 'default.png') ?>"
                         alt="Foto de perfil"
                         id="preview-foto"
                         class="w-20 h-20 rounded-full object-cover border-4 border-slate-100">

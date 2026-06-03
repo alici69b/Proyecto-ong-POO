@@ -228,7 +228,7 @@ $esta_cancelado = ($estado == 4);
                             ?>
                             <div class="flex gap-3 <?php if (!$es_voluntario) echo 'flex-row-reverse'; ?>">
                                 <!-- Foto -->
-                                <img src="/Proyecto-ong-POO/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
+                                <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
                                     alt="Avatar"
                                     class="shrink-0 w-8 h-8 rounded-full object-cover">
                                 <!-- Burbuja del mensaje -->

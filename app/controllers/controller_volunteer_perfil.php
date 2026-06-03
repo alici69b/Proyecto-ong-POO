@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
         $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad. Inténtalo de nuevo."];
-        header("Location: /Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php");
+        header("Location: " . BASE_URL . "/app/controllers/controller_volunteer_perfil.php");
         exit();
     }
 
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
     }
 
     //Redirigimos para evitar reenvío del formulario
-    header("Location: /Proyecto-ong-POO/app/controllers/controller_volunteer_perfil.php");
+    header("Location: " . BASE_URL . "/app/controllers/controller_volunteer_perfil.php");
     exit();
 }
 

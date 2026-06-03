@@ -77,13 +77,7 @@ $disponibles = $disponibles ?? [];
                 <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                 <p class="text-[#9fffcb] text-[10px]">Voluntario</p>
             </div>
-            <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-white/60 hover:text-white">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-                <!-- Botón cerrar sidebar en móvil -->
+            <!-- Botón cerrar sidebar en móvil -->
                 <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
@@ -129,6 +123,7 @@ $disponibles = $disponibles ?? [];
                 </a>
             </div>
         </aside>
+
         <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
             <!-- ── Contenido principal ──────────────────────────────────────────── -->
             <main class="flex-1 p-4 md:p-8 w-full">
@@ -319,7 +314,7 @@ $disponibles = $disponibles ?? [];
                                     </div>
 
                                     <!-- Botón asignarse -->
-                                    <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
+                                    <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php">
                                         <input type="hidden" name="action" value="asignar">
                                         <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
                                         <button type="button" onclick="abrirModal(this.closest('form'))"

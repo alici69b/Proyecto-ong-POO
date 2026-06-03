@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once __DIR__ . "/../../config.php";
+
 //Comprobamos que el usuario haya iniciado sesión y sea voluntario
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {
     header("Location: ../views/auth/Login.php");

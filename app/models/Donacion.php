@@ -9,8 +9,8 @@ class Donacion
     // Al crear el objeto Donacion, automáticamente se conecta a la BBDD
     public function __construct()
     {
-        $database = new Db();
-        $this->conn = $database->getConnection();
+        $Db = new Db();
+        $this->conn = $Db->getConnection();
     }
 
 

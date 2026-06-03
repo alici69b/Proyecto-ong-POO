@@ -9,8 +9,8 @@ class Impacto
     //creamos el constructor
     public function __construct()
     {
-        $database = new Db();
-        $this->conn = $database->getConnection();
+        $Db = new Db();
+        $this->conn = $Db->getConnection();
     }
     //contamos los resets totales
     public function contarResets(): int

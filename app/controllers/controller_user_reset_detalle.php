@@ -11,7 +11,7 @@ require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../models/ResetComentario.php';
 
-$db              = new Database();
+$db              = new Db();
 $conn            = $db->getConnection();
 $resetModel      = new Reset($conn);
 $comentarioModel = new ResetComentario($conn);
@@ -86,5 +86,5 @@ $flash = isset($_SESSION['flash']) ? $_SESSION['flash'] : null;
 unset($_SESSION['flash']);
 
 // Cargamos la vista
-require_once __DIR__ . '/../views/user/detalle.php';
+require_once __DIR__ . '/../views/user/Detalle.php';
 ?>

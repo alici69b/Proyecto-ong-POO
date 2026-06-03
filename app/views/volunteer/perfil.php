@@ -53,8 +53,8 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                 <p class="text-[#9fffcb] text-[10px]">Voluntario</p>
             </div>
-            <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-white/60 hover:text-white">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
@@ -66,13 +66,6 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                 </svg>
                 Volver al panel
-            </a>
-            <a href="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
-                class="bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-extrabold">
-                <svg fill="currentColor" width="20" height="20" viewBox="0 0 24 24">
-                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z" />
-                </svg>
-                Mi perfil
             </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-white/10">

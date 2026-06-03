@@ -70,8 +70,8 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <p class="text-white font-bold truncate"><?= htmlspecialchars($_SESSION['user_nombre']) ?></p>
                 <p class="text-[#9fffcb] text-[10px]">Voluntario</p>
             </div>
-            <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-white/60 hover:text-white">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <button onclick="toggleSidebar()" class="lg:hidden text-white/60 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
@@ -98,7 +98,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
 
     <!-- Contenido -->
     <div class="lg:ml-64 flex-1 min-h-screen flex flex-col">
-    <main class="flex-1 p-4 md:p-8 w-full max-w-4xl">
+    <main class="flex-1 p-4 md:p-8 w-full">
 
         <!-- Barra superior móvil -->
         <div class="lg:hidden flex items-center justify-between mb-6 bg-white rounded-2xl shadow-sm border border-slate-100 p-4">

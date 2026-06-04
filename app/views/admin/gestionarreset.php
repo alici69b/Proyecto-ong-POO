@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: ' . BASE_URL . '/Login');
+    header('Location: ' . BASE_URL . '/app/views/auth/Login.php');
     exit();
 }
 

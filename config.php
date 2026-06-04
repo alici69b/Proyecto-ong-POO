@@ -1,8 +1,6 @@
 <?php
-// Detectar BASE_URL automáticamente (funciona en localhost, hosting raíz o subcarpeta)
-$script_name = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-$base_path = dirname($script_name);
-define('BASE_URL', ($base_path === '/' || $base_path === '') ? '' : $base_path);
+$is_local = in_array($_SERVER['SERVER_NAME'] ?? '', ['localhost', '127.0.0.1']);
+define('BASE_URL', $is_local ? '/Proyecto-ong-POO' : '');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([

@@ -2,10 +2,20 @@
 require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
+    header('Location: ' . BASE_URL . '/Login');
+    exit();
+}
+
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
-$db = new Db();
-$conn = $db->getConnection();
+require_once __DIR__ . '/../models/UsuarioNormal.php';
+require_once __DIR__ . '/../models/Voluntario.php';
+require_once __DIR__ . '/../models/Admin.php';
+
+$usuarioModel   = new UsuarioNormal();
+$voluntarioModel = new Voluntario();
+$adminModel      = new Admin();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 
@@ -28,22 +38,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
         exit();
     }
 
-    $check = $conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
-    $check->execute([':email' => $email]);
-    if ($check->fetchColumn() > 0) {
+    if ($usuarioModel->existeEmail($email)) {
         header('Location: controller_admin_gestionusuarios.php?erroremail=1');
         exit();
     }
 
-    $hash = password_hash($password, PASSWORD_BCRYPT);
-    $stmt = $conn->prepare("INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil) VALUES (:nombre, :apellidos, :email, :password, :id_rol, 'foto_defecto.webp')");
-    $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':password' => $hash, ':id_rol' => $id_rol]);
+    $newId = $usuarioModel->insertarBase([
+        'nombre' => $nombre, 'apellidos' => $apellidos,
+        'email' => $email, 'password' => $password, 'id_rol' => $id_rol
+    ]);
 
-    $newId = $conn->lastInsertId();
     if ($id_rol == 2) {
-        $conn->prepare("INSERT INTO voluntario (id_usuario) VALUES (:id)")->execute([':id' => $newId]);
+        $voluntarioModel->insertarSoloId($newId);
     } elseif ($id_rol == 3) {
-        $conn->prepare("INSERT INTO admin (id_usuario) VALUES (:id)")->execute([':id' => $newId]);
+        $adminModel->insertarSoloId($newId);
+    }
+
+    if (!empty($_FILES['foto']['name'])) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+            $nombreArchivo = 'usuario_' . $newId . '_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
+                $usuarioModel->actualizarFoto($newId, $nombreArchivo);
+            }
+        }
     }
 
     header('Location: controller_admin_gestionusuarios.php?created=1');
@@ -73,13 +93,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
         exit();
     }
 
-    $stmt = $conn->prepare("UPDATE usuario SET nombre = :nombre, apellidos = :apellidos, email = :email, id_rol = :id_rol WHERE id = :id");
-    $stmt->execute([':nombre' => $nombre, ':apellidos' => $apellidos, ':email' => $email, ':id_rol' => $id_rol, ':id' => $id]);
+    $usuarioModel->actualizarDatosAdmin($id, $nombre, $apellidos, $email, $id_rol);
 
     if (!empty($_POST['password_nuevo'])) {
-        $hash = password_hash($_POST['password_nuevo'], PASSWORD_BCRYPT);
-        $stmt2 = $conn->prepare("UPDATE usuario SET password = :password WHERE id = :id");
-        $stmt2->execute([':password' => $hash, ':id' => $id]);
+        $usuarioModel->cambiarPassword($id, $_POST['password_nuevo']);
+    }
+
+    if (!empty($_FILES['foto']['name'])) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+            $nombreArchivo = 'usuario_' . $id . '_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
+                $usuarioModel->actualizarFoto($id, $nombreArchivo);
+            }
+        }
     }
 
     header('Location: controller_admin_gestionusuarios.php?updated=1');
@@ -89,9 +118,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
 if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])) {
     $id = (int)$_GET['id'];
     if ($id !== (int)$_SESSION['user_id']) {
-        $conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id")->execute([':id' => $id]);
-        $conn->prepare("DELETE FROM admin WHERE id_usuario = :id")->execute([':id' => $id]);
-        $conn->prepare("DELETE FROM usuario WHERE id = :id")->execute([':id' => $id]);
+        $voluntarioModel->eliminarPorIdUsuario($id);
+        $adminModel->eliminarPorIdUsuario($id);
+        $usuarioModel->eliminar($id);
     }
     header('Location: controller_admin_gestionusuarios.php?deleted=1');
     exit();
@@ -100,26 +129,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
 $buscar = trim($_GET['search'] ?? '');
 $pagina = max(1, (int)($_GET['p'] ?? 1));
 $por_pagina = 10;
-$offset = ($pagina - 1) * $por_pagina;
 
-$where = '';
-$params = [];
-if ($buscar !== '') {
-    $where = "WHERE (u.nombre LIKE :q OR u.apellidos LIKE :q2 OR u.email LIKE :q3)";
-    $params[':q'] = "%$buscar%";
-    $params[':q2'] = "%$buscar%";
-    $params[':q3'] = "%$buscar%";
-}
-
-$total = $conn->prepare("SELECT COUNT(*) FROM usuario u $where");
-$total->execute($params);
-$total_usuarios = (int)$total->fetchColumn();
+$total_usuarios = $usuarioModel->contarConFiltro($buscar);
 $total_paginas = max(1, (int)ceil($total_usuarios / $por_pagina));
 
-$sql = "SELECT u.*, r.nombre_rol FROM usuario u JOIN roles r ON u.id_rol = r.id $where ORDER BY u.created_at DESC LIMIT $por_pagina OFFSET $offset";
-$stmt = $conn->prepare($sql);
-$stmt->execute($params);
-$usuarios = $stmt->fetchAll();
+$usuarios = $usuarioModel->listarPaginado($buscar, $pagina, $por_pagina);
 
 foreach ($usuarios as &$u) {
     $u['iniciales'] = strtoupper(substr($u['nombre'], 0, 1) . substr($u['apellidos'] ?? $u['nombre'], 0, 1));

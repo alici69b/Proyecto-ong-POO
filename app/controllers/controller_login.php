@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_nombre']   = $usuario['nombre'];
         $_SESSION['user_apellidos'] = $usuario['apellidos'];
         $_SESSION['user_email']    = $usuario['email'];
-        $_SESSION['user_rol']      = $usuario['nombre_rol'];
+        $_SESSION['user_rol']      = strtolower($usuario['nombre_rol']);
         $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'foto_defecto.webp';
         $_SESSION['logged_in']     = true;
 

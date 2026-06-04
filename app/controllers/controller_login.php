@@ -59,7 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['user_nombre']   = $usuario['nombre'];
         $_SESSION['user_apellidos'] = $usuario['apellidos'];
         $_SESSION['user_email']    = $usuario['email'];
-        $_SESSION['user_rol']      = strtolower($usuario['nombre_rol']);
+        $rol = trim(strtolower($usuario['nombre_rol'] ?? ''));
+        $_SESSION['user_rol']      = $rol;
+        $_SESSION['user_rol_id']   = (int)($usuario['id_rol'] ?? 0);
         $_SESSION['foto_perfil']   = $usuario['foto_perfil'] ?? 'foto_defecto.webp';
         $_SESSION['logged_in']     = true;
 
@@ -71,24 +73,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         //Si el rol del usuario es voluntario, obtenemos su id_voluntario a través del modelo
-        if (strtolower($usuario['nombre_rol']) === 'soy-voluntario') {
+        if ($rol === 'soy-voluntario' || $_SESSION['user_rol_id'] === 2) {
             $volModel = new Voluntario();
             $_SESSION['id_voluntario'] = $volModel->obtenerIdPorUsuario($usuario['id']);
         }
 
-        //comrpobamos que el rol esta en minusculas y los guardamos en una variable
-        $rol = strtolower($usuario['nombre_rol']);
-
-        //si el rol es admin, te  redirije a el dashboard del admin 
-        if ($rol === 'admin') {
+        // Redirigimos según el rol del usuario
+        if ($rol === 'admin' || $_SESSION['user_rol_id'] === 3) {
             header('Location: ' . BASE_URL . '/app/controllers/controller_admin_dashboard.php');
-            //si el rol es voluntario, te  redirije a el dashboard del voluntario
-        } elseif ($rol === 'soy-voluntario') {
+        } elseif ($rol === 'soy-voluntario' || $_SESSION['user_rol_id'] === 2) {
             header('Location: ' . BASE_URL . '/app/controllers/controller_volunteer_dashboard.php');
-            //si el rol es usuario, te  redirije a el dashboard del usuario reset
-        } elseif ($rol === 'soy-usuario') {
+        } elseif ($rol === 'soy-usuario' || $_SESSION['user_rol_id'] === 1) {
             header('Location: ' . BASE_URL . '/app/controllers/controller_user_dashboard.php');
-            //si no te llevara a la pagina principal
         } else {
             header('Location: ' . BASE_URL . '/index.php');
         }

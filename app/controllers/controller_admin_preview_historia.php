@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . "/../../config.php";
-session_start();
+if (session_status() === PHP_SESSION_NONE) session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: ../auth/Login.php');
+    header('Location: ' . BASE_URL . '/app/views/auth/Login.php');
     exit();
 }
 

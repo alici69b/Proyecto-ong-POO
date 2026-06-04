@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Comprobamos que el usuario esté logueado y sea de tipo usuario normal
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
-    header('Location: ../views/auth/Login.php');
+    header('Location: ' . BASE_URL . '/app/views/auth/Login.php');
     exit();
 }
 
@@ -61,9 +62,7 @@ if (isset($_GET['estado']) && $_GET['estado'] != '') {
 // ── Obtenemos los datos para la vista ────────────────────────────────────────
 $mis_resets = $resetModel->obtenerPorUsuario($id_usuario, $id_categoria, $id_estado);
 
-// Obtenemos las categorías directamente con una consulta simple
-$stmtCat    = $conn->query("SELECT id, nombre_categoria FROM categoria_reset ORDER BY nombre_categoria");
-$categorias = $stmtCat->fetchAll();
+$categorias = $resetModel->obtenerCategorias();
 
 // Calculamos las estadísticas y las notificaciones de cada reset
 $total             = count($mis_resets);

@@ -202,7 +202,21 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                                         </span>
                                     <?php endif; ?>
                                     <div class="flex items-center gap-1 text-slate-400">
-                                        <button onclick="abrirModalEditar(<?= $h['id'] ?>, '<?= addslashes($h['titulo']) ?>', '<?= addslashes($h['solicitante'] ?? '') ?>', '<?= addslashes($h['nombre_voluntario'] ?? '') ?>', '<?= addslashes($h['nombre_categoria'] ?? '') ?>', '<?= addslashes($h['descripcion'] ?? '') ?>', '<?= addslashes($h['descripcion_antes'] ?? '') ?>', '<?= addslashes($h['descripcion_despues'] ?? '') ?>', '<?= (int)($h['duracion_meses'] ?? 0) ?>', '<?= (int)($h['valoracion'] ?? 5) ?>', '<?= addslashes($h['foto'] ?? '') ?>', '<?= addslashes($h['icono'] ?? '') ?>', '<?= addslashes($h['estado'] ?? 'Borrador') ?>')" title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
+                                        <button onclick="abrirModalEditar(this)"
+    data-id="<?= $h['id'] ?>"
+    data-titulo="<?= htmlspecialchars($h['titulo'], ENT_QUOTES) ?>"
+    data-solicitante="<?= htmlspecialchars($h['solicitante'] ?? '', ENT_QUOTES) ?>"
+    data-voluntario="<?= htmlspecialchars($h['nombre_voluntario'] ?? '', ENT_QUOTES) ?>"
+    data-categoria="<?= htmlspecialchars($h['nombre_categoria'] ?? '', ENT_QUOTES) ?>"
+    data-descripcion="<?= htmlspecialchars($h['descripcion'] ?? '', ENT_QUOTES) ?>"
+    data-antes="<?= htmlspecialchars($h['descripcion_antes'] ?? '', ENT_QUOTES) ?>"
+    data-despues="<?= htmlspecialchars($h['descripcion_despues'] ?? '', ENT_QUOTES) ?>"
+    data-duracion="<?= (int)($h['duracion_meses'] ?? 0) ?>"
+    data-valoracion="<?= (int)($h['valoracion'] ?? 5) ?>"
+    data-foto="<?= htmlspecialchars($h['foto'] ?? '', ENT_QUOTES) ?>"
+    data-icono="<?= htmlspecialchars($h['icono'] ?? '', ENT_QUOTES) ?>"
+    data-estado="<?= htmlspecialchars($h['estado'] ?? 'Borrador', ENT_QUOTES) ?>"
+    title="Editar" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
                                             <svg class="w-4 h-4 sm:w-[18px] sm:h-[18px]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/></svg>
                                         </button>
                                         <a href="controller_admin_preview_historia.php?id=<?= $h['id'] ?>" target="_blank" title="Vista previa" class="p-1.5 sm:p-2 rounded-lg hover:bg-slate-100 hover:text-[#00a5cf] transition">
@@ -447,22 +461,23 @@ function toggleSidebar() {
 }
 function abrirModalCrear() { document.getElementById('modal-crear').classList.remove('hidden'); }
 function cerrarModalCrear() { document.getElementById('modal-crear').classList.add('hidden'); }
-function abrirModalEditar(id, titulo, solicitante, voluntario, categoria, descripcion, antes, despues, duracion, valoracion, foto, icono, estado) {
-    document.getElementById('edit-id').value = id;
-    document.getElementById('edit-titulo').value = titulo;
-    document.getElementById('edit-solicitante').value = solicitante;
-    document.getElementById('edit-voluntario').value = voluntario;
-    document.getElementById('edit-categoria').value = categoria;
-    document.getElementById('edit-descripcion').value = descripcion;
-    document.getElementById('edit-antes').value = antes;
-    document.getElementById('edit-despues').value = despues;
-    document.getElementById('edit-duracion').value = duracion;
-    document.getElementById('edit-valoracion').value = valoracion;
-    document.getElementById('edit-icono').value = icono;
-    document.getElementById('edit-estado').value = estado;
+function abrirModalEditar(btn) {
+    var d = btn.dataset;
+    document.getElementById('edit-id').value = d.id;
+    document.getElementById('edit-titulo').value = d.titulo;
+    document.getElementById('edit-solicitante').value = d.solicitante;
+    document.getElementById('edit-voluntario').value = d.voluntario;
+    document.getElementById('edit-categoria').value = d.categoria;
+    document.getElementById('edit-descripcion').value = d.descripcion;
+    document.getElementById('edit-antes').value = d.antes;
+    document.getElementById('edit-despues').value = d.despues;
+    document.getElementById('edit-duracion').value = d.duracion;
+    document.getElementById('edit-valoracion').value = d.valoracion;
+    document.getElementById('edit-icono').value = d.icono;
+    document.getElementById('edit-estado').value = d.estado;
     var preview = document.getElementById('edit-foto-preview');
-    if (foto) {
-        preview.src = '<?= BASE_URL ?>/public/img/' + foto;
+    if (d.foto) {
+        preview.src = '<?= BASE_URL ?>/public/img/' + d.foto;
         preview.classList.remove('hidden');
     } else {
         preview.classList.add('hidden');

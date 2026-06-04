@@ -119,4 +119,100 @@ abstract class Usuario
     //metodo abstracto, que heredarn los hijos y cada uno tendran 
     //el array de $datos, se recoge a traves del registro de cada uno de los usuarios
     abstract public function insertarUsuario(array $datos);
+
+    // Métodos del panel admin 
+
+    public function contarTodos(): int
+    {
+        return (int)$this->conn->query("SELECT COUNT(*) FROM usuario")->fetchColumn();
+    }
+
+    public function existeEmail(string $email): bool
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM usuario WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function insertarBase(array $datos): int
+    {
+        $hash = password_hash($datos['password'], PASSWORD_BCRYPT);
+        $stmt = $this->conn->prepare("
+            INSERT INTO usuario (nombre, apellidos, email, password, id_rol, foto_perfil)
+            VALUES (:nombre, :apellidos, :email, :password, :id_rol, 'foto_defecto.webp')
+        ");
+        $stmt->execute([
+            ':nombre'    => $datos['nombre'],
+            ':apellidos' => $datos['apellidos'],
+            ':email'     => $datos['email'],
+            ':password'  => $hash,
+            ':id_rol'    => $datos['id_rol'],
+        ]);
+        return (int)$this->conn->lastInsertId();
+    }
+
+    public function actualizarDatosAdmin(int $id, string $nombre, string $apellidos, string $email, int $id_rol): bool
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE usuario SET nombre = :nombre, apellidos = :apellidos, email = :email, id_rol = :id_rol WHERE id = :id
+        ");
+        return $stmt->execute([
+            ':nombre'    => $nombre,
+            ':apellidos' => $apellidos,
+            ':email'     => $email,
+            ':id_rol'    => $id_rol,
+            ':id'        => $id,
+        ]);
+    }
+
+    public function obtenerUltimos(int $limite = 5): array
+    {
+        $stmt = $this->conn->prepare("
+            SELECT u.id, u.nombre, u.email, u.foto_perfil, u.created_at, r.nombre_rol
+            FROM usuario u
+            JOIN roles r ON u.id_rol = r.id
+            ORDER BY u.created_at DESC
+            LIMIT :limite
+        ");
+        $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function contarConFiltro(string $buscar = ''): int
+    {
+        $sql = "SELECT COUNT(*) FROM usuario u";
+        if ($buscar !== '') {
+            $sql .= " WHERE u.nombre LIKE :buscar OR u.apellidos LIKE :buscar2 OR u.email LIKE :buscar3";
+        }
+        $stmt = $this->conn->prepare($sql);
+        if ($buscar !== '') {
+            $like = "%$buscar%";
+            $stmt->bindValue(':buscar', $like);
+            $stmt->bindValue(':buscar2', $like);
+            $stmt->bindValue(':buscar3', $like);
+        }
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function listarPaginado(string $buscar = '', int $pagina = 1, int $porPagina = 10): array
+    {
+        $sql = "SELECT u.*, r.nombre_rol FROM usuario u JOIN roles r ON u.id_rol = r.id";
+        if ($buscar !== '') {
+            $sql .= " WHERE u.nombre LIKE :buscar OR u.apellidos LIKE :buscar2 OR u.email LIKE :buscar3";
+        }
+        $sql .= " ORDER BY u.created_at DESC LIMIT :limite OFFSET :offset";
+        $stmt = $this->conn->prepare($sql);
+        if ($buscar !== '') {
+            $like = "%$buscar%";
+            $stmt->bindValue(':buscar', $like);
+            $stmt->bindValue(':buscar2', $like);
+            $stmt->bindValue(':buscar3', $like);
+        }
+        $stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($pagina - 1) * $porPagina, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }

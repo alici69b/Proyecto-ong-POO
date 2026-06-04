@@ -1,9 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Comprobamos que el usuario esté logueado y sea de tipo usuario normal
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
-    header('Location: ../views/auth/Login.php');
+    header('Location: ' . BASE_URL . '/app/views/auth/Login.php');
     exit();
 }
 

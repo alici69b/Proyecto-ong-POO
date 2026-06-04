@@ -1,14 +1,10 @@
 <?php
-//Inicializamos sesión para manejar autenticación y mensajes flash
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 //Comprobamos que el usuario haya iniciado sesión y sea voluntario
 if (!isset($_SESSION["logged_in"]) || $_SESSION["user_rol"] !== "soy-voluntario") {
-    header("Location: ../views/auth/Login.php");
+    header("Location: " . BASE_URL . "/app/views/auth/Login.php");
     exit();
 }
 

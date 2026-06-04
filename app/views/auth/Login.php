@@ -9,6 +9,8 @@ $mensajeError = $_SESSION["error_login"] ?? null;
 if(isset($_SESSION["error_login"])) {
   unset($_SESSION["error_login"]);
 }
+
+$recordarEmail = $_COOKIE['recordar_email'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -78,7 +80,7 @@ if(isset($_SESSION["error_login"])) {
 
         <div id="email-group">
           <label for="email" class="block text-sm text-gray-700">Email</label>
-          <input type="email" name="email" id="email" placeholder="tu@email.com" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
+          <input type="email" name="email" id="email" placeholder="tu@email.com" value="<?= htmlspecialchars($recordarEmail) ?>" class="mt-1 w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]" />
           <p id="email-error" class="hidden text-red-500 text-sm mt-1"></p>
         </div>
 
@@ -90,7 +92,7 @@ if(isset($_SESSION["error_login"])) {
 
         <div class="flex items-center justify-between">
           <label for="recordarDatos" class="flex items-center text-sm text-gray-600">
-            <input name="recordarDatos" type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-[#00a5cf]" />
+            <input name="recordarDatos" type="checkbox" class="mr-2 h-4 w-4 rounded border-gray-300 text-[#00a5cf]" <?= $recordarEmail ? 'checked' : '' ?> />
             Recordarme
           </label>
           <a href="<?= BASE_URL ?>/app/controllers/controller_resetPassword.php" class="text-sm text-[#00a5cf] hover:underline">¿Olvidaste tu contraseña?</a>

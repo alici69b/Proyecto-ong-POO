@@ -21,6 +21,13 @@ $resetModel = new Reset($conn);
 
 //Obtenemos el id_voluntario de la sesión
 $id_voluntario = $_SESSION["id_voluntario"] ?? null;
+if (!$id_voluntario && !empty($_SESSION['user_id'])) {
+    $volModel = new Voluntario();
+    $id_voluntario = $volModel->obtenerIdPorUsuario((int)$_SESSION['user_id']);
+    if ($id_voluntario) {
+        $_SESSION['id_voluntario'] = $id_voluntario;
+    }
+}
 
 //Si se pulsa el boton de asignarse un reset
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["action"] === "asignar") {

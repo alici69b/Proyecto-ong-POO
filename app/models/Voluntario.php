@@ -134,6 +134,17 @@ class Voluntario extends Usuario
         return $fila ? (int)$fila['id'] : null;
     }
 
+    /** Comprueba si existe un voluntario por su ID
+     * @param int $id_voluntario
+     * @return bool
+     */
+    public function existe(int $id_voluntario): bool
+    {
+        $stmt = $this->conn->prepare("SELECT 1 FROM voluntario WHERE id = :id_voluntario");
+        $stmt->execute([':id_voluntario' => $id_voluntario]);
+        return (bool)$stmt->fetchColumn();
+    }
+
     /** Cambia la contraseña (firma compatible con la clase padre)
      * @param int $id
      * @param string $nueva_password

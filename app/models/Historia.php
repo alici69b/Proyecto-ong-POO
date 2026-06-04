@@ -46,38 +46,6 @@ class Historia
         }
     }
 
-    public function obtenerUsuariosNormales(): array
-    {
-        $stmt = $this->conn->query("
-            SELECT id, nombre, apellidos
-            FROM usuario
-            WHERE id_rol = 1
-            ORDER BY nombre ASC
-        ");
-        return $stmt->fetchAll();
-    }
-
-    public function obtenerVoluntarios(): array
-    {
-        $stmt = $this->conn->query("
-            SELECT u.id, u.nombre, u.apellidos
-            FROM usuario u
-            INNER JOIN voluntario v ON u.id = v.id_usuario
-            ORDER BY u.nombre ASC
-        ");
-        return $stmt->fetchAll();
-    }
-
-    public function obtenerCategorias(): array
-    {
-        $stmt = $this->conn->query("
-            SELECT nombre_categoria
-            FROM categoria_reset
-            ORDER BY id ASC
-        ");
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
-    }
-
     public function insertar(array $datos): int
     {
         try {

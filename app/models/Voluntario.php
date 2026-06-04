@@ -163,5 +163,47 @@ class Voluntario extends Usuario
             throw new RuntimeException("Error al cambiar la contraseña: " . $error->getMessage());
         }
     }
+
+    // Métodos del panel admin
+
+    public function listarVoluntarios(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT u.id, u.nombre, u.apellidos
+            FROM usuario u
+            JOIN voluntario v ON u.id = v.id_usuario
+            ORDER BY u.nombre ASC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function listarConNombre(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT v.id AS id_voluntario, u.nombre
+            FROM voluntario v
+            JOIN usuario u ON v.id_usuario = u.id
+            ORDER BY u.nombre
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function contarPorTipoAyuda(): array
+    {
+        $stmt = $this->conn->query("SELECT tipo_ayuda, COUNT(*) as total FROM voluntario GROUP BY tipo_ayuda");
+        return $stmt->fetchAll();
+    }
+
+    public function insertarSoloId(int $id_usuario): bool
+    {
+        $stmt = $this->conn->prepare("INSERT INTO voluntario (id_usuario) VALUES (:id)");
+        return $stmt->execute([':id' => $id_usuario]);
+    }
+
+    public function eliminarPorIdUsuario(int $id_usuario): bool
+    {
+        $stmt = $this->conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id");
+        return $stmt->execute([':id' => $id_usuario]);
+    }
 }
 ?>

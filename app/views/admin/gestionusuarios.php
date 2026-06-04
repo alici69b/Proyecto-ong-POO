@@ -263,7 +263,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <h3 class="text-2xl font-black text-slate-800">Editar usuario</h3>
                 <button type="button" onclick="cerrarModalEditar()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             </div>
-            <form method="POST" class="space-y-4">
+            <form method="POST" class="space-y-4" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="id_usuario" id="edit-id">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,6 +289,10 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                     </select>
                 </div>
                 <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Foto de perfil <span class="text-[10px] lowercase font-normal">(opcional)</span></label>
+                    <input type="file" name="foto" accept="image/jpeg,image/png,image/webp,image/gif" class="mt-1 w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#00a5cf] file:text-white hover:file:bg-[#0088aa] file:cursor-pointer file:transition-all">
+                </div>
+                <div>
                     <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Nueva contraseña <span class="text-[10px] lowercase font-normal">(opcional)</span></label>
                     <input type="password" name="password_nuevo" id="edit-password" placeholder="Dejar vacío para mantener" class="mt-1 px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:ring-2 focus:ring-[#25a18e] outline-none w-full">
                 </div>
@@ -306,7 +310,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <h3 class="text-2xl font-black text-slate-800">Nuevo usuario</h3>
                 <button type="button" onclick="cerrarModalCrear()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
             </div>
-            <form method="POST" class="space-y-4">
+            <form method="POST" class="space-y-4" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action_crear" value="1">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -334,6 +338,10 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                         <option value="2">Voluntario</option>
                         <option value="3">Administrador</option>
                     </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Foto de perfil <span class="text-[10px] lowercase font-normal">(opcional)</span></label>
+                    <input type="file" name="foto" accept="image/jpeg,image/png,image/webp,image/gif" class="mt-1 w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-[#25a18e] file:text-white hover:file:bg-[#1e8575] file:cursor-pointer file:transition-all">
                 </div>
                 <div class="flex gap-3 mt-6">
                     <button type="button" onclick="cerrarModalCrear()" class="flex-1 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-all">Cancelar</button>

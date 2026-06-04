@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Usuario.php';
+
 class UsuarioNormal extends Usuario
 {
     public function __construct()
@@ -113,6 +115,26 @@ class UsuarioNormal extends Usuario
         } catch (Exception $error) {
             throw new RuntimeException("Error al cambiar la contraseña: " . $error->getMessage());
         }
+    }
+
+    // Métodos del panel admin
+
+    public function listarSolicitantes(): array
+    {
+        $stmt = $this->conn->query("SELECT id, nombre, apellidos FROM usuario WHERE id_rol = 1 ORDER BY nombre ASC");
+        return $stmt->fetchAll();
+    }
+
+    public function contarPorTipoAyuda(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT un.tipo_ayuda, COUNT(*) as total
+            FROM usuario_normal un
+            JOIN usuario u ON u.id = un.id_usuario
+            WHERE u.id_rol = 1
+            GROUP BY un.tipo_ayuda
+        ");
+        return $stmt->fetchAll();
     }
 }
 ?>

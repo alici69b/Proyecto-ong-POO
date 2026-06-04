@@ -129,5 +129,5 @@ $resetModel->actualizarVisitaVoluntario($id_reset); // Marcamos que el voluntari
 $flash = $_SESSION["flash"] ?? null;
 unset($_SESSION["flash"]);
 
-require_once __DIR__ . "/../views/volunteer/detalle.php";
+require_once __DIR__ . "/../views/volunteer/Detalle.php";
 ?>

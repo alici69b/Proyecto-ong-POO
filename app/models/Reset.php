@@ -479,17 +479,6 @@ class Reset
     }
     // ── Métodos para el panel admin ────────────────────────────────────
 
-    public function contarPorEstado(): array
-    {
-        $stmt = $this->conn->query("
-            SELECT e.nombre_estado, COUNT(r.id) as total
-            FROM estado_maestro e
-            LEFT JOIN reset r ON r.id_estado = e.id
-            GROUP BY e.id, e.nombre_estado
-        ");
-        return $stmt->fetchAll();
-    }
-
     public function actualizarAsignacion(int $id_reset, ?int $id_voluntario, int $id_estado): bool
     {
         $stmt = $this->conn->prepare("
@@ -531,12 +520,6 @@ class Reset
     public function obtenerCategorias(): array
     {
         $stmt = $this->conn->query("SELECT * FROM categoria_reset ORDER BY id");
-        return $stmt->fetchAll();
-    }
-
-    public function obtenerEstados(): array
-    {
-        $stmt = $this->conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maestro ORDER BY id");
         return $stmt->fetchAll();
     }
 }

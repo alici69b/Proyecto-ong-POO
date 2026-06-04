@@ -22,10 +22,10 @@ class Db {
     public function __construct() {
         //Leo las credenciales desde .env o variables de entorno del sistema
         //Si no están definidas, uso los valores por defecto de XAMPP local
-        $this->host    = $_ENV['DB_HOST'] ?? getenv('DB_HOST') ?? '127.0.0.1';
-        $this->dbname  = $_ENV['DB_NAME'] ?? getenv('DB_NAME') ?? 'proyecto_ong_poo';
-        $this->user    = $_ENV['DB_USER'] ?? getenv('DB_USER') ?? 'root';
-        $this->password = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?? '';
+        $this->host    = $_ENV['DB_HOST'] ?? (getenv('DB_HOST') ?: '127.0.0.1');
+        $this->dbname  = $_ENV['DB_NAME'] ?? (getenv('DB_NAME') ?: 'proyecto_ong_poo');
+        $this->user    = $_ENV['DB_USER'] ?? (getenv('DB_USER') ?: 'root');
+        $this->password = $_ENV['DB_PASS'] ?? (getenv('DB_PASS') ?: '');
         $this->charset = "utf8mb4";
 
         try {

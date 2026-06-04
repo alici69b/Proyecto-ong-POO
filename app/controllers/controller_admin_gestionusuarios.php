@@ -2,6 +2,12 @@
 require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
+    header('Location: ' . BASE_URL . '/Login');
+    exit();
+}
+
+require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
 require_once __DIR__ . '/../models/UsuarioNormal.php';
 require_once __DIR__ . '/../models/Voluntario.php';
@@ -48,6 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
         $adminModel->insertarSoloId($newId);
     }
 
+    if (!empty($_FILES['foto']['name'])) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+            $nombreArchivo = 'usuario_' . $newId . '_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
+                $usuarioModel->actualizarFoto($newId, $nombreArchivo);
+            }
+        }
+    }
+
     header('Location: controller_admin_gestionusuarios.php?created=1');
     exit();
 }
@@ -79,6 +97,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'])) {
 
     if (!empty($_POST['password_nuevo'])) {
         $usuarioModel->cambiarPassword($id, $_POST['password_nuevo']);
+    }
+
+    if (!empty($_FILES['foto']['name'])) {
+        $errFoto = Validaciones::validarFoto($_FILES['foto']);
+        if (empty($errFoto)) {
+            $ext = strtolower(pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION));
+            $nombreArchivo = 'usuario_' . $id . '_' . time() . '.' . $ext;
+            $ruta = __DIR__ . '/../../public/img/' . $nombreArchivo;
+            if (move_uploaded_file($_FILES['foto']['tmp_name'], $ruta)) {
+                $usuarioModel->actualizarFoto($id, $nombreArchivo);
+            }
+        }
     }
 
     header('Location: controller_admin_gestionusuarios.php?updated=1');

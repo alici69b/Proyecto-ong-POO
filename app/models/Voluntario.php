@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Usuario.php';
+
 //creamos la clase hija de usuario Voluntario
 
 class Voluntario extends Usuario

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/Usuario.php';
+
 class UsuarioNormal extends Usuario
 {
     public function __construct()

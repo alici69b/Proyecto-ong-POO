@@ -314,7 +314,7 @@ $disponibles = $disponibles ?? [];
                                     </div>
 
                                     <!-- Botón asignarse -->
-                                    <form method="POST" action="\Proyecto-ong-POO\app\controllers\controller_volunteer_dashboard.php">
+                                    <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php">
                                         <input type="hidden" name="action" value="asignar">
                                         <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
                                         <button type="button" onclick="abrirModal(this.closest('form'))"

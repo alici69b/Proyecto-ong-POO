@@ -315,6 +315,7 @@ $disponibles = $disponibles ?? [];
 
                                     <!-- Botón asignarse -->
                                     <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_dashboard.php">
+                                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                                         <input type="hidden" name="action" value="asignar">
                                         <input type="hidden" name="id_reset" value="<?= $r["id"] ?>">
                                         <button type="button" onclick="abrirModal(this.closest('form'))"

@@ -124,6 +124,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
                 <form method="POST"
                     action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                     enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="actualizar_foto">
                     <label class="cursor-pointer">
                         <span class="inline-block text-sm font-bold border border-slate-200 rounded-2xl px-4 py-2 hover:bg-slate-50 text-slate-600">
@@ -143,6 +144,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
             <form method="POST"
                 action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                 class="flex flex-col gap-5">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action" value="actualizar_datos">
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -207,6 +209,7 @@ $disponibilidades = ['mañanas', 'tardes', 'noches', 'fines de semana', 'flexibl
             <form method="POST"
                 action="<?= BASE_URL ?>/app/controllers/controller_volunteer_perfil.php"
                 class="flex flex-col gap-5">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action" value="cambiar_password">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Contraseña actual</label>

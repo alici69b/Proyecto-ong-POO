@@ -164,10 +164,10 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                 </div>
 
                 <div class="mb-5">
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Email</label>
-                    <input type="email" name="email"
-                        value="<?= htmlspecialchars($perfil['email'] ?? '') ?>"
-                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Email</label>
+                    <input type="email" value="<?= htmlspecialchars($perfil['email'] ?? '') ?>" disabled
+                        class="w-full text-sm border border-slate-100 rounded-xl px-4 py-3 bg-slate-50 text-slate-400 cursor-not-allowed">
+                    <p class="text-xs text-slate-400 mt-1">El email no se puede cambiar.</p>
                 </div>
 
                 <!-- Tipo de ayuda (único campo extra del usuario normal) -->

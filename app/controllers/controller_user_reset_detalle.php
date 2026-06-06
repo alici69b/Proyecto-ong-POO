@@ -87,5 +87,5 @@ $flash = isset($_SESSION['flash']) ? $_SESSION['flash'] : null;
 unset($_SESSION['flash']);
 
 // Cargamos la vista
-require_once __DIR__ . '/../views/user/Detalle.php';
+require_once __DIR__ . '/../views/user/detalle.php';
 ?>

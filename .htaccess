@@ -15,8 +15,8 @@ RewriteRule ^Cerrar-sesion$      app/controllers/controller_logout.php [L,QSA]
 
 # 404
 <If "req('Host') == 'localhost' || req('Host') == '127.0.0.1'">
-    ErrorDocument 404 /Proyecto-ong-POO/404.php
+    ErrorDocument 404 /404.php
 </If>
-<If "req('Host') != 'localhost' && req('Host') != '127.0.0.1'">
+<If "req('Host') != 'loProyecto-ong-POO/calhost' && req('Host') != '127.0.0.1'">
     ErrorDocument 404 /404.php
 </If>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../config.php';
 if (session_status() === PHP_SESSION_NONE) session_start();
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
-    header('Location: ' . BASE_URL . '/Login');
+    header('Location: ' . BASE_URL . '/app/views/auth/Login.php');
     exit();
 }
 
@@ -120,6 +120,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     if ($id !== (int)$_SESSION['user_id']) {
         $voluntarioModel->eliminarPorIdUsuario($id);
         $adminModel->eliminarPorIdUsuario($id);
+        $db = new Db();
+        $conn = $db->getConnection();
+        $conn->prepare("DELETE rc FROM reset_comentario rc JOIN reset r ON rc.id_reset = r.id WHERE r.id_usuario = :id")->execute([':id' => $id]);
+        $conn->prepare("DELETE FROM reset WHERE id_usuario = :id")->execute([':id' => $id]);
+        $conn->prepare("DELETE FROM usuario_normal WHERE id_usuario = :id")->execute([':id' => $id]);
         $usuarioModel->eliminar($id);
     }
     header('Location: controller_admin_gestionusuarios.php?deleted=1');

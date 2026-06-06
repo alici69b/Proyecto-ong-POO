@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
         $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad."];
-        header("Location: controller_reset_detalle.php?id=$id_reset");
+        header("Location: controller_volunteer_reset_detalle.php?id=$id_reset");
         exit();
     }
 
@@ -129,5 +129,5 @@ $resetModel->actualizarVisitaVoluntario($id_reset); // Marcamos que el voluntari
 $flash = $_SESSION["flash"] ?? null;
 unset($_SESSION["flash"]);
 
-require_once __DIR__ . "/../views/volunteer/detalle.php";
+require_once __DIR__ . "/../views/volunteer/Detalle.php";
 ?>

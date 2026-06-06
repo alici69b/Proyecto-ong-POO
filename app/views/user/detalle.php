@@ -204,6 +204,7 @@ $esta_cancelado = ($estado == 4);
                 <p class="text-sm text-slate-500 mb-5">Puedes cancelar esta solicitud en cualquier momento.</p>
                 <form method="POST" id="form-cancelar"
                     action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="cancelar">
                     <button type="button" onclick="abrirModal()"
                         class="w-full bg-red-50 text-red-600 border border-red-200 font-extrabold text-sm py-3 rounded-2xl hover:bg-red-100">
@@ -274,6 +275,7 @@ $esta_cancelado = ($estado == 4);
             <?php if (!$esta_cancelado): ?>
                 <form method="POST"
                     action="<?= BASE_URL ?>/app/controllers/controller_user_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="comentar">
                     <textarea name="texto" rows="3"
                         placeholder="Escribe un mensaje a tu voluntario..."

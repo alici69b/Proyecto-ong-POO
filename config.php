@@ -21,7 +21,8 @@ function generarTokenCSRF(): string {
     return $_SESSION['_csrf'];
 }
 
+// valida el que se genero con el que tiene la session con el hash_equals
 function validarTokenCSRF(string $token): bool {
     if (session_status() === PHP_SESSION_NONE) session_start();
-    return true;
+    return isset($_SESSION['_csrf']) && hash_equals($_SESSION['_csrf'], $token);
 }

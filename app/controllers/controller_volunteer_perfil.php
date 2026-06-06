@@ -119,28 +119,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
         //Validamos contraseñas con helper
         $errPass = Validaciones::validarPasswordConConfirmacion([
-            'password_nueva' => $nueva, 'password_confirmar' => $repetir
+            'password_nueva' => $nueva, 
+            'password_confirmar' => $repetir
         ]);
 
         if (!empty($errPass)) {
             $_SESSION["flash"] = ["tipo" => "error", "msg" => reset($errPass)[0]];
         } else {
+            // Comprobamos que la contraseña actual es correcta
+            $datosUsuario = $voluntario->buscarPorId($id_usuario);
 
-            //Intentamos cambiar la contraseña y capturamos el resultado
-            $resultado = $voluntario->cambiarPassword($id_usuario, $nueva);
-
-            if ($resultado === true) {
-
-                $_SESSION["flash"] = [
-                    "tipo" => "success",
-                    "msg" => "Contraseña cambiada correctamente."
-                ];
+            if (!$datosUsuario || !password_verify($actual, $datosUsuario['password'])) {
+                $_SESSION["flash"] = ["tipo" => "error", "msg" => "La contraseña actual no es correcta."];
             } else {
+                // Solo cambiamos si la verificación fue correcta
+                $resultado = $voluntario->cambiarPassword($id_usuario, $nueva);
 
-                $_SESSION["flash"] = [
-                    "tipo" => "error",
-                    "msg" => $resultado
-                ];
+                if ($resultado === true) {
+                    $_SESSION["flash"] = ["tipo" => "success", "msg" => "Contraseña cambiada correctamente."];
+                } else {
+                    $_SESSION["flash"] = ["tipo" => "error", "msg" => $resultado];
+                }
             }
         }
     }

@@ -67,4 +67,23 @@ class Admin extends Usuario
         
         return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    //Métodos del panel admin
+
+    public function contarTodos(): int
+    {
+        return (int)$this->conn->query("SELECT COUNT(*) FROM admin")->fetchColumn();
+    }
+
+    public function insertarSoloId(int $id_usuario): bool
+    {
+        $stmt = $this->conn->prepare("INSERT INTO admin (id_usuario) VALUES (:id)");
+        return $stmt->execute([':id' => $id_usuario]);
+    }
+
+    public function eliminarPorIdUsuario(int $id_usuario): bool
+    {
+        $stmt = $this->conn->prepare("DELETE FROM admin WHERE id_usuario = :id");
+        return $stmt->execute([':id' => $id_usuario]);
+    }
 }

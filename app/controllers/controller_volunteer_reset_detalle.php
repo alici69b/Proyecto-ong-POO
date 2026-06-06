@@ -25,6 +25,12 @@ $comentarioModel  = new ResetComentario($conn);
 // Datos de sesión
 $id_voluntario = $_SESSION["id_voluntario"] ?? null;
 $id_usuario    = $_SESSION["user_id"]       ?? null;
+if (!$id_voluntario && !empty($id_usuario)) {
+    $id_voluntario = (new Voluntario())->obtenerIdPorUsuario((int)$id_usuario);
+    if ($id_voluntario) {
+        $_SESSION['id_voluntario'] = $id_voluntario;
+    }
+}
 
 // Recogemos el id del reset de la URL (?id=X)
 $id_reset = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
@@ -49,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
         $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad."];
-        header("Location: controller_reset_detalle.php?id=$id_reset");
+        header("Location: controller_volunteer_reset_detalle.php?id=$id_reset");
         exit();
     }
 
@@ -123,5 +129,5 @@ $resetModel->actualizarVisitaVoluntario($id_reset); // Marcamos que el voluntari
 $flash = $_SESSION["flash"] ?? null;
 unset($_SESSION["flash"]);
 
-require_once __DIR__ . "/../views/volunteer/detalle.php";
+require_once __DIR__ . "/../views/volunteer/Detalle.php";
 ?>

@@ -1,6 +1,5 @@
 <?php
-//Controlador del login
-echo "Hola";
+require_once __DIR__ . "/../../config.php";
+if (session_status() === PHP_SESSION_NONE) session_start();
 
-//Cargamos la vista del login
-require_once __DIR__ . "/../views/auth/Register.php";
+require_once __DIR__ . '/../views/auth/Reset_password.php';

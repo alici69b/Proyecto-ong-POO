@@ -67,6 +67,85 @@ class Reset
         return $stmt->rowCount() > 0;
     }
 
+    public function obtenerTodosConSolicitante(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT r.id AS id_reset, r.titulo, r.descripcion, r.created_at AS fecha,
+                   r.id_voluntario, r.id_estado,
+                   u.nombre AS solicitante, c.nombre_categoria, e.nombre_estado
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+            ORDER BY r.created_at DESC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function obtenerVoluntarios(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT v.id AS id_voluntario, u.nombre
+            FROM voluntario v
+            JOIN usuario u ON v.id_usuario = u.id
+            ORDER BY u.nombre
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function obtenerEstados(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT id AS id_estado, nombre_estado
+            FROM estado_maestro
+            ORDER BY id
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function contarTotal(): int
+    {
+        $stmt = $this->conn->query('SELECT COUNT(*) FROM reset');
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function contarPorEstado(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT e.nombre_estado, COUNT(r.id) AS total
+            FROM estado_maestro e
+            LEFT JOIN reset r ON r.id_estado = e.id
+            GROUP BY e.id, e.nombre_estado
+        ");
+        return $stmt->fetchAll();
+    }
+
+    /** Actualiza la asignación de un reset desde el administrador
+     * @param int $id_reset
+     * @param int|null $id_voluntario
+     * @param int $id_estado
+     * @return bool
+     */
+    public function actualizarAsignacionYEstado(int $id_reset, ?int $id_voluntario, int $id_estado): bool
+    {
+        if ($id_voluntario !== null && in_array($id_estado, [1, 2], true)) {
+            $id_estado = 2;
+        }
+
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET id_voluntario = :id_voluntario,
+                id_estado = :id_estado
+            WHERE id = :id_reset
+        ");
+        $stmt->execute([
+            ':id_voluntario' => $id_voluntario,
+            ':id_estado'     => $id_estado,
+            ':id_reset'      => $id_reset,
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+
     /** Obtiene las estadísticas del voluntario para mostrar en el dashboard
      * @param int $id_voluntario
      * @return array
@@ -397,6 +476,51 @@ class Reset
         ");
         $stmt->execute([':id_reset' => $id_reset]);
         return $stmt->fetchColumn() > 0;
+    }
+    // ── Métodos para el panel admin ────────────────────────────────────
+
+    public function actualizarAsignacion(int $id_reset, ?int $id_voluntario, int $id_estado): bool
+    {
+        $stmt = $this->conn->prepare("
+            UPDATE reset SET id_voluntario = :id_voluntario, id_estado = :id_estado WHERE id = :id
+        ");
+        return $stmt->execute([
+            ':id_voluntario' => $id_voluntario,
+            ':id_estado'     => $id_estado,
+            ':id'            => $id_reset,
+        ]);
+    }
+
+    public function obtenerEstado(int $id_reset): ?int
+    {
+        $stmt = $this->conn->prepare("SELECT id_estado FROM reset WHERE id = :id");
+        $stmt->execute([':id' => $id_reset]);
+        $val = $stmt->fetchColumn();
+        return $val !== false ? (int)$val : null;
+    }
+
+    public function obtenerTodosConDetalles(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT r.id AS id_reset, r.titulo, r.descripcion, r.necesidades_reset, r.causa_abandono,
+                   r.nombre_contacto, r.email_contacto, r.created_at AS fecha,
+                   r.id_voluntario, r.id_estado,
+                   u.nombre AS solicitante,
+                   c.nombre_categoria,
+                   e.nombre_estado
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+            ORDER BY r.created_at DESC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    public function obtenerCategorias(): array
+    {
+        $stmt = $this->conn->query("SELECT * FROM categoria_reset ORDER BY id");
+        return $stmt->fetchAll();
     }
 }
 ?>

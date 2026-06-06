@@ -128,6 +128,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                 <!-- Formulario para subir foto (se envía solo al seleccionar archivo) -->
                 <form method="POST" enctype="multipart/form-data"
                     action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="foto">
                     <label class="cursor-pointer">
                         <span class="inline-block text-sm font-bold border border-slate-200 rounded-2xl px-4 py-2 hover:bg-slate-50 text-slate-600">
@@ -146,6 +147,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
         <div class="bg-white rounded-3xl border border-slate-100 p-8 mb-6">
             <h3 class="text-lg font-extrabold mb-6">Datos personales</h3>
             <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action" value="datos">
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -164,10 +166,10 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
                 </div>
 
                 <div class="mb-5">
-                    <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Email</label>
-                    <input type="email" name="email"
-                        value="<?= htmlspecialchars($perfil['email'] ?? '') ?>"
-                        class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#00a5cf]">
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Email</label>
+                    <input type="email" value="<?= htmlspecialchars($perfil['email'] ?? '') ?>" disabled
+                        class="w-full text-sm border border-slate-100 rounded-xl px-4 py-3 bg-slate-50 text-slate-400 cursor-not-allowed">
+                    <p class="text-xs text-slate-400 mt-1">El email no se puede cambiar.</p>
                 </div>
 
                 <!-- Tipo de ayuda (único campo extra del usuario normal) -->
@@ -195,6 +197,7 @@ $tipos_ayuda = array('estudio', 'salud', 'creatividad', 'proyecto', 'otros');
         <div class="bg-white rounded-3xl border border-slate-100 p-8">
             <h3 class="text-lg font-extrabold mb-6">Cambiar contraseña</h3>
             <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_user_perfil.php">
+                <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                 <input type="hidden" name="action" value="password">
 
                 <div class="mb-5">

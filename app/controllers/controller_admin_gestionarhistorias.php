@@ -9,15 +9,19 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Historia.php';
+require_once __DIR__ . '/../models/UsuarioNormal.php';
+require_once __DIR__ . '/../models/Voluntario.php';
+require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
 $historiaModel = new Historia();
 
-$db = new Db();
-$conn = $db->getConnection();
+$usuarioModel   = new UsuarioNormal();
+$voluntarioModel = new Voluntario();
+$resetModel      = new Reset((new Db())->getConnection());
 
-$usuarios = $conn->query("SELECT id, nombre, apellidos FROM usuario WHERE id_rol = 1 ORDER BY nombre ASC")->fetchAll();
-$voluntarios = $conn->query("SELECT u.id, u.nombre, u.apellidos FROM usuario u JOIN voluntario v ON u.id = v.id_usuario ORDER BY u.nombre ASC")->fetchAll();
-$categorias = $conn->query("SELECT nombre_categoria FROM categoria_reset ORDER BY id ASC")->fetchAll(PDO::FETCH_COLUMN);
+$usuarios    = $usuarioModel->listarSolicitantes();
+$voluntarios = $voluntarioModel->listarVoluntarios();
+$categorias  = array_column($resetModel->obtenerCategorias(), 'nombre_categoria');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
 

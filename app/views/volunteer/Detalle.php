@@ -193,6 +193,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <h3 class="text-lg font-extrabold mb-4">Cerrar este reset</h3>
                 <p class="text-sm text-slate-500 mb-5">Añade una nota de cierre (opcional) y elige la acción.</p>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <textarea name="nota_cierre" rows="2"
                         placeholder="Escribe una nota de cierre para el chat... (opcional)"
                         class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-6 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
@@ -245,6 +246,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <p class="text-sm text-slate-400 mb-5">Puedes reactivarlo si necesitas retomar el caso.</p>
                 <form method="POST" id="form-reactivar"
                     action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="reactivar">
                     <button type="button" onclick="abrirModal(document.getElementById('form-reactivar'), 'reactivar')"
                         class="w-full border-2 border-slate-300 text-slate-500 font-extrabold text-sm py-3 rounded-2xl hover:border-[#00a5cf] hover:text-[#00a5cf] transition-all">
@@ -300,6 +302,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
 
             <?php if ((int)($reset['id_estado'] ?? 0) !== 4): ?>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="comentar">
                     <textarea name="texto" rows="3"
                         placeholder="Añade una nota de seguimiento..."

@@ -15,6 +15,7 @@ require_once __DIR__ . "/../models/Voluntario.php";
 require_once __DIR__ . "/../models/Reset.php";
 require_once __DIR__ . "/../models/ResetComentario.php";
 require_once __DIR__ . "/../models/Historia.php";
+require_once __DIR__ . "/../Helpers/FiltroProfanidad.php";
 
 // Instanciamos
 $db               = new Db();
@@ -60,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
     }
 
     // Primero insertamos el comentario de cierre si viene relleno
-    $nota = trim($_POST["nota_cierre"] ?? "");
+    $nota = FiltroProfanidad::limpiar(trim($_POST["nota_cierre"] ?? ""));
     if ($nota !== "") {
         $comentarioModel->insertar($id_reset, null, $id_voluntario, $nota);
     }
@@ -72,10 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
             $historiaModel = new Historia();
 
             // Recogemos los datos que ha rellenado el voluntario en el formulario
-            $titulo      = trim($_POST['historia_titulo']      ?? '');
-            $descripcion = trim($_POST['historia_descripcion'] ?? '');
-            $antes       = trim($_POST['historia_antes']       ?? '');
-            $despues     = trim($_POST['historia_despues']     ?? '');
+            $titulo      = FiltroProfanidad::limpiar(trim($_POST['historia_titulo']      ?? ''));
+            $descripcion = FiltroProfanidad::limpiar(trim($_POST['historia_descripcion'] ?? ''));
+            $antes       = FiltroProfanidad::limpiar(trim($_POST['historia_antes']       ?? ''));
+            $despues     = FiltroProfanidad::limpiar(trim($_POST['historia_despues']     ?? ''));
 
             // Si el voluntario ha rellenado los campos usamos sus datos
             // Si no (por si acaso), usamos el método automático como antes
@@ -102,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
         // ── Acción: añadir comentario ────────────────────────────────────────────
     } elseif ($_POST["action"] === "comentar") {
-        $texto = trim($_POST["texto"] ?? "");
+        $texto = FiltroProfanidad::limpiar(trim($_POST["texto"] ?? ""));
         if ($texto !== "") {
             $comentarioModel->insertar($id_reset, null, $id_voluntario, $texto);
             $_SESSION["flash"] = ["tipo" => "success", "msg" => "Comentario añadido."];

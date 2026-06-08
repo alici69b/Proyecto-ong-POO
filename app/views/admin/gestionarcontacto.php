@@ -106,7 +106,14 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
                 <p class="text-slate-500"><?= $total_mensajes ?> mensajes recibidos</p>
             </div>
-            <button onclick="location.reload()" class="px-6 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95">Actualizar</button>
+            <div class="flex items-center gap-3">
+                <select onchange="window.location.href = 'controller_admin_gestionarcontacto.php?leido=' + this.value" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-[#25a18e] outline-none cursor-pointer shadow-sm">
+                    <option value="" <?= empty($filtroLeido) ? 'selected' : '' ?>>Todos</option>
+                    <option value="0" <?= ($filtroLeido ?? '') === '0' ? 'selected' : '' ?>>No leídos</option>
+                    <option value="1" <?= ($filtroLeido ?? '') === '1' ? 'selected' : '' ?>>Leídos</option>
+                </select>
+                <button onclick="location.reload()" class="px-6 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95">Actualizar</button>
+            </div>
         </header>
 
         <?php if (isset($_GET['deleted'])): ?>
@@ -178,6 +185,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+
+        <?php if ($total_paginas > 1): ?>
+        <div class="mt-6 p-4 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>
+            <div class="flex flex-wrap gap-1.5">
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                    <a href="controller_admin_gestionarcontacto.php?p=<?= $i ?>&leido=<?= urlencode($filtroLeido ?? '') ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
+                <?php endfor; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 </div>
 <div id="modal-eliminar" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">

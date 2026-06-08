@@ -133,7 +133,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
 
 $buscar = trim($_GET['search'] ?? '');
 $pagina = max(1, (int)($_GET['p'] ?? 1));
-$por_pagina = 10;
+$por_pagina = 6;
 
 $total_usuarios = $usuarioModel->contarConFiltro($buscar);
 $total_paginas = max(1, (int)ceil($total_usuarios / $por_pagina));

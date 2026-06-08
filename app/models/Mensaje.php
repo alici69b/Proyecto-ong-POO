@@ -75,6 +75,73 @@ class Mensaje
         }
     }
 
+    public function obtenerPaginado(string $buscar = '', string $leido = '', int $pagina = 1, int $porPagina = 3): array
+    {
+        try {
+            $conditions = [];
+            $params = [];
+            if ($buscar !== '') {
+                $conditions[] = "(nombre_remitente LIKE :buscar OR email_remitente LIKE :buscar2 OR asunto LIKE :buscar3 OR cuerpo_mensaje LIKE :buscar4)";
+                $like = "%$buscar%";
+                $params[':buscar'] = $like;
+                $params[':buscar2'] = $like;
+                $params[':buscar3'] = $like;
+                $params[':buscar4'] = $like;
+            }
+            if ($leido === '0' || $leido === '1') {
+                $conditions[] = "leido = :leido";
+                $params[':leido'] = (int)$leido;
+            }
+            $sql = "SELECT * FROM mensaje";
+            if (!empty($conditions)) {
+                $sql .= " WHERE " . implode(" AND ", $conditions);
+            }
+            $sql .= " ORDER BY created_at DESC LIMIT :limite OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $key => $val) {
+                $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            }
+            $stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', ($pagina - 1) * $porPagina, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al obtener mensajes paginados: " . $e->getMessage());
+        }
+    }
+
+    public function contarConFiltro(string $buscar = '', string $leido = ''): int
+    {
+        try {
+            $conditions = [];
+            $params = [];
+            if ($buscar !== '') {
+                $conditions[] = "(nombre_remitente LIKE :buscar OR email_remitente LIKE :buscar2 OR asunto LIKE :buscar3 OR cuerpo_mensaje LIKE :buscar4)";
+                $like = "%$buscar%";
+                $params[':buscar'] = $like;
+                $params[':buscar2'] = $like;
+                $params[':buscar3'] = $like;
+                $params[':buscar4'] = $like;
+            }
+            if ($leido === '0' || $leido === '1') {
+                $conditions[] = "leido = :leido";
+                $params[':leido'] = (int)$leido;
+            }
+            $sql = "SELECT COUNT(*) FROM mensaje";
+            if (!empty($conditions)) {
+                $sql .= " WHERE " . implode(" AND ", $conditions);
+            }
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $key => $val) {
+                $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+            }
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (Exception $e) {
+            throw new RuntimeException("Error al contar mensajes: " . $e->getMessage());
+        }
+    }
+
     //eliminar mensajes
     public function eliminar(int $id): bool
     {

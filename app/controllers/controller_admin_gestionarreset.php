@@ -55,7 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['actualizar_reset'])) 
     exit();
 }
 
-$resets      = $resetModel->obtenerTodosConDetalles();
+$filtroEstado = $_GET['estado'] ?? '';
+$pagina = max(1, (int)($_GET['p'] ?? 1));
+$por_pagina = 3;
+
+$resets      = $resetModel->obtenerPaginadoConDetalles('', $filtroEstado, $pagina, $por_pagina);
+$total_resets = $resetModel->contarResetsConFiltro('', $filtroEstado);
+$total_paginas = max(1, (int)ceil($total_resets / $por_pagina));
 $voluntarios = $voluntarioModel->listarConNombre();
 $estados     = $resetModel->obtenerEstados();
 

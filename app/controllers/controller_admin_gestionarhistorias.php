@@ -77,11 +77,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     exit();
 }
 
-$historias = $historiaModel->obtenerTodas();
-
+$pagina = max(1, (int)($_GET['p'] ?? 1));
+$por_pagina = 4;
 $filtroEstado = $_GET['estado'] ?? '';
-if ($filtroEstado === 'Publicada' || $filtroEstado === 'Borrador') {
-    $historias = array_values(array_filter($historias, fn($h) => $h['estado'] === $filtroEstado));
-}
+
+$total_historias = $historiaModel->contarConFiltro('', $filtroEstado);
+$total_paginas = max(1, (int)ceil($total_historias / $por_pagina));
+
+$historias = $historiaModel->obtenerPaginado('', $filtroEstado, $pagina, $por_pagina);
 
 include __DIR__ . '/../views/admin/gestionarhistorias.php';

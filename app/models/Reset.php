@@ -517,6 +517,84 @@ class Reset
         return $stmt->fetchAll();
     }
 
+    public function obtenerPaginadoConDetalles(string $buscar = '', string $id_estado = '', int $pagina = 1, int $porPagina = 3): array
+    {
+        $conditions = [];
+        $params = [];
+        if ($buscar !== '') {
+            $conditions[] = "(r.titulo LIKE :buscar OR r.descripcion LIKE :buscar2 OR r.nombre_contacto LIKE :buscar3 OR r.email_contacto LIKE :buscar4 OR u.nombre LIKE :buscar5)";
+            $like = "%$buscar%";
+            $params[':buscar'] = $like;
+            $params[':buscar2'] = $like;
+            $params[':buscar3'] = $like;
+            $params[':buscar4'] = $like;
+            $params[':buscar5'] = $like;
+        }
+        if ($id_estado !== '' && ctype_digit($id_estado)) {
+            $conditions[] = "r.id_estado = :id_estado";
+            $params[':id_estado'] = (int)$id_estado;
+        }
+        $sql = "
+            SELECT r.id AS id_reset, r.titulo, r.descripcion, r.necesidades_reset, r.causa_abandono,
+                   r.nombre_contacto, r.email_contacto, r.created_at AS fecha,
+                   r.id_voluntario, r.id_estado,
+                   u.nombre AS solicitante,
+                   c.nombre_categoria,
+                   e.nombre_estado
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+        ";
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+        $sql .= " ORDER BY r.created_at DESC LIMIT :limite OFFSET :offset";
+        $stmt = $this->conn->prepare($sql);
+        foreach ($params as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($pagina - 1) * $porPagina, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function contarResetsConFiltro(string $buscar = '', string $id_estado = ''): int
+    {
+        $conditions = [];
+        $params = [];
+        if ($buscar !== '') {
+            $conditions[] = "(r.titulo LIKE :buscar OR r.descripcion LIKE :buscar2 OR r.nombre_contacto LIKE :buscar3 OR r.email_contacto LIKE :buscar4 OR u.nombre LIKE :buscar5)";
+            $like = "%$buscar%";
+            $params[':buscar'] = $like;
+            $params[':buscar2'] = $like;
+            $params[':buscar3'] = $like;
+            $params[':buscar4'] = $like;
+            $params[':buscar5'] = $like;
+        }
+        if ($id_estado !== '' && ctype_digit($id_estado)) {
+            $conditions[] = "r.id_estado = :id_estado";
+            $params[':id_estado'] = (int)$id_estado;
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+        ";
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+        $stmt = $this->conn->prepare($sql);
+        foreach ($params as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
     public function obtenerCategorias(): array
     {
         $stmt = $this->conn->query("SELECT * FROM categoria_reset ORDER BY id");

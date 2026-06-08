@@ -100,7 +100,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestión de Historias</h1>
-                <p class="text-slate-500"><?= count($historias) ?> historias de éxito para inspirar</p>
+                <p class="text-slate-500"><?= $total_historias ?> historias de éxito para inspirar</p>
             </div>
             <div class="flex items-center gap-3">
                 <select onchange="window.location.href = 'controller_admin_gestionarhistorias.php?estado=' + this.value" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-[#25a18e] outline-none cursor-pointer shadow-sm">
@@ -134,9 +134,9 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
             </div>
         <?php endif; ?>
         <?php
-        $total = count($historias);
-        $publicadas = count(array_filter($historias, fn($h) => $h['estado'] === 'Publicada'));
-        $borradores = count(array_filter($historias, fn($h) => $h['estado'] === 'Borrador'));
+        $total = $total_historias;
+        $publicadas = $historiaModel->contarConFiltro('', 'Publicada');
+        $borradores = $historiaModel->contarConFiltro('', 'Borrador');
         ?>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div class="bg-[#e0f7fa] p-6 rounded-2xl border border-cyan-100 flex items-center gap-4">
@@ -234,6 +234,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if ($total_paginas > 1): ?>
+        <div class="mt-6 p-4 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>
+            <div class="flex flex-wrap gap-1.5">
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                    <a href="controller_admin_gestionarhistorias.php?p=<?= $i ?>&estado=<?= urlencode($filtroEstado ?? '') ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
+                <?php endfor; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 </div>
 <div id="modal-crear" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">

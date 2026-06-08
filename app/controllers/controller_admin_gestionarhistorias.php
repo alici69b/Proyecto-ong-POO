@@ -13,6 +13,7 @@ require_once __DIR__ . '/../models/UsuarioNormal.php';
 require_once __DIR__ . '/../models/Voluntario.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 $historiaModel = new Historia();
 
 $usuarioModel   = new UsuarioNormal();
@@ -31,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
     }
 
     $datos = $_POST;
+    foreach (['titulo', 'descripcion', 'descripcion_antes', 'descripcion_despues'] as $campo) {
+        if (isset($datos[$campo])) {
+            $datos[$campo] = FiltroProfanidad::limpiar($datos[$campo]);
+        }
+    }
     if (!empty($_FILES['foto']['name'])) {
         $errFoto = Validaciones::validarFoto($_FILES['foto']);
         if (empty($errFoto)) {
@@ -55,6 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_editar']) && i
     }
 
     $datos = $_POST;
+    foreach (['titulo', 'descripcion', 'descripcion_antes', 'descripcion_despues'] as $campo) {
+        if (isset($datos[$campo])) {
+            $datos[$campo] = FiltroProfanidad::limpiar($datos[$campo]);
+        }
+    }
     if (!empty($_FILES['foto']['name'])) {
         $errFoto = Validaciones::validarFoto($_FILES['foto']);
         if (empty($errFoto)) {

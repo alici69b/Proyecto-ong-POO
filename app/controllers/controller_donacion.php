@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../models/Donacion.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 
 // Cargo las variables del .env (ahí guardamos STRIPE_SECRET_KEY, que es la clave secreta)
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
@@ -89,11 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['donar'])) {
     }
 
     // Recogemos los datos del formulario
-    $nombre = trim($_POST['nombre'] ?? '');
+    $nombre = FiltroProfanidad::limpiar(trim($_POST['nombre'] ?? ''));
     $email = trim($_POST['email'] ?? '');
     $cantidad = floatval($_POST['cantidad'] ?? 0);
     $moneda = trim($_POST['moneda'] ?? 'eur');
-    $mensaje = trim($_POST['mensaje'] ?? '');
+    $mensaje = FiltroProfanidad::limpiar(trim($_POST['mensaje'] ?? ''));
     $idUsuario = $_SESSION['user_id'] ?? null; 
 
     // Validamos los datos usando el helper Validaciones 

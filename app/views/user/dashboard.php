@@ -169,7 +169,8 @@ if (!isset($mis_resets)) $mis_resets = array();
             </div>
             <!-- Botón para abrir el modal de nuevo reset -->
             <button onclick="abrirModal()"
-                class="shrink-0 bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold text-sm px-6 py-3 rounded-2xl hover:opacity-90 shadow-md">
+                class="shrink-0 bg-gradient-to-r from-[#00a5cf] to-[#9fffcb] text-[#004e64] font-extrabold
+                text-sm px-6 py-3 md:text-lg md:px-14 md:py-6 rounded-2xl hover:opacity-90 shadow-md">
                 + Nuevo Reset
             </button>
         </div>

@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //Eliminar cuenta
     } elseif ($action == 'eliminar_cuenta') {
 
-        $ok = $usuarioNormal->eliminarCuenta($id_usuario);
+        $ok = $usuarioModel->eliminarCuenta($id_usuario);
         if ($ok) {
             $_SESSION = [];
 

@@ -193,6 +193,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <h3 class="text-lg font-extrabold mb-4">Cerrar este reset</h3>
                 <p class="text-sm text-slate-500 mb-5">Añade una nota de cierre (opcional) y elige la acción.</p>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <textarea name="nota_cierre" rows="2"
                         placeholder="Escribe una nota de cierre para el chat... (opcional)"
                         class="w-full text-sm border border-slate-200 rounded-2xl px-4 py-3 mb-6 resize-none focus:outline-none focus:ring-2 focus:ring-[#00a5cf]"></textarea>
@@ -245,6 +246,7 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                 <p class="text-sm text-slate-400 mb-5">Puedes reactivarlo si necesitas retomar el caso.</p>
                 <form method="POST" id="form-reactivar"
                     action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="reactivar">
                     <button type="button" onclick="abrirModal(document.getElementById('form-reactivar'), 'reactivar')"
                         class="w-full border-2 border-slate-300 text-slate-500 font-extrabold text-sm py-3 rounded-2xl hover:border-[#00a5cf] hover:text-[#00a5cf] transition-all">
@@ -270,12 +272,14 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                         <div class="flex gap-3 <?php if ($es_voluntario) echo 'flex-row-reverse'; ?>">
                             <img src="<?= BASE_URL ?>/public/img/<?= htmlspecialchars($c['foto_voluntario'] ?? 'default.png') ?>"
                                 alt="Avatar" class="shrink-0 w-8 h-8 rounded-full object-cover">
-                            <div class="flex-1 rounded-2xl px-4 py-3
+
+                            <div class="flex-1 rounded-2xl px-4 py-3 relative
                                 <?php if ($es_voluntario): ?>
                                     bg-gradient-to-br from-[#e0f7ff] to-[#d0fff0] ml-12
                                 <?php else: ?>
                                     bg-slate-50 mr-12
                                 <?php endif; ?>">
+
                                 <div class="flex items-center justify-between mb-1">
                                     <span class="text-xs font-extrabold text-[#004e64]">
                                         <?= htmlspecialchars($c['nombre_usuario'] ?? 'Usuario') ?>
@@ -285,21 +289,55 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
                                             <span class="ml-1 text-[10px] bg-[#004e64] text-white px-2 py-0.5 rounded-full">usuario</span>
                                         <?php endif; ?>
                                     </span>
-                                    <span class="text-[10px] text-slate-400">
-                                        <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
-                                    </span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[10px] text-slate-400">
+                                            <?= date('d/m/Y H:i', strtotime($c['created_at'])) ?>
+                                        </span>
+                                        <!-- Boton para eliminar comentarios propios -->
+                                        <?php if ($es_voluntario && empty($c['eliminado'])): ?>
+                                            <div class="relative" x-data="{ open: false }">
+                                                <button onclick="toggleMenu(<?= $c['id'] ?>)"
+                                                    class="text-slate-400 hover:text-slate-600 transition-all p-1 rounded-lg hover:bg-black/5">
+                                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                        <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+                                                    </svg>
+                                                </button>
+                                                <div id="menu-<?= $c['id'] ?>" class="hidden absolute right-0 top-6 bg-white rounded-xl shadow-lg border border-slate-100 py-1 z-10 min-w-[140px]">
+                                                    <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                                                        <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
+                                                        <input type="hidden" name="action" value="eliminar_comentario">
+                                                        <input type="hidden" name="id_comentario" value="<?= $c['id'] ?>">
+                                                        <button type="submit"
+                                                            class="w-full text-left px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-50 transition-all">
+                                                            Eliminar
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-                                <p class="text-sm text-slate-600 leading-relaxed">
-                                    <?= nl2br(htmlspecialchars($c['texto'])) ?>
-                                </p>
+
+                                <!-- Contenido del comentario o placeholder si está eliminado -->
+                                <?php if (!empty($c['eliminado'])): ?>
+                                    <div class="flex items-center gap-2 text-slate-400 italic">
+                                        <svg width="18" height="18" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#ada9a9" fill-rule="evenodd" d="M5.781 4.414a7 7 0 019.62 10.039l-9.62-10.04zm-1.408 1.42a7 7 0 009.549 9.964L4.373 5.836zM10 1a9 9 0 100 18 9 9 0 000-18z"></path> </g></svg>
+                                        <p class="text-xs text-slate-400 italic"> Este mensaje fue eliminado</p>
+                                    </div>
+                                <?php else: ?>
+                                    <p class="text-sm text-slate-600 leading-relaxed">
+                                        <?= nl2br(htmlspecialchars($c['texto'])) ?>
+                                    </p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-
+                                            
             <?php if ((int)($reset['id_estado'] ?? 0) !== 4): ?>
                 <form method="POST" action="<?= BASE_URL ?>/app/controllers/controller_volunteer_reset_detalle.php?id=<?= $reset['id'] ?>">
+                    <input type="hidden" name="csrf_token" value="<?= generarTokenCSRF() ?>">
                     <input type="hidden" name="action" value="comentar">
                     <textarea name="texto" rows="3"
                         placeholder="Añade una nota de seguimiento..."
@@ -369,6 +407,22 @@ $activo = isset($reset['id_estado']) && (int)$reset['id_estado'] === 2;
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         }
+
+        function toggleMenu(id) {
+            const menu = document.getElementById('menu-' + id);
+            // Cerramos todos los demás menús abiertos
+            document.querySelectorAll('[id^="menu-"]').forEach(m => {
+                if (m.id !== 'menu-' + id) m.classList.add('hidden');
+            });
+            menu.classList.toggle('hidden');
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('[id^="menu-"]') && !e.target.closest('button[onclick^="toggleMenu"]')) {
+                document.querySelectorAll('[id^="menu-"]').forEach(m => m.classList.add('hidden'));
+            }
+        });
     </script>
 </body>
 </html>

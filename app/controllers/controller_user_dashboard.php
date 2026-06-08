@@ -10,6 +10,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 
 // Creamos la conexión y el modelo
 $db         = new Db();
@@ -21,11 +22,11 @@ $id_usuario = $_SESSION['user_id'];
 // ── Si se envía el formulario de crear reset 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['action'] == 'crear_reset') {
 
-    $titulo            = trim($_POST['titulo']);
+    $titulo            = FiltroProfanidad::limpiar(trim($_POST['titulo']));
     $id_categoria      = (int)$_POST['id_categoria'];
-    $descripcion       = trim($_POST['descripcion']);
-    $necesidades_reset = trim($_POST['necesidades_reset']);
-    $causa_abandono    = trim($_POST['causa_abandono']);
+    $descripcion       = FiltroProfanidad::limpiar(trim($_POST['descripcion']));
+    $necesidades_reset = FiltroProfanidad::limpiar(trim($_POST['necesidades_reset']));
+    $causa_abandono    = FiltroProfanidad::limpiar(trim($_POST['causa_abandono']));
 
     // Comprobamos que los campos obligatorios no estén vacíos
     if ($titulo == '' || $id_categoria == 0) {

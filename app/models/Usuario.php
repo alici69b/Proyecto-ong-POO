@@ -215,4 +215,16 @@ abstract class Usuario
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    /**
+     * Eliminar la cuenta de un usuario (Voluntario / Usuario normal).
+     * @param int $id
+     * @return bool True si se eliminó correctamente, false si no se encontró el usuario o no se pudo eliminar
+     */
+    public function eliminarCuenta(int $id): bool
+    {
+        $stmt = $this->conn->prepare("DELETE FROM usuario WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->rowCount() > 0;
+    }
 }

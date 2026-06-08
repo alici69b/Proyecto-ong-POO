@@ -66,6 +66,74 @@ class Reset
         ]);
         return $stmt->rowCount() > 0;
     }
+    
+    /** Marca un reset como resuelto por el voluntario, solo si está activo
+     * @return array|false El reset actualizado o false si no se pudo actualizar
+     */
+    public function obtenerTodosConSolicitante(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT r.id AS id_reset, r.titulo, r.descripcion, r.created_at AS fecha,
+                   r.id_voluntario, r.id_estado,
+                   u.nombre AS solicitante, c.nombre_categoria, e.nombre_estado
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+            ORDER BY r.created_at DESC
+        ");
+        return $stmt->fetchAll();
+    }
+
+    /** Devuelve todos los voluntarios disponibles para asignar a un reset
+    * @return array
+    */
+    public function obtenerVoluntarios(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT v.id AS id_voluntario, u.nombre
+            FROM voluntario v
+            JOIN usuario u ON v.id_usuario = u.id
+            ORDER BY u.nombre
+        ");
+        return $stmt->fetchAll();
+    }
+
+    /** Devuelve todos los estados posibles para un reset
+    * @return array
+    */  
+    public function obtenerEstados(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT id AS id_estado, nombre_estado
+            FROM estado_maestro
+            ORDER BY id
+        ");
+        return $stmt->fetchAll();
+    }
+
+    /** Devuelve el número total de resets en la base de datos
+    * @return int
+    */
+    public function contarTotal(): int
+    {
+        $stmt = $this->conn->query('SELECT COUNT(*) FROM reset');
+        return (int)$stmt->fetchColumn();
+    }
+
+    /** Devuelve el número de resets por cada estado, incluyendo estados sin resets
+    * @return array
+    */
+    public function contarPorEstado(): array
+    {
+        $stmt = $this->conn->query("
+            SELECT e.nombre_estado, COUNT(r.id) AS total
+            FROM estado_maestro e
+            LEFT JOIN reset r ON r.id_estado = e.id
+            GROUP BY e.id, e.nombre_estado
+        ");
+        return $stmt->fetchAll();
+    }
 
     /** Actualiza la asignación de un reset desde el administrador
      * @param int $id_reset
@@ -478,6 +546,84 @@ class Reset
             ORDER BY r.created_at DESC
         ");
         return $stmt->fetchAll();
+    }
+
+    public function obtenerPaginadoConDetalles(string $buscar = '', string $id_estado = '', int $pagina = 1, int $porPagina = 3): array
+    {
+        $conditions = [];
+        $params = [];
+        if ($buscar !== '') {
+            $conditions[] = "(r.titulo LIKE :buscar OR r.descripcion LIKE :buscar2 OR r.nombre_contacto LIKE :buscar3 OR r.email_contacto LIKE :buscar4 OR u.nombre LIKE :buscar5)";
+            $like = "%$buscar%";
+            $params[':buscar'] = $like;
+            $params[':buscar2'] = $like;
+            $params[':buscar3'] = $like;
+            $params[':buscar4'] = $like;
+            $params[':buscar5'] = $like;
+        }
+        if ($id_estado !== '' && ctype_digit($id_estado)) {
+            $conditions[] = "r.id_estado = :id_estado";
+            $params[':id_estado'] = (int)$id_estado;
+        }
+        $sql = "
+            SELECT r.id AS id_reset, r.titulo, r.descripcion, r.necesidades_reset, r.causa_abandono,
+                   r.nombre_contacto, r.email_contacto, r.created_at AS fecha,
+                   r.id_voluntario, r.id_estado,
+                   u.nombre AS solicitante,
+                   c.nombre_categoria,
+                   e.nombre_estado
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+        ";
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+        $sql .= " ORDER BY r.created_at DESC LIMIT :limite OFFSET :offset";
+        $stmt = $this->conn->prepare($sql);
+        foreach ($params as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', ($pagina - 1) * $porPagina, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function contarResetsConFiltro(string $buscar = '', string $id_estado = ''): int
+    {
+        $conditions = [];
+        $params = [];
+        if ($buscar !== '') {
+            $conditions[] = "(r.titulo LIKE :buscar OR r.descripcion LIKE :buscar2 OR r.nombre_contacto LIKE :buscar3 OR r.email_contacto LIKE :buscar4 OR u.nombre LIKE :buscar5)";
+            $like = "%$buscar%";
+            $params[':buscar'] = $like;
+            $params[':buscar2'] = $like;
+            $params[':buscar3'] = $like;
+            $params[':buscar4'] = $like;
+            $params[':buscar5'] = $like;
+        }
+        if ($id_estado !== '' && ctype_digit($id_estado)) {
+            $conditions[] = "r.id_estado = :id_estado";
+            $params[':id_estado'] = (int)$id_estado;
+        }
+        $sql = "
+            SELECT COUNT(*)
+            FROM reset r
+            JOIN usuario u ON r.id_usuario = u.id
+            LEFT JOIN categoria_reset c ON r.id_categoria = c.id
+            LEFT JOIN estado_maestro e ON r.id_estado = e.id
+        ";
+        if (!empty($conditions)) {
+            $sql .= " WHERE " . implode(" AND ", $conditions);
+        }
+        $stmt = $this->conn->prepare($sql);
+        foreach ($params as $key => $val) {
+            $stmt->bindValue($key, $val, is_int($val) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
     }
 
     public function obtenerCategorias(): array

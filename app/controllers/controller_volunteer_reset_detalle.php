@@ -15,6 +15,7 @@ require_once __DIR__ . "/../models/Voluntario.php";
 require_once __DIR__ . "/../models/Reset.php";
 require_once __DIR__ . "/../models/ResetComentario.php";
 require_once __DIR__ . "/../models/Historia.php";
+require_once __DIR__ . "/../Helpers/FiltroProfanidad.php";
 
 // Instanciamos
 $db               = new Db();
@@ -55,12 +56,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
     if (!validarTokenCSRF($_POST['csrf_token'] ?? '')) {
         $_SESSION["flash"] = ["tipo" => "error", "msg" => "Error de seguridad."];
-        header("Location: controller_reset_detalle.php?id=$id_reset");
+        header("Location: controller_volunteer_reset_detalle.php?id=$id_reset");
         exit();
     }
 
     // Primero insertamos el comentario de cierre si viene relleno
-    $nota = trim($_POST["nota_cierre"] ?? "");
+    $nota = FiltroProfanidad::limpiar(trim($_POST["nota_cierre"] ?? ""));
     if ($nota !== "") {
         $comentarioModel->insertar($id_reset, null, $id_voluntario, $nota);
     }
@@ -72,10 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
             $historiaModel = new Historia();
 
             // Recogemos los datos que ha rellenado el voluntario en el formulario
-            $titulo      = trim($_POST['historia_titulo']      ?? '');
-            $descripcion = trim($_POST['historia_descripcion'] ?? '');
-            $antes       = trim($_POST['historia_antes']       ?? '');
-            $despues     = trim($_POST['historia_despues']     ?? '');
+            $titulo      = FiltroProfanidad::limpiar(trim($_POST['historia_titulo']      ?? ''));
+            $descripcion = FiltroProfanidad::limpiar(trim($_POST['historia_descripcion'] ?? ''));
+            $antes       = FiltroProfanidad::limpiar(trim($_POST['historia_antes']       ?? ''));
+            $despues     = FiltroProfanidad::limpiar(trim($_POST['historia_despues']     ?? ''));
 
             // Si el voluntario ha rellenado los campos usamos sus datos
             // Si no (por si acaso), usamos el método automático como antes
@@ -102,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
         // ── Acción: añadir comentario ────────────────────────────────────────────
     } elseif ($_POST["action"] === "comentar") {
-        $texto = trim($_POST["texto"] ?? "");
+        $texto = FiltroProfanidad::limpiar(trim($_POST["texto"] ?? ""));
         if ($texto !== "") {
             $comentarioModel->insertar($id_reset, null, $id_voluntario, $texto);
             $_SESSION["flash"] = ["tipo" => "success", "msg" => "Comentario añadido."];
@@ -114,6 +115,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
         $_SESSION["flash"] = $ok
             ? ["tipo" => "success", "msg" => "Reset reactivado correctamente."]
             : ["tipo" => "error",   "msg" => "No se pudo reactivar."];
+    } elseif ($_POST["action"] === "eliminar_comentario") {
+        $id_comentario = filter_input(INPUT_POST, 'id_comentario', FILTER_VALIDATE_INT);
+        if ($id_comentario) {
+            $ok = $comentarioModel->marcarComoEliminado($id_comentario, $id_voluntario, null);
+            $_SESSION["flash"] = $ok
+                ? ["tipo" => "success", "msg" => "Mensaje eliminado."]
+                : ["tipo" => "error",   "msg" => "No se pudo eliminar el mensaje."];
+        }
     }
 
     // Redirigimos a la misma página para evitar reenvío del formulario al refrescar

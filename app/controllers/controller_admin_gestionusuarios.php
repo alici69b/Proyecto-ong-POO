@@ -120,6 +120,11 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     if ($id !== (int)$_SESSION['user_id']) {
         $voluntarioModel->eliminarPorIdUsuario($id);
         $adminModel->eliminarPorIdUsuario($id);
+        $db = new Db();
+        $conn = $db->getConnection();
+        $conn->prepare("DELETE rc FROM reset_comentario rc JOIN reset r ON rc.id_reset = r.id WHERE r.id_usuario = :id")->execute([':id' => $id]);
+        $conn->prepare("DELETE FROM reset WHERE id_usuario = :id")->execute([':id' => $id]);
+        $conn->prepare("DELETE FROM usuario_normal WHERE id_usuario = :id")->execute([':id' => $id]);
         $usuarioModel->eliminar($id);
     }
     header('Location: controller_admin_gestionusuarios.php?deleted=1');
@@ -128,7 +133,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
 
 $buscar = trim($_GET['search'] ?? '');
 $pagina = max(1, (int)($_GET['p'] ?? 1));
-$por_pagina = 10;
+$por_pagina = 6;
 
 $total_usuarios = $usuarioModel->contarConFiltro($buscar);
 $total_paginas = max(1, (int)ceil($total_usuarios / $por_pagina));

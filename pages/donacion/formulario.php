@@ -115,13 +115,14 @@
                             <input type="hidden" name="_csrf" value="<?= generarTokenCSRF() ?>">
 
                             <div>
-                                <input type="number" name="cantidad" id="input-cantidad" min="1" max="99999" step="0.01"
-                                    value="<?= htmlspecialchars($old['cantidad'] ?? '') ?>"
-                                    placeholder="Otra cantidad..."
-                                    class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#25a18e] focus:border-[#25a18e] outline-none transition text-center text-xl font-bold">
-                                <?php if (!empty($errores['cantidad'])): ?>
-                                    <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars(is_array($errores['cantidad']) ? implode(', ', $errores['cantidad']) : $errores['cantidad']) ?></p>
-                                <?php endif; ?>
+                            <input type="number" name="cantidad" id="input-cantidad" min="1" max="500" step="0.01"
+                                value="<?= htmlspecialchars($old['cantidad'] ?? '') ?>"
+                                placeholder="Otra cantidad..."
+                                class="w-full p-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#25a18e] focus:border-[#25a18e] outline-none transition text-center text-xl font-bold">
+                            <p class="text-gray-400 text-xs mt-1">Mínimo 1€ · Máximo 500€</p>
+                            <?php if (!empty($errores['cantidad'])): ?>
+                                <p class="text-red-500 text-sm mt-1"><?= htmlspecialchars(is_array($errores['cantidad']) ? implode(', ', $errores['cantidad']) : $errores['cantidad']) ?></p>
+                            <?php endif; ?>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">

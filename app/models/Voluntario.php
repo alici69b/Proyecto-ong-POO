@@ -213,14 +213,22 @@ class Voluntario extends Usuario
      */
     public function eliminarCuenta(int $id): bool
     {
+        // Buscamos el id del voluntario a partir del id de usuario
+        $stmtV = $this->conn->prepare("SELECT id FROM voluntario WHERE id_usuario = :id_usuario");
+        $stmtV->execute([':id_usuario' => $id]);
+        $vol = $stmtV->fetch();
+        $id_voluntario = $vol ? (int)$vol['id'] : null;
+
         // Resets asignados vuelven a pendiente para ser reasignados
-        $stmt = $this->conn->prepare("
-            UPDATE reset
-            SET id_estado = 1, id_voluntario = NULL
-            WHERE id_voluntario = :id
-            AND id_estado = 2
-        ");
-        $stmt->execute([':id' => $id]);
+        if ($id_voluntario) {
+            $stmt = $this->conn->prepare("
+                UPDATE reset
+                SET id_estado = 1, id_voluntario = NULL
+                WHERE id_voluntario = :id_voluntario
+                AND id_estado = 2
+            ");
+            $stmt->execute([':id_voluntario' => $id_voluntario]);
+        }
 
         // Llamamos al padre para borrar el registro
         return parent::eliminarCuenta($id);

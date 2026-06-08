@@ -19,7 +19,7 @@ class ResetComentario
     public function obtenerPorReset(int $id_reset): array
     {
         $stmt = $this->conn->prepare("
-        SELECT rc.id, rc.texto, rc.created_at,
+        SELECT rc.id, rc.texto, rc.created_at, rc.eliminado,
                COALESCE(u.nombre,  uv.nombre)           AS nombre_usuario,
                v.id                                      AS es_voluntario,
                COALESCE(u.foto_perfil, uv.foto_perfil)  AS foto_voluntario
@@ -56,6 +56,34 @@ class ResetComentario
             ":texto"         => $texto,
         ]);
 
+        return $stmt->rowCount() > 0;
+    }
+
+    /** Marca un comentario como eliminado
+    * 
+    * @param int $id_comentario
+    * @param int|null $id_voluntario 
+    * @param int|null $id_usuario
+    * @return bool True si se marcó como eliminado, false si no se encontró el comentario o no se pudo actualizar
+    */
+    public function marcarComoEliminado(int $id_comentario, ?int $id_voluntario = null, ?int $id_usuario = null): bool
+    {
+        // Construimos la condición según el rol
+        if ($id_voluntario !== null) {
+            $stmt = $this->conn->prepare("
+                UPDATE reset_comentario
+                SET eliminado = 1
+                WHERE id = :id AND id_voluntario = :id_voluntario
+            ");
+            $stmt->execute([':id' => $id_comentario, ':id_voluntario' => $id_voluntario]);
+        } else {
+            $stmt = $this->conn->prepare("
+                UPDATE reset_comentario
+                SET eliminado = 1
+                WHERE id = :id AND id_usuario = :id_usuario
+            ");
+            $stmt->execute([':id' => $id_comentario, ':id_usuario' => $id_usuario]);
+        }
         return $stmt->rowCount() > 0;
     }
 }

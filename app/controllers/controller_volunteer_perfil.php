@@ -131,6 +131,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
 
             if (!$datosUsuario || !password_verify($actual, $datosUsuario['password'])) {
                 $_SESSION["flash"] = ["tipo" => "error", "msg" => "La contraseña actual no es correcta."];
+            } elseif (password_verify($nueva, $datosUsuario['password'])) {
+                $_SESSION["flash"] = ['tipo' => 'error', 'msg' => 'La nueva contraseña no puede ser igual a la actual.'];
             } else {
                 // Solo cambiamos si la verificación fue correcta
                 $resultado = $voluntario->cambiarPassword($id_usuario, $nueva);
@@ -141,6 +143,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
                     $_SESSION["flash"] = ["tipo" => "error", "msg" => $resultado];
                 }
             }
+        }
+    // ELIMINAR CUENTA
+    } elseif ($_POST["action"] === "eliminar_cuenta") {
+
+        // Eliminamos la cuenta y destruimos la sesión
+        $eliminado = $voluntario->eliminarCuenta($id_usuario);
+
+        // Si se eliminó correctamente, destruimos la sesión y redirigimos a página de cuenta eliminada
+        if ($eliminado) {
+            $_SESSION = [];
+
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+
+            session_destroy();
+            header('Location: ' . BASE_URL . '/app/views/auth/cuenta_eliminada.php');
+            exit();
+        } else {
+            $_SESSION['flash'] = ["tipo" => "error", "msg" => "No se pudo eliminar la cuenta."];
+            header("Location: " . BASE_URL . "/app/controllers/controller_volunteer_perfil.php");
+            exit();
         }
     }
 

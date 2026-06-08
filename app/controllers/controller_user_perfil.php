@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $action = $_POST['action'];
 
-    // Acción: guardar datos personales
+    // Acción: Actualizar datos personales
     if ($action == 'datos') {
         $nombre     = trim($_POST['nombre']);
         $apellidos  = trim($_POST['apellidos']);
@@ -69,16 +69,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['flash'] = ['tipo' => 'error', 'msg' => reset($errores)[0]];
         } else {
             $datosUsuario = $usuarioModel->buscarPorId($id_usuario);
-            if (password_verify($actual, $datosUsuario['password'])) {
+            if (!password_verify($actual, $datosUsuario['password'])) {
+                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'La contraseña actual no es correcta.'];
+            } elseif (password_verify($nuevo, $datosUsuario['password'])) {
+                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'La nueva contraseña no puede ser igual a la actual.'];
+            } else {
                 $usuarioModel->cambiarPassword($id_usuario, $nuevo);
                 $_SESSION['flash'] = ['tipo' => 'success', 'msg' => 'Contraseña actualizada correctamente.'];
-            } else {
-                $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'La contraseña actual no es correcta.'];
             }
         }
 
-        // Acción: cambiar foto de perfil
-        } elseif ($action == 'foto') {
+    // Acción: cambiar foto de perfil
+    } elseif ($action == 'foto') {
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] == 0) {
             $errFoto = Validaciones::validarFoto($_FILES['foto']);
 
@@ -97,6 +99,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'No se pudo guardar la imagen.');
                 }
             }
+        }
+    //Eliminar cuenta
+    } elseif ($action == 'eliminar_cuenta') {
+
+        $ok = $usuarioModel->eliminarCuenta($id_usuario);
+        if ($ok) {
+            $_SESSION = [];
+
+            // Si se usan cookies para la sesión, eliminamos la cookie de sesión
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+
+            // Destruimos la sesión y redirigimos a página de cuenta eliminada
+            session_destroy();
+            header('Location: ' . BASE_URL . '/app/views/auth/cuenta_eliminada.php');
+            exit();
+        } else {
+            $_SESSION['flash'] = ['tipo' => 'error', 'msg' => 'No se pudo eliminar la cuenta.'];
         }
     }
 

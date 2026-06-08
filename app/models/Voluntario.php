@@ -205,5 +205,25 @@ class Voluntario extends Usuario
         $stmt = $this->conn->prepare("DELETE FROM voluntario WHERE id_usuario = :id");
         return $stmt->execute([':id' => $id_usuario]);
     }
+
+    /**
+     * Elimina la cuenta del voluntario y libera los resets asignados
+     * @param int $id_usuario
+     * @return bool
+     */
+    public function eliminarCuenta(int $id): bool
+    {
+        // Resets asignados vuelven a pendiente para ser reasignados
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET id_estado = 1, id_voluntario = NULL
+            WHERE id_voluntario = :id
+            AND id_estado = 2
+        ");
+        $stmt->execute([':id' => $id]);
+
+        // Llamamos al padre para borrar el registro
+        return parent::eliminarCuenta($id);
+    }
 }
 ?>

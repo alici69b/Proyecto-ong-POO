@@ -114,6 +114,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"])) {
         $_SESSION["flash"] = $ok
             ? ["tipo" => "success", "msg" => "Reset reactivado correctamente."]
             : ["tipo" => "error",   "msg" => "No se pudo reactivar."];
+    } elseif ($_POST["action"] === "eliminar_comentario") {
+        $id_comentario = filter_input(INPUT_POST, 'id_comentario', FILTER_VALIDATE_INT);
+        if ($id_comentario) {
+            $ok = $comentarioModel->marcarComoEliminado($id_comentario, $id_voluntario, null);
+            $_SESSION["flash"] = $ok
+                ? ["tipo" => "success", "msg" => "Mensaje eliminado."]
+                : ["tipo" => "error",   "msg" => "No se pudo eliminar el mensaje."];
+        }
     }
 
     // Redirigimos a la misma página para evitar reenvío del formulario al refrescar

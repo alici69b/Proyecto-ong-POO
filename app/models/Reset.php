@@ -514,22 +514,6 @@ class Reset
         return $val !== false ? (int)$val : null;
     }
 
-    public function contarPorEstado(): array
-    {
-        $stmt = $this->conn->query("SELECT e.nombre_estado, COUNT(*) AS total
-            FROM reset r
-            JOIN estado_maestro e ON r.id_estado = e.id
-            GROUP BY e.nombre_estado
-            ORDER BY e.id");
-        return $stmt->fetchAll();
-    }
-
-    public function obtenerEstados(): array
-    {
-        $stmt = $this->conn->query("SELECT id AS id_estado, nombre_estado FROM estado_maestro ORDER BY id");
-        return $stmt->fetchAll();
-    }
-
     public function obtenerTodosConDetalles(): array
     {
         $stmt = $this->conn->query("

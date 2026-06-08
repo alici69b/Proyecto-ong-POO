@@ -66,8 +66,8 @@ class Validaciones
     {
         $errores = [];
         $cantidad = floatval($cantidad);
-        if ($cantidad < 1 || $cantidad > 99999) {
-            $errores[] = "La cantidad debe estar entre 1€ y 99.999€";
+        if ($cantidad < 1 || $cantidad > 500) {
+            $errores[] = "La cantidad debe estar entre 1€ y 500€";
         }
         return $errores;
     }

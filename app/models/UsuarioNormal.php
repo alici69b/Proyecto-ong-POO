@@ -136,5 +136,26 @@ class UsuarioNormal extends Usuario
         ");
         return $stmt->fetchAll();
     }
+
+    /**
+     * Elimina la cuenta de un usuario normal. Antes de eliminar el registro, se cancelan sus resets activos/pendientes.
+     * @param int $id El ID del usuario a eliminar.
+     * @return bool Devuelve true si la cuenta se eliminó correctamente, false en caso contrario.
+     * 
+     */
+    public function eliminarCuenta(int $id): bool
+    {
+        // Resets activos/pendientes se cancelan
+        $stmt = $this->conn->prepare("
+            UPDATE reset
+            SET id_estado = 4
+            WHERE id_usuario = :id
+            AND id_estado IN (1, 2)
+        ");
+        $stmt->execute([':id' => $id]);
+
+        // Llamamos al padre para borrar el registro
+        return parent::eliminarCuenta($id);
+    }
 }
 ?>

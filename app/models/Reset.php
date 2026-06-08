@@ -66,7 +66,10 @@ class Reset
         ]);
         return $stmt->rowCount() > 0;
     }
-
+    
+    /** Marca un reset como resuelto por el voluntario, solo si está activo
+     * @return array|false El reset actualizado o false si no se pudo actualizar
+     */
     public function obtenerTodosConSolicitante(): array
     {
         $stmt = $this->conn->query("
@@ -82,6 +85,9 @@ class Reset
         return $stmt->fetchAll();
     }
 
+    /** Devuelve todos los voluntarios disponibles para asignar a un reset
+    * @return array
+    */
     public function obtenerVoluntarios(): array
     {
         $stmt = $this->conn->query("
@@ -93,6 +99,9 @@ class Reset
         return $stmt->fetchAll();
     }
 
+    /** Devuelve todos los estados posibles para un reset
+    * @return array
+    */  
     public function obtenerEstados(): array
     {
         $stmt = $this->conn->query("
@@ -103,12 +112,18 @@ class Reset
         return $stmt->fetchAll();
     }
 
+    /** Devuelve el número total de resets en la base de datos
+    * @return int
+    */
     public function contarTotal(): int
     {
         $stmt = $this->conn->query('SELECT COUNT(*) FROM reset');
         return (int)$stmt->fetchColumn();
     }
 
+    /** Devuelve el número de resets por cada estado, incluyendo estados sin resets
+    * @return array
+    */
     public function contarPorEstado(): array
     {
         $stmt = $this->conn->query("

@@ -70,6 +70,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['flash'] = array('tipo' => 'error', 'msg' => 'El mensaje no puede estar vacío.');
             }
         }
+    } elseif ($action == 'eliminar_comentario') {
+    $id_comentario = filter_input(INPUT_POST, 'id_comentario', FILTER_VALIDATE_INT);
+    if ($id_comentario) {
+        $ok = $comentarioModel->marcarComoEliminado($id_comentario, null, $id_usuario);
+        $_SESSION['flash'] = $ok
+            ? ['tipo' => 'success', 'msg' => 'Mensaje eliminado.']
+            : ['tipo' => 'error',   'msg' => 'No se pudo eliminar el mensaje.'];
+        }  
     }
 
     // Redirigimos para evitar reenvío del formulario

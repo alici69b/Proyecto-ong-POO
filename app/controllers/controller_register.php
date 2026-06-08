@@ -73,7 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $modeloUsuario = new UsuarioNormal();
     if ($modeloUsuario->buscarPorEmail($email)) {
         $_SESSION['errores'] = ['email' => ['Este email ya está registrado']];
-        header('Location: ../views/auth/Register.php');
+        // Mostrar la vista directamente en la misma petición para conservar la sesión
+        require_once __DIR__ . '/../views/auth/Register.php';
         exit();
     }
 

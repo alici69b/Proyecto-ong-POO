@@ -13,6 +13,7 @@ require_once __DIR__ . '/../models/UsuarioNormal.php';
 require_once __DIR__ . '/../models/Voluntario.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 $historiaModel = new Historia();
 
 $usuarioModel   = new UsuarioNormal();
@@ -31,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crear'])) {
     }
 
     $datos = $_POST;
+    foreach (['titulo', 'descripcion', 'descripcion_antes', 'descripcion_despues'] as $campo) {
+        if (isset($datos[$campo])) {
+            $datos[$campo] = FiltroProfanidad::limpiar($datos[$campo]);
+        }
+    }
     if (!empty($_FILES['foto']['name'])) {
         $errFoto = Validaciones::validarFoto($_FILES['foto']);
         if (empty($errFoto)) {
@@ -55,6 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_editar']) && i
     }
 
     $datos = $_POST;
+    foreach (['titulo', 'descripcion', 'descripcion_antes', 'descripcion_despues'] as $campo) {
+        if (isset($datos[$campo])) {
+            $datos[$campo] = FiltroProfanidad::limpiar($datos[$campo]);
+        }
+    }
     if (!empty($_FILES['foto']['name'])) {
         $errFoto = Validaciones::validarFoto($_FILES['foto']);
         if (empty($errFoto)) {
@@ -77,11 +88,13 @@ if (isset($_GET['action']) && $_GET['action'] === 'delete' && isset($_GET['id'])
     exit();
 }
 
-$historias = $historiaModel->obtenerTodas();
-
+$pagina = max(1, (int)($_GET['p'] ?? 1));
+$por_pagina = 4;
 $filtroEstado = $_GET['estado'] ?? '';
-if ($filtroEstado === 'Publicada' || $filtroEstado === 'Borrador') {
-    $historias = array_values(array_filter($historias, fn($h) => $h['estado'] === $filtroEstado));
-}
+
+$total_historias = $historiaModel->contarConFiltro('', $filtroEstado);
+$total_paginas = max(1, (int)ceil($total_historias / $por_pagina));
+
+$historias = $historiaModel->obtenerPaginado('', $filtroEstado, $pagina, $por_pagina);
 
 include __DIR__ . '/../views/admin/gestionarhistorias.php';

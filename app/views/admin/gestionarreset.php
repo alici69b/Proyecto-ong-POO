@@ -99,9 +99,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                 <h1 class="text-3xl font-extrabold tracking-tight">Gestionar Resets</h1>
-                <p class="text-slate-500"><?= count($resets) ?> solicitudes de reset registradas</p>
+                <p class="text-slate-500"><?= $total_resets ?> solicitudes de reset registradas</p>
             </div>
-            <button onclick="location.reload()" class="px-6 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95">Actualizar</button>
+            <div class="flex items-center gap-3">
+                <select onchange="window.location.href = '<?= BASE_URL ?>/app/controllers/controller_admin_gestionarreset.php?estado=' + this.value" class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 focus:ring-2 focus:ring-[#25a18e] outline-none cursor-pointer shadow-sm">
+                    <option value="" <?= empty($filtroEstado) ? 'selected' : '' ?>>Todos</option>
+                    <?php foreach ($estados as $est): ?>
+                        <option value="<?= $est['id_estado'] ?>" <?= ($filtroEstado ?? '') === (string)$est['id_estado'] ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst($est['nombre_estado'])) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <button onclick="location.reload()" class="px-6 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold hover:shadow-md transition-all active:scale-95">Actualizar</button>
+            </div>
         </header>
 
         <?php if (isset($_GET['updated'])): ?>
@@ -165,6 +173,17 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'admin') {
                 </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if ($total_paginas > 1): ?>
+        <div class="mt-6 p-4 bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-slate-400 font-bold uppercase">Página <?= $pagina ?> de <?= $total_paginas ?></p>
+            <div class="flex flex-wrap gap-1.5">
+                <?php for ($i = 1; $i <= $total_paginas; $i++): ?>
+                    <a href="<?= BASE_URL ?>/app/controllers/controller_admin_gestionarreset.php?p=<?= $i ?>&estado=<?= urlencode($filtroEstado ?? '') ?>" class="w-9 h-9 flex items-center justify-center rounded-xl font-bold text-[13px] transition-all <?= $i === $pagina ? 'bg-[#004e64] text-white shadow-md' : 'bg-white border border-slate-200 hover:text-[#004e64]' ?>"><?= $i ?></a>
+                <?php endfor; ?>
+            </div>
+        </div>
+        <?php endif; ?>
     </main>
 </div>
 <script>

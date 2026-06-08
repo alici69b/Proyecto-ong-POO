@@ -46,6 +46,71 @@ class Historia
         }
     }
 
+    public function obtenerPaginado(string $buscar = '', string $estado = '', int $pagina = 1, int $porPagina = 3): array
+    {
+        try {
+            $sql = "SELECT id, titulo, solicitante, nombre_categoria, descripcion,
+                           descripcion_antes, descripcion_despues, nombre_voluntario,
+                           duracion_meses, valoracion, edad, foto, estado, icono,
+                           automatica, created_at
+                    FROM historias WHERE 1=1";
+            $params = [];
+            if ($buscar !== '') {
+                $sql .= " AND (titulo LIKE :buscar OR solicitante LIKE :buscar2 OR descripcion LIKE :buscar3 OR nombre_categoria LIKE :buscar4 OR nombre_voluntario LIKE :buscar5)";
+                $like = "%$buscar%";
+                $params[':buscar'] = $like;
+                $params[':buscar2'] = $like;
+                $params[':buscar3'] = $like;
+                $params[':buscar4'] = $like;
+                $params[':buscar5'] = $like;
+            }
+            if ($estado === 'Publicada' || $estado === 'Borrador') {
+                $sql .= " AND estado = :estado";
+                $params[':estado'] = $estado;
+            }
+            $sql .= " ORDER BY created_at DESC LIMIT :limite OFFSET :offset";
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $key => $val) {
+                $stmt->bindValue($key, $val);
+            }
+            $stmt->bindValue(':limite', $porPagina, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', ($pagina - 1) * $porPagina, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    public function contarConFiltro(string $buscar = '', string $estado = ''): int
+    {
+        try {
+            $sql = "SELECT COUNT(*) FROM historias WHERE 1=1";
+            $params = [];
+            if ($buscar !== '') {
+                $sql .= " AND (titulo LIKE :buscar OR solicitante LIKE :buscar2 OR descripcion LIKE :buscar3 OR nombre_categoria LIKE :buscar4 OR nombre_voluntario LIKE :buscar5)";
+                $like = "%$buscar%";
+                $params[':buscar'] = $like;
+                $params[':buscar2'] = $like;
+                $params[':buscar3'] = $like;
+                $params[':buscar4'] = $like;
+                $params[':buscar5'] = $like;
+            }
+            if ($estado === 'Publicada' || $estado === 'Borrador') {
+                $sql .= " AND estado = :estado";
+                $params[':estado'] = $estado;
+            }
+            $stmt = $this->conn->prepare($sql);
+            foreach ($params as $key => $val) {
+                $stmt->bindValue($key, $val);
+            }
+            $stmt->execute();
+            return (int) $stmt->fetchColumn();
+        } catch (Exception $e) {
+            return 0;
+        }
+    }
+
     public function obtenerUsuariosNormales(): array
     {
         $stmt = $this->conn->query("

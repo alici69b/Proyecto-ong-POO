@@ -17,9 +17,15 @@ if (isset($_GET['action']) && $_GET['action'] === 'read' && isset($_GET['id'])) 
     exit();
 }
 
-$mensajes = $mensajeModel->obtenerTodos();
-$total_mensajes = $mensajeModel->contarTodos();
+$filtroLeido = $_GET['leido'] ?? '';
+$pagina = max(1, (int)($_GET['p'] ?? 1));
+$por_pagina = 4;
+
+$mensajes = $mensajeModel->obtenerPaginado('', $filtroLeido, $pagina, $por_pagina);
+$total_mensajes = $mensajeModel->contarConFiltro('', $filtroLeido);
+//ceil--> redndea el numero
+$total_paginas = max(1, (int)ceil($total_mensajes / $por_pagina));
 $no_leidos = $mensajeModel->contarNoLeidos();
-$leidos = $total_mensajes - $no_leidos;
+$leidos = $mensajeModel->contarTodos() - $no_leidos;
 
 include __DIR__ . '/../views/admin/gestionarcontacto.php';

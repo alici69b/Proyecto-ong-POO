@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 require_once __DIR__ . '/../models/Mensaje.php';
 require_once __DIR__ . '/../Helpers/Validaciones.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
 
@@ -13,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
         exit();
     }
     $datos = [
-        'nombre_remitente' => trim($_POST['nombre_remitente'] ?? ''),
+        'nombre_remitente' => FiltroProfanidad::limpiar(trim($_POST['nombre_remitente'] ?? '')),
         'email_remitente'  => trim($_POST['email_remitente'] ?? ''),
-        'asunto'           => trim($_POST['asunto'] ?? ''),
-        'cuerpo_mensaje'   => trim($_POST['cuerpo_mensaje'] ?? ''),
+        'asunto'           => FiltroProfanidad::limpiar(trim($_POST['asunto'] ?? '')),
+        'cuerpo_mensaje'   => FiltroProfanidad::limpiar(trim($_POST['cuerpo_mensaje'] ?? '')),
     ];
 
     $_SESSION['errores'] = Validaciones::validarContacto($datos);

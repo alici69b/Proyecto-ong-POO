@@ -11,6 +11,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['user_rol'] !== 'soy-usuario') {
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../models/Reset.php';
 require_once __DIR__ . '/../models/ResetComentario.php';
+require_once __DIR__ . '/../Helpers/FiltroProfanidad.php';
 
 $db              = new Db();
 $conn            = $db->getConnection();
@@ -60,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($action == 'comentar') {
         // No puede comentar si está cancelado
         if ($reset['id_estado'] != 4) {
-            $texto = trim($_POST['texto']);
+            $texto = FiltroProfanidad::limpiar(trim($_POST['texto']));
             if ($texto != '') {
                 // id_voluntario = null porque quien comenta es el usuario
                 $comentarioModel->insertar($id_reset, $id_usuario, null, $texto);
